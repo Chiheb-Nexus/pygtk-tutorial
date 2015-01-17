@@ -1,0 +1,54 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+
+<chapter id="fixed">
+    <title>Fixed</title>
+    <para>A Fixed widget is a container which can hold child widgets at specified positions and sizes.</para>
+    <para>Using a Fixed widget prevents having to learning about packing and container widgets, however it should not be used for most applications as it can lead to broken interfaces. This includes truncated text and overlapping. Other issues can occur after development including:</para>
+    <itemizedlist>
+        <listitem>Different themes can change widget sizes, which may break the application on configurations different to those that the program was developed on.</listitem>
+        <listitem>Larger fonts mean larger widgets, which again can easily break the layout.</listitem>
+        <listitem>Text translation can change the amount of text placed in the widget.</listitem>
+        <listitem>Languages which use right-to-left will not work correctly with your application as PyGTK cannot flip the interface correctly.</listitem>
+        <listitem>Maintaining the application becomes increasingly difficult. If you wish to add a new widget, you will need to reposition the current widgets to accomodate the new one. The same applies to removing an existing widget.</listitem>
+    </itemizedlist>
+    <simplesect>
+        <title>Constructor</title>
+        <programlisting>fixed = gtk.Fixed()</programlisting>
+    </simplesect>
+    <simplesect>
+        <title>Methods</title>
+        <para>Now we can place widgets on the container and also move them around if necessary:</para>
+        <programlisting>fixed.put(child, x, y)
+fixed.move(child, x, y)</programlisting>
+        <para>The child property is the name of the widget which should be added to the container. The X value is the number of pixels across the Fixed widget, where the child should be placed. The Y value is the number of pixels down the Fixed widget, where the child sould be placed. Using a pixel-based method allows for accurate positioning of widgets, which does not change unless requested.</para>
+    </simplesect>
+    <simplesect>
+        <title>Example</title>
+        <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class Fixed:
+    def __init__(self):
+        window = gtk.Window()
+        window.set_default_size(200, 200)
+        
+        fixed = gtk.Fixed()
+        button1 = gtk.Button("Button 1")
+        button2 = gtk.Button("Button 2")
+        
+        fixed.put(button1, 50, 5)
+        fixed.put(button2, 110, 80)
+        
+        window.connect("destroy", lambda w: gtk.main_quit())
+        
+        window.add(fixed)
+        window.show_all()
+
+Fixed()
+gtk.main()</programlisting>
+        <para>Download <ulink url="examples/fixed.py"><command>fixed.py</command></ulink></para>
+    </simplesect>
+</chapter>

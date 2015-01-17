@@ -1,0 +1,71 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+
+<chapter id="expander">
+    <title>Expander</title>
+    <para>An expander widget can hold a child widget, and show or hide that widget at the request of the user.</para>
+    <simplesect>
+        <title>Constructor</title>
+	    <programlisting>expander = gtk.Expander(label)</programlisting>
+	    <para>The label property should be set to string of text which describes the expander. Alternatively, it can be left blank if no title is required, however this is not recommended.</para>
+	</simplesect>
+	<simplesect>
+	    <title>Methods</title>
+	    <para>After creating the expander, we can change the label text by using:</para>
+	    <programlisting>expander.set_label(label)</programlisting>
+	    <para>Adding or removing a child widget is done with the following methods:</para>
+	    <programlisting>expander.add(child)
+expander.remove(child)</programlisting>
+	    <para>We can also configure whether the expander is showing or hiding the child widget using the following:</para>
+	    <programlisting>expander.set_expanded(expanded)</programlisting>
+	    <para>When the expanded parameter is set to True, the context in the Expander will be displayed. False sets the child contents to hidden.</para>
+	    <para>The expanded state can also be retrieved with:</para>
+	    <programlisting>expanded = expander.get_expanded()</programlisting>
+	    <para>A useful accessibility feature is to allow access to the Expander dropdown via the keyboard. This can be enabled with:</para>
+	    <programlisting>expander.set_use_underline(underline)</programlisting>
+	    <para>Setting the underline property to True is the first part to enabling this feature. The second part is to place an underscore character before a letter in the label. The letter proceeding the underscore, will then have an underscore under it when the application is run. The user can then access the expander by pressing Ctrl and the character which is underscored.</para>
+	</simplesect>
+	<simplesect>
+	    <title>Signals</title>
+	    <programlisting>"activate"</programlisting>
+	    <para>The "activate" signal is emitted when the user clicks on the expander adjustment, to toggle whether the widget is expanded or not.</para>
+	</simplesect>
+	<simplesect>
+	    <title>Example</title>
+	    <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class Expander:
+    def __init__(self):
+        window = gtk.Window()
+        window.set_default_size(200, -1)
+        
+        label = gtk.Label("Expander")
+        expander = gtk.Expander(None)
+        expander.set_label_widget(label)
+
+        window.connect("destroy", lambda w: gtk.main_quit())
+        expander.connect("notify::expanded", self.expanded)
+        
+        window.add(expander)
+        window.show_all()
+
+    def expanded(self, expander, parameter):
+        if expander.get_expanded():
+            label = gtk.Label("Label")
+            label.set_size_request(200, 100)
+            expander.add(label)
+            label.show()
+        else:
+            expander.remove(expander.child)
+            expander.get_parent().resize(200, 1)
+        
+        print "The Expander is currently %s" % ("closed", "open")[expander.get_expanded()]
+
+Expander()
+gtk.main()</programlisting>
+        <para>Download <ulink url="examples/expander.py"><command>expander.py</command></ulink></para>
+    </simplesect>
+</chapter>

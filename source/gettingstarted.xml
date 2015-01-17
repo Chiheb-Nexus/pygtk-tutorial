@@ -1,0 +1,70 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+
+<chapter id="gettingstarted">
+    <title>Getting Started</title>
+    <para>To begin with, we will start with a simple example which created a 200 pixel wide by 200 pixel high window. You will not be able to close the window in the traditional way (by clicking the X in the top right corner). Instead it will need to be closed via the shell using CTRL + C.</para>
+    <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class GettingStarted:
+    def __init__(self):
+        window = gtk.Window()
+        window.show()
+
+GettingStarted()
+gtk.main()</programlisting>
+    <para>Download <ulink url="examples/gettingstarted.py"><command>gettingstarted.py</command></ulink></para>
+    <para>To run the file, open your shell to the directory of the file, and enter:</para>
+    <programlisting>python gettingstarted.py</programlisting>
+	<para>Note: A Python application can be run as with any standard file or application by clicking on it, when the file has been made executable.</para>
+	<para>Due to this example having no way to quit, it is much easier to run and close from the shell. Attempting to close the window using the X button will make the window disappear, however the Python interpreter will still be running, therefore consuming resources. We will look at connecting the close button in depth in the next few pages.</para>
+	<para>In the mean time, use CTRL+C to stop the script from executing.</para>
+	<sect1>
+	    <title>Hello World</title>
+	    <para>As with any great programming tutorial, there needs to be a Hello World example. We will build on the previous example to create our first "real" application.</para>
+	    <programlisting># Invoke the Python interpreter. This should be the first line in all Python programs.
+#!/usr/bin/env python
+
+# Import the PyGTK bindings so that we can access them
+import gtk
+
+# Define our class named HelloWorld
+class HelloWorld:
+    # Create a function to handle quitting the application
+    def close(self, widget):
+        # Exit the GTK main loop
+        gtk.main_quit()
+    
+    # Create a function to allow printing "Hello World" to the shell
+    def print_hello_world(self, widget):
+        print "Hello World"
+    
+    def __init__(self):
+        # Create our window
+        window = gtk.Window()
+        # Create our button with appropriate text label
+        button = gtk.Button("Click Here")
+        
+        # Connect the window destroy event to the close function
+        # This allows the application to exit when the X button is clicked
+        window.connect("destroy", self.close)
+        # Connect the button to the print function
+        # When clicked, Python will call the print_hello_world function
+        button.connect("clicked", self.print_hello_world)
+        
+        # Add the button to the window
+        window.add(button)
+        # Use show_all() to display all widgets on the window
+        window.show_all()
+
+# Run the HelloWorld class
+HelloWorld()
+# This is the GTK main loop. Once the HelloWorld class has run, control will sleep
+# here until an event is triggered. 
+gtk.main()</programlisting>
+        <para>Download <ulink url="examples/helloworld.py"><command>helloworld.py</command></ulink></para>
+	</sect1>	
+</chapter>

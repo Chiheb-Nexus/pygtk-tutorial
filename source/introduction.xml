@@ -1,0 +1,42 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+
+<chapter id="introduction">
+    <title>Introduction</title>
+    <para>PyGTK is a set of bindings which provide an interface to access GTK+ via the Python programming language.</para>
+    <simplesect>
+        <title>Before Using PyGTK</title>
+        <para>Prior to working through this tutorial, it is recommended that you have a reasonable grasp of the Python programming language. GUI programming introduces new problems compares to interacting with the standard output (console / terminal). It is necessary for you to know how to create and run Python files, understanding basic interpreter errors, work with strings, integers, floats and Boolean values. For the more advanced widgets in this tutorial, good knowledge of lists and tuples will be needed.</para>
+        <para>Prior knowledge of GTK+ is not required.</para>
+    </simplesect>
+    <simplesect>
+        <title>About This Tutorial</title>
+        <para>This guide assumes that you are using the Python 2.6.x series. It also assumes that you are working with a relatively new version of GTK+. This tutorial is based on PyGTK version 2.24. Older versions will work for the most part, however some issues will arise with newer widgets, methods and signals.</para>
+    </simplesect>
+    <simplesect>
+        <title>Deprecation</title>
+        <para>If you look at older / other documentation on PyGTK, you may find some widgets which are marked as deprecated. As PyGTK has developed, older widgets are replaced with newer widgets that offered increased functionality and / or ease-of-use. This means that the older widget is no longer recommended for use. As some point in the future, the code for the deprecated widget may be removed. Deprecated widgets are left available for use for backward compatibility with older applications. In some cases, widgets are not deprecated but methods and signals they used previously has been replaced with something easier to use or more powerful. The same applies to these, in that they should not be used except in legacy code.</para>
+        <para>This tutorial will not cover widgets which are marked as deprecated. If you do attempt to use deprecated widgets, you will received warnings when running the application.</para>
+    </simplesect>
+    <simplesect>
+        <title>Credits</title>
+        <itemizedlist>
+            <listitem>Guido van Rossum and other developers for creating and maintaining the Python programming language.</listitem>
+            <listitem>The GTK+ developers for their excellent work on creating the toolkit.</listitem>
+            <listitem>James Henstridge and other developers for their work on the PyGTK bindings.</listitem>
+            <listitem>John Finlay, Rafaele Villar Burke and other maintainers of the original (and excellent) PyGTK tutorial.</listitem>
+        </itemizedlist>
+    </simplesect>
+    <simplesect>
+        <title>Contact</title>
+        <para>You may contact me at <email>admin@learngtk.org</email> to report issues, bugs and provide comments. All suggestions are welcome.</para>
+    </simplesect>
+    <simplesect>
+        <title>License</title>
+        <itemizedlist>
+            <listitem>The tutorial text and code examples are released under a <ulink url="http://creativecommons.org/publicdomain/zero/1.0/">CC0 1.0 Universal (CC0 1.0)</ulink> license (in effect Public Domain).</listitem>
+            <listitem>The GTK+ logo used for examples and site favicon is released under the GNU Free Documentation License 1.2, which can be <ulink url="../gnu_fdl-1.2.txt">found in full here</ulink>, or alternatively the at <ulink url="http://www.gnu.org/licenses/old-licenses/fdl-1.2.html">GNU foundation website</ulink>.</listitem>
+        </itemizedlist>
+    </simplesect>
+</chapter>

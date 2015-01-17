@@ -1,0 +1,128 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+
+<chapter id="treeviewconstruction">
+    <title>TreeView Construction</title>
+    <para>A TreeView and its associated widgets are an extremely powerful way of displaying data. They are used in conjunction with a ListStore or TreeStore and provide a way of displaying and manipulating data in many ways, including:</para>
+    <itemizedlist>
+        <listitem>Automatically updates when data added, removed or edited</listitem>
+        <listitem>Drag and drop support</listitem>
+        <listitem>Sorting of data</listitem>
+        <listitem>Support embedding widgets such as Toggle Buttons, Progress Bars, etc.</listitem>
+        <listitem>Reorderable and resizable columns</listitem>
+        <listitem>Filtering of data</listitem>
+    </itemizedlist>
+    <para>With the power and flexibility of a TreeView comes complexity. It is often difficult for beginner developers to be able to utilise correctly due to the number of methods which are required.</para>
+    <sect1 id="treeview">
+        <title>TreeView</title>
+        <simplesect>
+            <title>Constructor</title>
+            <programlisting>treeview = gtk.TreeView(model)</programlisting>
+            <para>The model parameter is the name of a ListStore or TreeStore which is the data source for the TreeView. This can be left blank if no model needs to be added at construction time.</para>
+        </simplesect>
+        <simplesect>
+            <title>Methods</title>
+            <para>We can set the model on the TreeView after its construction with:</para>
+            <programlisting>treeview.set_model(model)</programlisting>
+            <para>The model specified for use with the TreeView can also be retrieved with:</para>
+            <programlisting>model = treeview.get_model()</programlisting>
+            <para>After constructing the TreeView, columns will need to be added so data can be displayed. We use TreeViewColumn widgets (which will be looked at next) and they are added to the TreeView with:</para>
+            <programlisting>treeview.append_column(column)
+treeview.insert_column(column, position)</programlisting>
+            <para>The .append_column() method places columns into the TreeView as they were added. The .insert_column() method allows the specification of a column position. The position value begins at 0 for the first position.</para>
+            <para>Columns can also be removed from the TreeView with:</para>
+            <programlisting>treeview.remove_column(column)</programlisting>
+            <para>In some cases, we may not wish to display the column headers. We can turn this off with:</para>
+            <programlisting>treeview.set_headers_visible(visible)</programlisting>
+            <para>The visible argument can be set to False to remove the column headers from view.</para>
+            <para>By default, columns are to set a fixed position once added to the TreeView. However, we can allow the user to reorder columns with:</para>
+            <programlisting>treeview.set_reorderable(reorderable)</programlisting>
+            <para>When the reorderable value is set to True, the column positions can be adjusted.</para>
+            <para>When the user presses CTRL + F, a search box appears which allows the user to type and highlight any matches to the characters typed. To configure which column is used to match the text:</para>
+            <programlisting>treeview.set_search_column(column)</programlisting>
+            <para>The column value should be set to the number of the column which is searched. The values start at 0, which indicates the first column.</para>
+            <para>Depending on requirements, you may wish to configure the grid lines displayed on the TreeView.</para>
+            <programlisting>treeview.set_grid_lines(grid_lines)</programlisting>
+            <para>The grid_lines parameter can be set to one of the following:</para>
+            <programlisting>gtk.TREE_VIEW_GRID_LINES_NONE
+gtk.TREE_VIEW_GRID_LINES_HORIZONTAL
+gtk.TREE_VIEW_GRID_LINES_VERTICAL
+gtk.TREE_VIEW_GRID_LINES_BOTH</programlisting>
+            <para>To display large amounts of information in a TreeView, it is necessary to add some form of scrolling. This is commonly done using a Scrolled Window. However, you may wish to use the <link linkend="scrollbar">Scrollbar</link> widgets and to do this, Adjustments will need to be retrieved.</para>
+            <programlisting>vadjustment = treeview.get_vadjustment()
+hadjustment = treeview.get_hadjustment()</programlisting>
+            <para>When using a TreeStore together with a TreeView, rows can have sub-rows which are opened and closed by the user. It can also be useful to enable a feature which opens and closes all rows at once in the TreeView. This can be done with:</para>
+            <programlisting>treeview.expand_all()
+treeview.collapse_all()</programlisting>
+        </simplesect>
+        <simplesect>
+            <title>Signals</title>
+            <para>Note: the parameters in brackets are those passed to the function when the signal is emitted.</para>
+            <programlisting>"cursor-changed" (treeview)
+"row-activated" (treeview, path, column)
+"move-cursor" (treeview, step, count)</programlisting>
+            <para>The "cursor-changed" emits whenever the selected row is changed, either via the mouse or keyboard. "row-activated" emits when the user double clicks on a row, or presses the Enter/Return/Space button on the keyboard. The "move-cursor" signal is emitted when the user presses the arrow keys on the keyboard.</para>
+        </simplesect>
+        <simplesect>
+            <title>Example</title>
+            <para>For an example of a TreeView, see the <link linkend="liststore">ListStore</link> or <link linkend="treestore">TreeStore</link> pages.</para>
+        </simplesect>
+    </sect1>
+    <sect1 id="treeviewcolumn">
+        <title>TreeViewColumn</title>
+        <simplesect>
+            <title>Constructor</title>
+            <programlisting>treeviewcolumn = gtk.TreeViewColumn(title, cellrenderer)</programlisting>
+            <para>The title parameter is the text which will be displayed on the header of the column. The cellrenderer parameter is the name of a CellRenderer which will be displayed inside the column (CellRenderer's will be covered in the next chapter).</para>
+        </simplesect>
+        <simplesect>
+            <title>Methods</title>
+            <para>After creating the column, we need to add CellRenderer's to allow data to be displayed. This can be done with the following:</para>
+            <programlisting>treeviewcolumn.pack_start(cellrenderer, expand)
+treeviewcolumn.pack_end(cellrenderer, expand)</programlisting>
+            <para>The .pack_start() and .pack_end() methods work in a similar way to packing with the VBox and HBox. We can also pack more than one CellRenderer into each column. This is useful to display images and text in the same cell. The cellrenderer parameter is the name of the CellRenderer widget which should be added to the column. The expand value is a Boolean which when set to True, allows the child to take up all space within the cell.</para>
+            <para>After construction and packing, attributes need to be set on the column to allow for the data to be displayed. This is done with:</para>
+            <programlisting>treeviewcolumn.add_attribute(cellrenderer, attribute, value)
+treeviewcolumn.set_attributes(cellrenderer)</programlisting>
+            <para>The cellrenderer parameter is the name of the CellRenderer widget which should be placed in the column. The attribute value is the property relating to the CellRenderer. The value parameter is the value relating to the attribute which is specified.</para>
+            <para>Columns by default are not resizable by the user and are set to size themselves automatically based on the content of the cells. This can be changed with:</para>
+            <programlisting>treeviewcolumn.set_resizable(resizable)</programlisting>
+            <para>When the resizable parameter is set to True, the column width can be adjusted. This needs to be done for each column created.</para>
+            <para>We can also configure the automatic resizing type used by each column.</para>
+            <programlisting>treeviewcolumn.set_sizing(type)</programlisting>
+            <para>The type should be set to one of:</para>
+            <programlisting>gtk.TREE_VIEW_COLUMN_GROW_ONLY
+gtk.TREE_VIEW_COLUMN_AUTOSIZE
+gtk.TREE_VIEW_COLUMN_FIXED</programlisting>
+            <para>If the column is going to contain more than one cell, it may be useful to set a spacing value between the contents.</para>
+            <programlisting>treeviewcolumn.set_spacing(space)</programlisting>
+        </simplesect>
+    </sect1>
+    <sect1 id="treeselection">
+        <title>TreeSelection</title>
+        <simplesect>
+            <title>Methods</title>
+            <para>A TreeSelection object indicates which item in a TreeView is currently selected. It is constructed when the TreeView is created, and can not exist independently of a TreeView.</para>
+            <para>We can access the selection with:</para>
+            <programlisting>selection = treeview.get_selection()</programlisting>
+            <para>A common function of the TreeSelection object is to use it to retrieve which rows are currently selected:</para>
+            <programlisting>treemodel, iter = treeselection.get_selected()
+treemodel, path = treeselection.get_selected_rows()</programlisting>
+            <para>The first method returns a Tuple, with the second part of the tuple being an iter, which identifies the row which is currently selected. The second method shown also returns a tuple, however the second part includes a path, which is a list of all rows which are currently selected. The first part of the tuple in both methods returns a TreeModel object.</para>
+            <para>Usage of .get_selected() or .get_selected_rows() will depend on whether you want to allow the user to select multiple rows. However, .get_selected_rows() will only work if multiple selections are allowed.</para>
+            <para>We can also count how many rows are currently selected with:</para>
+            <programlisting>count = treeselection.count_selected_rows()</programlisting>
+            <para>The TreeSelection can be configured to allow multiple items to be selected with:</para>
+            <programlisting>treeselection.set_mode(mode)</programlisting>
+            <para>The mode value must be set to one of the following:</para>
+            <programlisting>gtk.SELECTION_NONE
+gtk.SELECTION_SINGLE
+gtk.SELECTION_BROWSE
+gtk.SELECTION_MULTIPLE</programlisting>
+            <para>Assuming the mode is set to gtk.SELECTION_MULTIPLE is enabled, all items can be selected and unselected with:</para>
+            <programlisting>treeselection.select_all()
+treeselection.unselect_all()</programlisting>
+        </simplesect>
+    </sect1>
+</chapter>

@@ -1,0 +1,67 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+
+<chapter id="scale">
+    <title>Scale</title>
+    <para>A Scale widget allows for the selection of a value within a specified range using a slider. There are two types of Scale, horizontal and vertical.</para>
+    <simplesect>
+        <title>Constructor</title>
+        <programlisting>scale = gtk.VScale(adjustment)
+scale = gtk.HScale(adjustment)</programlisting>
+        <para>The adjustment property can be set to the name of a previously created Adjustment.</para>
+    </simplesect>
+    <simplesect>
+        <title>Methods</title>
+        <para>By default, the numerical value is displayed above the slider. This can be disabled using the method:</para>
+        <programlisting>scale.set_draw_value(draw_value)</programlisting>
+        <para>When the draw_value is set to False, no value is shown on the Scale.</para>
+        <para>Another default is that the value shown will always be to one decimal point. This can be changed:</para>
+        <programlisting>scale.set_digits(digits)</programlisting>
+        <para>The digits value can be set to any integer value, however no more than thirteen digits will be displayed on screen.</para>
+        <para>Changing the position where the value is drawn can be done via:</para>
+        <programlisting>scale.set_value_pos(position)</programlisting>
+        <para>The position attribute can be one of the following four (with gtk.POS_TOP being the default):</para>
+        <programlisting>gtk.POS_LEFT
+gtk.POS_RIGHT
+gtk.POS_TOP
+gtk.POS_BOTTOM</programlisting>
+        <para>When the value draw position is set to gtk.POS_TOP or gtk.POS_BOTTOM, it will follow the slider.</para>
+        <para>Defining when the value is updated is also an important function of a scale. To change the update method:</para>
+        <programlisting>scale.set_update_policy(policy)</programlisting>
+        <para>The policy argument can be set to one of the three following values:</para>
+        <programlisting>gtk.UPDATE_CONTINUOUS
+gtk.UPDATE_DISCONTINUOUS
+gtk.UPDATE_DELAYED</programlisting>
+        <para>By default, gtk.UPDATE_CONTINUOUS is enabled. This argument ensures that a signal is emitted as soon as the slider is moved. gtk.UPDATE_DISCONTINUOUS is updated when the slider is no longer moving and the user releases the mouse button. Finally, gtk.UPDATE_DELAYED emits a signal either when the mouse button is released or when the slider stops for a short period (of around half a second).</para>
+    </simplesect>
+    <simplesect>
+        <title>Example</title>
+        <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class Scale:
+    def __init__(self):
+        window = gtk.Window()
+        window.set_default_size(200, -1)
+        
+        adjustment = gtk.Adjustment(0, 0, 100, 5, 10, 0)
+        self.scale = gtk.HScale(adjustment)
+        self.scale.set_digits(0)
+        self.scale.set_update_policy(gtk.UPDATE_DELAYED)
+        
+        window.connect("destroy", lambda w: gtk.main_quit())
+        self.scale.connect("value-changed", self.scale_moved)
+        
+        window.add(self.scale)
+        window.show_all()
+
+    def scale_moved(self, event):
+        print self.scale.get_value()
+
+Scale()
+gtk.main()</programlisting>
+        <para>Download <ulink url="examples/scale.py"><command>scale.py</command></ulink></para>
+    </simplesect>
+</chapter>

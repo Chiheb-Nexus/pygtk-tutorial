@@ -1,0 +1,69 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+
+<chapter id="viewport">
+    <title>Viewport</title>
+    <para>A Viewport widget is used to allow viewing of a portion of a larger widget. It is unlikely that this would be used on its own as a Scrolled Window can provide similar functionality but an easier-to-use implementation.</para>
+    <para>The Viewport widget should be used when the child widget does not provide its own scrolling methods. Examples of these include the Table, VBox and HBox.</para>
+    <simplesect>
+        <title>Constructor</title>
+        <programlisting>viewport = gtk.Viewport(hadjustment, vadjustment)</programlisting>
+        <para>The hadjustment and vadjustment arguments can be ignored or set to the name of Adjustment widgets created previously.</para>
+    </simplesect>
+    <simplesect>
+        <title>Methods</title>
+        <para>We can however set the horizontal and vertical Adjustments after construction of the Viewport with:</para>
+        <programlisting>viewport.set_vadjustment(adjustment)
+viewport.set_hadjustment(adjustment)</programlisting>
+        <para>If no adjustments are specified, the Viewport will create its own Adjustment widgets internally. These can be accessed with:</para>
+        <programlisting>adjustment = viewport.get_vadjustment()
+adjustment = viewport.get_hadjustment()</programlisting>
+        <para>By default, a border is placed around the Viewport. This can be configured with the method:</para>
+        <programlisting>viewport.set_shadow_type(shadow)</programlisting>
+        <para>The shadow parameter should be set to one of the following values:</para>
+        <programlisting>gtk.SHADOW_NONE
+gtk.SHADOW_IN
+gtk.SHADOW_OUT
+gtk.SHADOW_ETCHED_IN
+gtk.SHADOW_ETCHED_OUT</programlisting>
+        <para>By default, the gtk.SHADOW_IN value is used.</para>
+    </simplesect>
+    <simplesect>
+        <title>Example</title>
+        <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class Viewport:
+    def __init__(self):
+        window = gtk.Window()
+
+        viewport = gtk.Viewport()
+        viewport.set_size_request(200, 200)
+        vadjustment = viewport.get_vadjustment()
+        hadjustment = viewport.get_hadjustment()
+        vscroll = gtk.VScrollbar(vadjustment)
+        hscroll = gtk.HScrollbar(hadjustment)
+        
+        table = gtk.Table(2, 2, False)
+        table.attach(viewport, 0, 1, 0, 1, gtk.FILL | gtk.EXPAND, gtk.FILL | gtk.EXPAND)
+        table.attach(vscroll, 1, 2, 0, 1, gtk.FILL | gtk.SHRINK, gtk.FILL | gtk.SHRINK)
+        table.attach(hscroll, 0, 1, 1, 2, gtk.FILL | gtk.SHRINK, gtk.FILL | gtk.SHRINK)
+        
+        table2 = gtk.Table()
+        for i in range(0, 15):
+            button = gtk.Button(str(i))
+            table2.attach(button, 0 + i, 1 + i, 0 + i, 1 + i)
+
+        window.connect("destroy", lambda w: gtk.main_quit())
+        
+        window.add(table)
+        viewport.add(table2)
+        window.show_all()
+
+Viewport()
+gtk.main()</programlisting>
+        <para>Download <ulink url="examples/viewport.py"><command>viewport.py</command></ulink></para>
+    </simplesect>
+</chapter>

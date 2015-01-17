@@ -1,0 +1,86 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+
+<chapter id="iconview">
+    <title>IconView</title>
+    <para>An IconView is used to display a collection of icons in a grid view. It is a relatively powerful widget which can do a range of things such as displaying textual labels associated with the images, configuring whether multiple selections can be made and supporting dragging and dropping.</para>
+    <simplesect>
+        <title>Constructor</title>
+        <programlisting>iconview = gtk.IconView(model)</programlisting>
+        <para>The model argument is the name of a ListStore which has previously been constructed.</para>
+    </simplesect>
+    <simplesect>
+        <title>Methods</title>
+        <para>The model can also be set after the creation of the IconView.</para>
+        <programlisting>iconview.set_model(model)</programlisting>
+        <para>Now that we have a ListStore associated with the IconView, we need to specify which columns are used to store images and text (the text is completely optional).</para>
+        <programlisting>iconview.set_pixbuf_column(column)
+iconview.set_text_column(column)</programlisting>
+        <para>The column argument is the number of the column which holds the relevant data (the first column is numbered 0).</para>
+        <para>Using a similar method, we can also access tooltip text if required:</para>
+        <programlisting>iconview.set_tooltip_column(column)</programlisting>
+        <para>To retrieve a list containing all the images that are currently selected, use the method:</para>
+        <programlisting>items = iconview.get_selected_items()</programlisting>
+        <para>We can select and unselect all the images within the IconView with the following methods:</para>
+        <programlisting>iconview.select_all()
+iconview.unselect_all()</programlisting>
+        <para>Configuration of the number of images it is possible to select can be done with:</para>
+        <programlisting>iconview.set_selection_mode(mode)</programlisting>
+        <para>The mode argument can be set to one of the following:</para>
+        <programlisting>gtk.SELECTION_NONE
+gtk.SELECTION_SINGLE
+gtk.SELECTION_BROWSE
+gtk.SELECTION_MULTIPLE</programlisting>
+        <para>gtk.SELECTION_NONE prevents the user from selecting any images. gtk.SELECTION_SINGLE allows for the selection of one image at a time. gtk.SELECTION_BROWSE allows for single selection of an image by pointing with the cursor. Finally, gtk.SELECTION_MULTIPLE allows selection of one or more images by holding down the Ctrl key and selecting the image with the cursor.</para>
+        <para>A useful feature of the IconView is to be able to reorder the images with:</para>
+        <programlisting>iconview.set_reorderable(reorderable)</programlisting>
+        <para>When the reorderable parameter is set to True, items within the IconView can be dragged and dropped to be reordered.</para>
+        <para>In many cases, you will want to set the width of the items within the IconView.</para>
+        <programlisting>iconview.set_item_width(width)</programlisting>
+        <para>The value entered here is a value in pixels for how wide each item will be. If the width should be variable based on the size of the IconView, enter -1.</para>
+        <para>The amount of spacing between items within the IconView can be customised using the following methods:</para>
+        <programlisting>iconview.set_spacing(value)
+iconview.set_row_spacing(value)
+iconview.set_column_spacing(value)</programlisting>
+    </simplesect>
+    <simplesect>
+        <title>Signals</title>
+        <programlisting>"selection-changed" (iconview)
+"activate-cursor-item" (iconview)
+"item-activated" (iconview, path)
+"move-cursor" (iconview, step, number)</programlisting>
+        <para>The "selection-changed" signal is emitted when the user uses the keyboard or mouse to adjust the current selection within the IconView. "activate-cursor-item" is emited when an icon is selected and the Enter key is pressed. An "item-activated" signal can be emitted by pressing the Enter key on a selected item, or by double-clicking with the mouse. The "move-cursor" signal emits from the IconView when the currently selected item is changed, via the mouse or keyboard.</para>
+    </simplesect>
+    <simplesect>
+        <title>Example</title>
+        <programlisting>#!/usr/bin/env python
+
+import gtk
+
+icons = [gtk.STOCK_OPEN, gtk.STOCK_NEW, gtk.STOCK_SAVE, gtk.STOCK_CLOSE, gtk.STOCK_PRINT]
+
+class IconView:
+    def __init__(self):
+        window = gtk.Window()
+        window.set_default_size(200, 200)
+        
+        liststore = gtk.ListStore(gtk.gdk.Pixbuf)
+        iconview = gtk.IconView()
+        iconview.set_model(liststore)
+        iconview.set_pixbuf_column(0)
+        
+        for icon in icons:
+            pixbuf = iconview.render_icon(icon, gtk.ICON_SIZE_LARGE_TOOLBAR)
+            liststore.append([pixbuf])
+        
+        window.connect("destroy", lambda w: gtk.main_quit())
+        
+        window.add(iconview)
+        window.show_all()
+        
+IconView()
+gtk.main()</programlisting>
+        <para>Download <ulink url="examples/iconview.py"><command>iconview.py</command></ulink></para>
+    </simplesect>
+</chapter>

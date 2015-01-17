@@ -1,0 +1,52 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+
+<chapter id="dialog">
+    <title>Dialog</title>
+    <para>Dialog windows are very similar to standard windows, and are used to provide or retrieve information from the user. They are often used to provide a preferences window, for example. The major difference a dialog has is some prepacked widgets which layout the dialog automatically. From there, we can simply add labels, buttons, check buttons, etc. Another big difference is the handling of responses to control how the application should behave after the dialog has been interacted with.</para>
+    <para>Note: if your dialog is going to display a small amount of information or ask the user a question, it may be of more benefit to use a <link linkend="messagedialog">Message Dialog</link>.</para>
+    <simplesect>
+        <title>Constructor</title>
+        <programlisting>dialog = gtk.Dialog(title, parent, flags, buttons)</programlisting>
+        <para>The title property is a string which is displayed on the window of the Dialog. The parent can be set to the name of the main application window, however this can be set to None if required. With the flags value, it should be set to one or more of the following (when using more than one, use the "|" (pipe) character to separate them):</para>
+        <programlisting>0
+gtk.DIALOG_MODAL
+gtk.DIALOG_DESTROY_WITH_PARENT
+gtk.DIALOG_NO_SEPARATOR</programlisting>
+        <para>0 should be used when no changes to the default dialog options are required. Use gtk.DIALOG_MODAL to prevent the user from clicking anything other than the dialog window. To destroy the dialog when the main application window is closed, use gtk.DIALOG_DESTROY_WITH_PARENT. Finally, by default the dialog comes with a Separator widget between the main content and buttons. This can be removed with gtk.DIALOG_NO_SEPARATOR.</para>
+        <para>Finally, the buttons argument is a tuple of buttons which can be set to provide a range of different buttons and responses.</para>
+        <para>Implementing a Dialog correctly can be difficult at first due to the way responses from the user are created and handled.</para>
+        <para>There are two ways to remove a dialog from view:</para>
+        <programlisting>dialog.hide()
+dialog.destroy()</programlisting>
+        <para>The .hide() method removes the dialog from view, however keeps it stored in memory. This is useful to prevent having to construct the dialog again if it needs to be accessed at a later time. Alternatively, the .destroy() method can be used to delete the dialog from memory once it is no longer needed. It should be noted that if the dialog needs to be accessed after it has been destroyed, it will need to be constructed again otherwise the dialog window will be empty.</para>
+    </simplesect>
+    <simplesect>
+        <title>Example</title>
+        <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class Dialog:       
+    def __init__(self):
+        dialog = gtk.Dialog("Dialog Example", None, 0, (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL, gtk.STOCK_OK, gtk.RESPONSE_OK))
+        dialog.set_default_size(250, 300)
+        label = gtk.Label("PyGTK Dialog")
+        
+        dialog.vbox.pack_start(label, True, True, 0)
+        dialog.show_all()
+        
+        response = dialog.run()
+        
+        if response == gtk.RESPONSE_OK:
+            print "The OK button was clicked"
+        elif response == gtk.RESPONSE_CANCEL:
+            print "The Cancel button was clicked"
+        
+        dialog.destroy()
+
+Dialog()</programlisting>
+        <para>Download <ulink url="examples/dialog.py"><command>dialog.py</command></ulink></para>
+    </simplesect>
+</chapter>

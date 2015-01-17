@@ -1,0 +1,95 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+
+<chapter id="signaltheory">
+    <title>Signal Theory</title>
+    <para>GTK+ is an event-driven toolkit which means that control of the application sleeps in gtk.main(). When an event, such as a mouse click occurs in the application, control is passed to the appropriate function before returning to gtk.main().</para>
+    <para>Control is passed using signals. When an event occurs, the appropriate signal is emitted by the widget that was interacted with. The type of event used by a widget depends on what it is. For example, a button has a "clicked" event, however a label does not.</para>
+    <para>A generic example of a signal is:</para>
+    <programlisting>widget.connect("event", function, data)</programlisting>
+    <para>Firstly, the widget is the name of the widget which we have created earlier. There are many widgets which use signals to communicate with other areas of the application, for example a Button. Next, the event method is the action which has been performed. Each widget has its own particularly events which can occur. Using our button example again, we would usually set the event to "clicked". This means that when the button is clicked, the signal is issued. Thirdly, the function argument is the name of function we have written in our application. This function contains the code which runs when signals is issued. Finally, the data argument includes any data which should be passed when the signal is issued. However, this argument is completely optional and can be left out if not required.</para>
+    <para>Signals can also be disconnected if they are no longer required with:</para>
+    <programlisting>widget.disconnect(handler_id)</programlisting>
+    <para>The handler_id is a number which is returned when the signal is originally connected to the widget. To retrieve the handler_id, we construct the .connect() method as follows:</para>
+    <programlisting>handler_id = widget.connect("event", function", data)</programlisting>
+    <para>The number stored in the handler_id identifies the connection made.</para>
+    <para>A real world example would be:</para>
+    <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class Signal:
+    def __init__(self):
+        window = gtk.Window()
+        button = gtk.Button("Run an event")
+        
+        window.add(button)
+        
+        window.connect("destroy", lambda w: gtk.main_quit())
+        button.connect("clicked", self.run_function, "Run an event")
+        
+        window.show_all()
+    
+    def run_function(self, widget, data):
+        print data, "button was clicked"
+
+Signal()
+gtk.main()</programlisting>
+    <para>Download <ulink url="examples/signal1.py"><command>signal1.py</command></ulink></para>
+    <para>As you can see, the window.connect() which we have seen previously is also a function. When the X button of the window is clicked, the "destroy" signal is issued. The function gtk.main_quit() is then run to stop the GTK main loop. No data is passed in this instance, however this could be changed by handling a data argument both at the connection of the signal and when running the function. For example, we could pass the message "The application is closing..." and print it to the terminal upon exit using a new function. The example also includes a button, which when clicked passes the text "Run an event" to the "run_function". When the button is clicked, the text is prepended to form the sentence "Run an event button was clicked".</para>
+    <para>Another example is the following which provides an example of connecting and disconnecting signals.</para>
+    <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class Signal:
+    def __init__(self):
+        window = gtk.Window()
+        
+        table = gtk.Table(2, 3, True)
+        self.label = gtk.Label()
+        button_connect = gtk.Button("Connect")
+        button_disconnect = gtk.Button("Disconnect")
+        button_disconnect.set_sensitive(False)
+        self.button_status = gtk.Button("Status")
+        
+        window.connect("destroy", lambda q: gtk.main_quit())
+        button_connect.connect("clicked", self.signal_connected, button_disconnect)
+        button_disconnect.connect("clicked", self.signal_disconnected, button_connect)
+
+        window.add(table)
+        table.attach(self.label, 0, 3, 0, 1)
+        table.attach(button_connect, 0, 1, 1, 2)
+        table.attach(button_disconnect, 1, 2, 1, 2)
+        table.attach(self.button_status, 2, 3, 1, 2)
+        window.show_all()
+    
+    def signal_connected(self, button_connect, button_disconnect):
+        self.handler_id = self.button_status.connect("clicked", self.signal_status)
+        self.label.set_text("Status Button connected with id of %s" % str(self.handler_id))
+        button_connect.set_sensitive(False)
+        button_disconnect.set_sensitive(True)
+    
+    def signal_disconnected(self, button_disconnect, button_connect):
+        if self.button_status.handler_is_connected(self.handler_id):
+            self.button_status.disconnect(self.handler_id)
+            self.label.set_text("Status Button disconnected")
+            button_connect.set_sensitive(True)
+            button_disconnect.set_sensitive(False)
+    
+    def signal_status(self, button_status):
+        print "Status Button connected with id of %s" % str(self.handler_id)
+
+Signal()
+gtk.main()</programlisting>
+    <para>Download <ulink url="examples/signal2.py"><command>signal2.py</command></ulink></para>
+    <simplesect>
+        <title>Arguments Error</title>
+        <para>When connecting signals from widgets, it is important to pass the correct number of parameters. The number of parameters, and the type that they are depends on the signal being connected. If the number of parameters passed is greater than the number of parameters a function can receive, an error similar to below will be displayed:</para>
+        <programlisting>TypeError: function() takes exactly 2 arguments (3 given)</programlisting>
+        <para>Alternatively, if the number of parameters being provided is fewer than the number that a function can receive, an error similar to below will be displayed:</para>
+        <programlisting>TypeError: function() takes exactly 4 arguments (1 given)</programlisting>
+    </simplesect>
+    <para>Each page in the tutorial will cover common events issued by the widgets. In some cases however, a widget does not issue an event. Examples of this include the Label, Separator and Table.</para>
+</chapter>

@@ -1,0 +1,152 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+
+<chapter id="fontselectionwidgets">
+    <title>Font Selection Widgets</title>
+    <sect1 id="fontselection">
+        <title>FontSelection</title>
+        <para>A FontSelection widget allows for the selection of fonts, style and size. It is similar to a FontSelectionDialog however it does not provide its own Window. The use of this widget is relatively uncommon as a FontButton or FontSelectionDialog is often preferred. One use-case for this widget however is to style it in a similar way to the FontSelectionDialog, however add functionality which that widget does not provide.</para>
+        <simplesect>
+            <title>Constructor</title>
+            <programlisting>fontselection = gtk.FontSelection()</programlisting>
+        </simplesect>
+        <simplesect>
+            <title>Methods</title>
+            <para>To retrieve the selected font, style and size, use the method:</para>
+            <programlisting>font = fontselection.get_font_name()</programlisting>
+            <para>Or you may find it useful to retrieve only the size value:</para>
+            <programlisting>size = fontselection.get_size()</programlisting>
+            <para>We can also set a font, style and size to the FontSelection:</para>
+            <programlisting>fontselection.set_font_name(font)</programlisting>
+            <para>This call MUST be made after the FontSelection has been added to the parent (e.g. Window, Dialog, Table). If called before, it will not change the font, style or size.</para>
+            <para>By default the FontSelection displays a preview with the text 'abcdefghijk ABCDEFGHIJK'. This can be modified with:</para>
+            <programlisting>fontselection.set_preview_text(text)</programlisting>
+        </simplesect>
+        <simplesect>
+            <title>Example</title>
+            <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class FontSelection:
+    def __init__(self):
+        window = gtk.Window()
+        window.set_border_width(5)
+        
+        vbox = gtk.VBox(False, 5)
+        hbox = gtk.HBox()
+        
+        self.fontselection = gtk.FontSelection()
+        button = gtk.Button("OK")
+        button.set_size_request(80, -1)
+        
+        window.connect("destroy", lambda w: gtk.main_quit())
+        button.connect("clicked", self.interaction)
+        
+        window.add(vbox)
+        vbox.pack_start(self.fontselection, True, True, 0)
+        vbox.pack_start(hbox, False, False, 0)
+        hbox.pack_end(button, False, False, 0)
+        
+        window.show_all()
+    
+    def interaction(self, widget):
+        print "Font selected:", self.fontselection.get_font_name()
+
+FontSelection()
+gtk.main()</programlisting>
+            <para>Download <ulink url="examples/fontselection.py"><command>fontselection.py</command></ulink></para>
+        </simplesect>
+    </sect1>
+    <sect1 id="fontselectiondialog">
+        <title>FontSelectionDialog</title>
+        <para>A FontSelectionDialog provides a way of accessing a FontSelection widget using a dialog window.</para>
+        <simplesect>
+            <title>Constructor</title>
+            <programlisting>fontselectiondialog = gtk.FontSelectionDialog(title)</programlisting>
+            <para>The title parameter allows for the setting of a title on the dialog which appears. If no title needs to be displayed, the value should be set to None.</para>
+        </simplesect>
+        <simplesect>
+            <title>Methods</title>
+            <para>Alternatively, setting the title after construction can be done using:</para>
+            <programlisting>fontselectiondialog.set_title(text)</programlisting>
+            <para>We can retrieve the font, style and size options that have been set with the call:</para>
+            <programlisting>font = fontselectiondialog.get_font_name()</programlisting>
+            <para>It is also possible to set a font, style and size on the dialog before it is displayed:</para>
+            <programlisting>fontselectiondialog.set_font_name(font)</programlisting>
+            <para>The FontSelectionDialog includes a string of text which displays a preview of the current font options selected. By default, this string is 'abcdefghijk ABCDEFGHIJK', however it can be changed with:</para>
+            <programlisting>fontselectiondialog.set_preview_text(text)</programlisting>
+        </simplesect>
+        <simplesect>
+            <title>Example</title>
+            <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class FontSelectionDialog:
+    def __init__(self):
+        fontselectiondialog = gtk.FontSelectionDialog("FontSelectionDialog Example")
+        
+        response = fontselectiondialog.run()
+        
+        if response == gtk.RESPONSE_OK:
+            print "Font selected:", fontselectiondialog.get_font_name()
+        
+        fontselectiondialog.destroy()
+
+FontSelectionDialog()</programlisting>
+            <para>Download <ulink url="examples/fontselectiondialog.py"><command>fontselectiondialog.py</command></ulink></para>
+        </simplesect>
+    </sect1>
+    <sect1 id="fontbutton">
+        <title>FontButton</title>
+        <para>A FontButton provides a way of accessing a FontSelectionDialog.</para>
+        <simplesect>
+            <title>Constructor</title>
+            <programlisting>fontbutton = gtk.FontButton(font)</programlisting>
+            <para>The font property can be set to the name and size of the font which should be set as default. Examples of fonts and their input format is "Liberation Sans 20" or "Cantarell 10". If no font is entered, the Font Button will use the default Sans font at size 12.</para>
+        </simplesect>
+        <simplesect>
+            <title>Methods</title>
+            <para>We can change the font shown after creation using:</para>
+            <programlisting>fontbutton.set_font_name(name)</programlisting>
+            <para>Alternatively, we can retrieve the font from the button with:</para>
+            <programlisting>font = fontbutton.get_font_name()</programlisting>
+            <para>The display of the button is relatively customisable as well. We can configure whether to show the style or size on the button using:</para>
+            <programlisting>fontbutton.set_show_style(Boolean)
+fontbutton.set_show_size(Boolean)</programlisting>
+            <para>We can also configure whether the styling selected should apply to the text on the button with:</para>
+            <programlisting>fontbutton.set_use_style(Boolean)
+fontbutton.set_use_size(Boolean)</programlisting>
+            <para>Setting the Font Button to use the style for the text within the button is fairly useful for a quick preview of the selected font. Beward however, that using set_use_size will increase the button size based on the font size, and may make the Font Button extremely large when the user has selected a large font.</para>
+            <para>Another method that you may want to use is setting the title on the Font Dialog which appears:</para>
+            <programlisting>fontbutton.set_title(title)</programlisting>
+        </simplesect>
+        <simplesect>
+            <title>Example</title>
+            <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class FontButton:
+    def __init__(self):
+        window = gtk.Window()
+        window.set_default_size(200, -1)
+        fontbutton = gtk.FontButton()
+
+        window.connect("destroy", gtk.main_quit)
+        fontbutton.connect("font-set", self.font_selected)
+        
+        window.add(fontbutton)
+        window.show_all()
+    
+    def font_selected(self, widget):
+        print "Font selected:", widget.get_font_name()
+        
+FontButton()
+gtk.main()</programlisting>
+            <para>Download <ulink url="examples/fontbutton.py"><command>fontbutton.py</command></ulink></para>
+        </simplesect>
+    </sect1>
+</chapter>

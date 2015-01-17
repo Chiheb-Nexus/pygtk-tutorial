@@ -1,0 +1,176 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+
+<chapter id="fileselectionwidgets">
+    <title>File Selection Widgets</title>
+    <sect1 id="filechooserwidget">
+        <title>FileChooserWidget</title>
+        <para>A FileChooserWidget allows the selection of files. It is similar to a FileChooserDialog however it does not provide its own window, instead it is required to embed it into another Window. The use of this widget in this form is relatively uncommon as the FileChooserDialog or FileChooserButton are often preferred. Generally, its use is limited to custom open or save dialogs which need functionality that is not provided by a File Chooser Dialog.</para>
+	    <simplesect>
+	        <title>Constructor</title>
+            <programlisting>filechooserwidget = gtk.FileChooserWidget(action, backend)</programlisting>
+            <para>A FileChooserWidget can be used to open or save files. Therefore, the action argument will be set to one of the following depending on requirements:</para>
+            <programlisting>gtk.FILE_CHOOSER_ACTION_OPEN
+gtk.FILE_CHOOSER_ACTION_SAVE</programlisting>
+            <para>The backend argument will usually be set to None unless there are specific requirements.</para>
+        </simplesect>
+        <simplesect>
+            <title>Example</title>
+            <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class FileChooserWidget:
+    def __init__(self):
+        window = gtk.Window()
+        window.set_default_size(500, 350)
+        window.set_border_width(5)
+        
+        vbox = gtk.VBox(False, 5)
+        hbox = gtk.HBox()
+        
+        self.filechooser = gtk.FileChooserWidget()
+        self.filechooser.set_select_multiple(True)
+        
+        button = gtk.Button("OK")
+        button.set_size_request(80, -1)
+        
+        window.connect("destroy", lambda w: gtk.main_quit())
+        button.connect("clicked", self.file_selected)
+        
+        window.add(vbox)
+        vbox.pack_start(self.filechooser)
+        vbox.pack_start(hbox, False, False, 0)
+        hbox.pack_end(button, False, False, 0)
+        
+        window.show_all()
+    
+    def file_selected(self, widget):
+        filenames = self.filechooser.get_filenames()
+        for filename in filenames:
+            print "Selected filepath: %s" % filename
+
+FileChooserWidget()
+gtk.main()</programlisting>
+            <para>Download <ulink url="examples/filechooserwidget.py"><command>filechooserwidget.py</command></ulink></para>
+        </simplesect>
+    </sect1>
+    <sect1 id="filechooserdialog">
+        <title>FileChooserDialog</title>
+        <para>A Viewport widget is used to allow viewing of a portion of a larger widget. It is unlikely that this would be used on its own (as a Scrolled Window provides a similar but easier-to-use implementation).</para>
+	    <simplesect>
+	        <title>Constructor</title>
+            <programlisting>filechooserdialog = gtk.FileChooserDialog(title, parent, action, buttons, backend)</programlisting>
+            <para>The title parameter is the text which should be displayed on the dialog. The parent parameter should be set to either None, or the name of a window or dialog which the FileChooserDialog belongs to. Setting this parameter ensures that the FileChooserDialog displays in the middle of the parent window and is destroyed when the parent is closed. The action argument configures what the purpose of the FileChooserDialog is (e.g. Open, Save, Select Folder). It can be set to one of the following values:</para>
+            <programlisting>gtk.FILE_CHOOSER_ACTION_OPEN
+gtk.FILE_CHOOSER_ACTION_SAVE
+gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER
+gtk.FILE_CHOOSER_ACTION_CREATE_FOLDER</programlisting>
+            <para>The buttons argument is used to configure which buttons should be displayed in the dialog. If None is set, no buttons will be displayed. The following buttons are commonly used within the FileChooserDialog:</para>
+            <programlisting>gtk.STOCK_OK
+gtk.STOCK_OPEN
+gtk.STOCK_SAVE
+gtk.STOCK_CANCEL</programlisting>
+            <para>Finally, the backend parameter will be set to the backend filesystem in use or None.</para>
+        </simplesect>
+        <simplesect>
+            <title>Example</title>
+            <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class FileChooserDialog:
+    def __init__(self):
+        filechooserdialog = gtk.FileChooserDialog("FileChooserDialog Example", None, gtk.FILE_CHOOSER_ACTION_OPEN, (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL, gtk.STOCK_OK, gtk.RESPONSE_OK))
+        
+        response = filechooserdialog.run()
+        
+        if response == gtk.RESPONSE_OK:
+            print "Selected filepath: %s" % filechooserdialog.get_filename()
+        
+        filechooserdialog.destroy()
+
+FileChooserDialog()</programlisting>
+        </simplesect>
+    </sect1>
+    <sect1 id="filechooserbutton">
+        <title>FileChooserButton</title>
+        <para>A FileChooserButton allows for the selection of files by loading a dialog. Selected files are then displayed by filename on the button.</para>
+        <simplesect>
+            <title>Constructor</title>
+            <programlisting>filechooserbutton = gtk.FileChooserButton(title, backend)</programlisting>
+            <para>The title property allows for entering the name which should be displayed on the dialog. Generally, the backend property will be set to None.</para>
+        </simplesect>
+        <simplesect>
+            <title>Methods</title>
+            <para>Alternatively, if the FileChooserDialog has been previously created, it can be attached to the button with:</para>
+            <programlisting>filechooserbutton = gtk.FileChooserButton(dialog)</programlisting>
+            <para>You can also set the title of the dialog after construction using:</para>
+            <programlisting>filechooserbutton.set_title(title)</programlisting>
+        </simplesect>
+        <simplesect>
+            <title>Signals</title>
+            <programlisting>"file-set"</programlisting>
+            <para>The "file-set" signal emits when the user changes the currently selected file.</para>
+        </simplesect>
+        <simplesect>
+            <title>Example</title>
+            <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class FileChooserButton:
+    def __init__(self):
+        window = gtk.Window()
+        window.set_default_size(200, -1)
+        filechooserbutton = gtk.FileChooserButton("Select A File", None)
+
+        window.connect("destroy", lambda w: gtk.main_quit())
+        filechooserbutton.connect("file-set", self.file_selected)        
+        
+        window.add(filechooserbutton)
+        window.show_all()
+    
+    def file_selected(self, widget):
+        print "Selected filepath: %s" % widget.get_filename()
+
+FileChooserButton()
+gtk.main()</programlisting>
+            <para>Download <ulink url="examples/filechooserbutton.py"><command>filechooserbutton.py</command></ulink></para>
+        </simplesect>
+    </sect1>
+    <sect1 id="filechoosercommon">
+        <title>FileChooser Common Methods</title>
+        <simplesect>
+            <title>Methods</title>
+            <para>FileChoser-based widgets are all based on the FileChooser object. Therefore, the FileChooserDialog, FileChooserWidget and FileChooserButton can all use the following methods:</para>
+            <para>To retrieve the filename or filenames which are currently selected, the methods to do this are:</para>
+            <programlisting>filechooser.get_filename()
+filechooser.get_filenames()</programlisting>
+            <para>The URIs of the file or files can also be retrieved:</para>
+            <programlisting>filechooser.get_uri()
+filechooser.get_uris()</programlisting>
+            <para>By default, FileChooser's only allow a single file to be selected at a time. To enable multiple files to be selected:</para>
+            <programlisting>filechooser.set_select_multiple(multiple)</programlisting>
+            <para>When the multiple value is set to True, the user can hold down the CTRL button and select multiple files.</para>
+            <para>FileChooser widgets also support a variety of options, which make the files and folders more configurable or accessible.</para>
+            <programlisting>filechooser.set_local_only(local)
+filechooser.set_show_hidden(hidden)
+filechooser.set_do_overwrite_confirmation(confirmation)</programlisting>
+            <para>When the local value is set to True, only files on the local hard disk will be displayed. When hidden is set to True, files which are not normally displayed will be shown in the FileChooser. By default, files which are hidden are not shown. Finally, when .set_do_overwrite_confirmation() is set to False, the FileChooser will not prompt when overwriting a file. This method only works when the FileChooser action is set to save. It is also highly recommended to ensure that the FileChooser prompts when overwriting a file, otherwise there is a potential for data loss for the user.</para>
+            <para>The action of the FileChooser can be configured after construction of the widget with:</para>
+            <programlisting>filechooser.set_action(action)</programlisting>
+            <para>The action parameter should be set to one of the following:</para>
+            <programlisting>gtk.FILE_CHOOSER_ACTION_OPEN
+gtk.FILE_CHOOSER_ACTION_SAVE
+gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER
+gtk.FILE_CHOOSER_ACTION_CREATE_FOLDER</programlisting>
+        </simplesect>
+        <simplesect>
+            <title>Signals</title>
+            <programlisting>"selection-changed"</programlisting>
+            <para>The "selection-changed" signal is emitted when the user selects an item within the FileChooser.</para>
+        </simplesect>
+    </sect1>
+</chapter>

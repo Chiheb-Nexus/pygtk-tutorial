@@ -1,0 +1,10 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+
+<chapter id="packingtheory">
+    <title>Packing Theory</title>
+    <para>Our first Hello World program only contains a single widget. However, in the real world, we are going to need more than one widget per window. For this purpose, we can use several different widgets to achieve the layout we want. The most commonly used are VBoxes (vertical boxes), HBoxes (horizontal boxes) and Tables. These are known as packing (or container) widgets, they are invisible to the end user and are inserted into a window, or placed within each other to develop the interface.</para>
+    <para>For anybody who has used Microsoft Visual Studio, placing widgets in a window is different to GTK+ (and virtually all other toolkits). Microsoft products use a pixel-based system where the widget is dropped in place and adjusted to size. GTK+ uses a packing-based method where widgets are placed inside container widgets.</para>
+    <para>The learning curve of the packing-based method is arguably slightly higher, however it allows for rapid development and a fluid interface design once the initial learning stage is overcome. People who have worked with HTML and CSS will find the GTK+ packing method similar.</para>
+</chapter>

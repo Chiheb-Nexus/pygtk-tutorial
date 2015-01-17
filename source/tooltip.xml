@@ -1,0 +1,115 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+
+<chapter id="tooltip">
+    <title>Tooltip</title>
+    <para>Tooltips are short messages displayed when the mouse cursor hovers over a widget, and are used to describe what a widget does. There are two ways to create Tooltip widgets. The first is the simplest, which provides a text-only string. The second is relatively advanced, however is also extremely functional with the ability to add icons, markup and even child widgets.</para>
+    <para>For most cases, it is recommended to use the basic tooltip, unless specific, advanced functionality of the advanced variant is required.</para>
+    <sect1 id="basictooltip">
+        <title>Basic Tooltip</title>
+        <para>Virtually any widget can receive a tooltip, with examples being the following:</para>
+        <programlisting>button.set_tooltip_text(text)
+label.set_tooltip_text(text)
+combobox.set_tooltip_text(text)</programlisting>
+        <para>The above provides a basic way to display tooltips and will be used in most cases. However, when a tooltip is required to have more advanced functionality such as containing icons or have different content per row/cell in a Treeview, more work is required.</para>
+        <simplesect>
+            <title>Example</title>
+            <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class TooltipBasic:
+    def __init__(self):
+        window = gtk.Window()
+        vbox = gtk.VBox(True, 2)
+        
+        button = gtk.Button("Button")
+        button.set_tooltip_text("Button Tooltip")
+        label = gtk.Label("Label")
+        label.set_tooltip_text("Label Tooltip")
+        entry = gtk.Entry()
+        entry.set_tooltip_text("Entry Tooltip")
+        
+        window.add(vbox)
+        vbox.add(button)
+        vbox.add(label)
+        vbox.add(entry)
+        
+        window.connect("destroy", lambda w: gtk.main_quit())
+        
+        window.show_all()
+
+TooltipBasic()
+gtk.main()</programlisting>
+            <para>Download <ulink url="examples/tooltipbasic.py"><command>tooltipbasic.py</command></ulink></para>
+        </simplesect>
+    </sect1>
+    <sect1 id="advancedtooltip">
+        <title>Advanced Tooltip</title>
+        <para>First, we need to tell our widget that it is going to have a Tooltip.</para>
+        <programlisting>widget.set_has_tooltip(boolean)</programlisting>
+        <para>Then, connect the button with the "query-tooltip" event.</para>
+        <programlisting>widget.connect("query-tooltip", function)</programlisting>
+        <para>The function name is the one given were the tooltip properties will be set, such as text, images, markup, etc.</para>
+        <para>We then construct the function as follows:</para>
+        <programlisting>def function(item, x, y, keyboard_mode, tooltip):</programlisting>
+        <para>The final tooltip argument is the most important. When this is created, we can then access the tooltip and begin adding items to it.</para>
+        <para>Some of the common methods are:</para>
+        <programlisting>tooltip.set_text(text)</programlisting>
+        <para>To add an icon to the tooltip:</para>
+        <programlisting>tooltip.set_icon_from_stock(stock_image, size)</programlisting>
+        <para>The stock_image property should be set to a value from the Stock Images page. The size value should be set to one of the following:</para>
+        <programlisting>gtk.ICON_SIZE_MENU
+gtk.ICON_SIZE_SMALL_TOOLBAR
+gtk.ICON_SIZE_LARGE_TOOLBAR
+gtk.ICON_SIZE_BUTTON
+gtk.ICON_SIZE_DND
+gtk.ICON_SIZE_DIALOG</programlisting>
+        <para>Markup can also be placed into the Tooltip to customise the appearance.</para>
+        <programlisting>tooltip.set_markup(markup)</programlisting>
+        <para>Using markup, the Tooltip can display bold, italic or underlined text, with a variety of styles and sizes.</para>
+        <para>To truly customise the Tooltip widget, the following call can be made:</para>
+        <programlisting>tooltip.set_custom(widget)</programlisting>
+        <para>Replacing the widget parameter with the name of a widget allows for the insertion of a range of other widgets, including HBoxes, VBoxes, Tables, etc.</para>
+        <simplesect>
+            <title>Example</title>
+            <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class TooltipAdvanced:
+    def __init__(self):
+        window = gtk.Window()
+        window.set_default_size(200, -1)
+        
+        vbox = gtk.VBox(True, 5)
+        button = gtk.Button("Button")
+        button.set_has_tooltip(True)
+        label = gtk.Label("Label")
+        label.set_has_tooltip(True)
+        entry = gtk.Entry()
+        entry.set_has_tooltip(True)
+
+        window.connect("destroy", lambda w: gtk.main_quit())
+        button.connect("query-tooltip", self.tooltip, "Button")
+        label.connect("query-tooltip", self.tooltip, "Label")
+        entry.connect("query-tooltip", self.tooltip, "Entry")
+        
+        window.add(vbox)
+        vbox.pack_start(button)
+        vbox.pack_start(label)
+        vbox.pack_start(entry)
+        window.show_all()
+    
+    def tooltip(self, item, x, y, keyboard_mode, tooltip, text):
+        tooltip.set_text("%s Tooltip" % text)
+        tooltip.set_icon_from_stock(gtk.STOCK_HOME, gtk.ICON_SIZE_MENU)
+        return True
+
+TooltipAdvanced()
+gtk.main()</programlisting>
+            <para>Download <ulink url="examples/tooltipadvanced.py"><command>tooltipadvanced.py</command></ulink></para>
+        </simplesect>
+    </sect1>
+</chapter>

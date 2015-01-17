@@ -1,0 +1,9 @@
+What is GTK+?
+
+GTK+ is a highly usable, feature rich toolkit for creating graphical user interfaces which boasts cross platform compatibility and an easy to use API. GTK+ it is written in C, but has bindings to many other popular programming languages such as C++, Python and C# among others. GTK+ is licensed under the GNU LGPL 2.1 allowing development of both free and proprietary software with GTK+ without any license fees or royalties.
+
+Get an overview of GTK+. Understand who started it, the basic architecture and why we use the license we do.
+
+GTK+ has been involved in many projects and some big platforms. To see what people think of GTK+ and how it has been used in commercial projects, read the success stories...
+
+To find out how more about what GTK+ can do for you, visit our features page. If you want to contribute, you are more than welcome.

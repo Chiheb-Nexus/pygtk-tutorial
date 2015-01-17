@@ -1,0 +1,31 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+
+<chapter id="toolitemgroup">
+    <title>ToolItemGroup</title>
+    <para>The ToolItemGroup object allows for separation of items contained within a <link linkend="toolpalette">ToolPalette</link>. Using groups, items can be separated into associated sections, which can be expanded and collapsed to only display what is required.</para>
+    <simplesect>
+        <title>Constructor</title>
+        <programlisting>toolitemgroup = gtk.ToolItemGroup(title)</programlisting>
+        <para>The title parameter is used to set the text of the group within the ToolPalette.</para>
+    </simplesect>
+    <simplesect>
+        <title>Methods</title>
+        <para>To add items to the group, two methods can be used. The first adds items to the group based on the order they are specified, the second adds items to a specific position:</para>
+        <programlisting>toolitemgroup.add(item)
+toolitemgroup.insert(item, position)</programlisting>
+        <para>The item parameter should be set to the ToolItem (or derivative) which is to be added to the group. The position value used in the .insert() method is used to specify where in the group the item will be placed in relation to other items. To place an item as first in the group, specify 0 as the positional value.</para>
+        <para>Items can also be removed from the group:</para>
+        <programlisting>toolitemgroup.remove(item)</programlisting>
+        <para>By default, the group will be expanded to display all items. To collapse the group, use the method:</para>
+        <programlisting>toolitemgroup.set_collapsed(collapsed)</programlisting>
+        <para>When the collapsed value is set to True, the group will hide all items.</para>
+        <para>To expand a group after it has been collapsed, use the following call and set the expanded property to True:</para>
+        <programlisting>toolitemgroup.set_expanded(expanded)</programlisting>
+    </simplesect>
+    <simplesect>
+        <title>Example</title>
+        <para>For an example of the ToolItemGroup object, see the ToolPalette example.</para>
+    </simplesect>
+</chapter>

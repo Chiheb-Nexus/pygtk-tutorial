@@ -1,0 +1,51 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+
+<chapter id="boxes">
+    <title>Boxes</title>
+    <para>The Vertical Box (VBox) and Horizontal Box (HBox) widgets are the most common widgets used to develop the interface. They are invisible containers which can be used to place child widgets into. You can also use them to pack boxes into other boxes to create sophisticated layouts.</para>
+    <para>When using the HBox widget, child widgets are positioned across the screen. If using the VBox widget, child widgets are positioned down the screen.</para>
+    <simplesect>
+        <title>Constructor</title>
+        <programlisting>vbox = gtk.VBox(homogeneous, spacing)
+hbox = gtk.HBox(homogeneous, spacing)</programlisting>
+        <para>The homogeneous property is a Boolean which if set to True, forces all cells in the box will be the same size, of which the size is determined by the largest child widget. The spacing property is an integer value, which is the number of pixels between each cell.</para>
+    </simplesect>
+    <simplesect>
+        <title>Methods</title>
+        <para>To pack child widgets into the box, use:</para>
+        <programlisting>box.pack_start(child, expand, fill, padding)
+box.pack_end(child, expand, fill, padding)</programlisting>
+        <para>if using .pack_start(), items are positioned on the leftof a HBox or top of a VBox in a first-in, first-out order. If using .pack_end(), items are positioned on the right of a HBox or bottom of a VBox in a last-in, first-out order. Both the expand and fill properties are boolean values and will be detailed in a moment. The padding value should be an integer and is the space in pixels between the child widget and the cell border.</para>
+        <para>The expand option when set to True allows the child widget to take all available space it can. Alternately, if the value is set to False, the box will be shrunken to the same size as the child widget.</para>
+        <para>If the fill argument is set to True, the child widget takes all available space and is equal to the size of the box. This only has an effect when expand is set to True. When fill is set to False, the widget has extra padding area the cell.</para>
+        <para>Note: the expand, fill and padding properties are all optional values.</para>
+    </simplesect>
+    <simplesect>
+        <title>Example</title>
+        <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class Box:
+    def __init__(self):
+        window = gtk.Window()
+        window.set_default_size(200, 100)
+        vbox = gtk.VBox(False, 5)
+        button1 = gtk.Button("Button 1")
+        button2 = gtk.Button("Button 2")
+        
+        window.add(vbox)
+        vbox.pack_start(button1)
+        vbox.pack_start(button2)
+        
+        window.connect("destroy", lambda w: gtk.main_quit())
+        
+        window.show_all()
+
+Box()
+gtk.main()</programlisting>
+        <para>Download: <ulink url="examples/boxes.py">boxes.py</ulink></para>
+    </simplesect>
+</chapter>

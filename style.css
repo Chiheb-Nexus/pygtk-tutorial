@@ -1,0 +1,19 @@
+body {
+font-size: 0.8em;
+}
+
+table {
+font-size: 1em;
+}
+
+.programlisting {
+font: monospace;
+font-size: 1.2em;
+background-color: #E0E0E0;
+padding: 5px;
+}
+
+pre.synopsis {
+background-color: #E0E0E0;
+padding: 5px;
+}

@@ -1,0 +1,79 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+
+<chapter id="notebook">
+    <title>Notebook</title>
+    <para>A notebook widget is a collection of pages which can contain their own set of widgets. Only one page at a time is displayed. Notebook widgets have become popular recently as they allow for logical separation of items which are loosely related. For example, preference windows often use notebooks because while all preferences located allow for customisation over the look-and-feel of an application, it would be difficult to navigate through a large amount of options.</para>
+	<simplesect>
+	    <title>Constructor</title>
+	    <programlisting>notebook = gtk.Notebook()</programlisting>
+	</simplesect>
+	<simplesect>
+	    <title>Methods</title>
+	    <para>By default, the tabs on the notebook are positioned on the top edge of the widget. This can be changed:</para>
+	    <programlisting>notebook.set_tab_pos(position)</programlisting>
+	    <para>The position property can be set to one of the following:</para>
+	    <programlisting>gtk.POS_TOP
+gtk.POS_BOTTOM
+gtk.POS_LEFT
+gtk.POS_RIGHT</programlisting>
+        <para>There are three ways to add a new page to a notebook. We can append, which adds the page as the last on the notebook. We can prepend, which places the page first in the notebook and we can insert, which allows us to specify where we want the page to be placed.</para>
+        <programlisting>notebook.append_page(child, label)
+notebook.prepend_page(child, label)
+notebook.insert_page(child, label, position)</programlisting>
+        <para>The child is the widget which should be placed into the Notebook page. In most cases this would be a VBox, HBox or Table. The label parameter is the name of the Label widget to be displayed on the tab. Finally, the position property on the insert method is the position at which the page should be placed (numbering starts at zero).</para>
+        <para>We can also remove pages from the notebook:</para>
+        <programlisting>notebook.remove_page(position)</programlisting>
+        <para>Again, the position parameter is the page number of the page we wish to remove.</para>
+        <para>It may be necessary to retrieve the number of the page which is currently in view:</para>
+        <programlisting>page = notebook.get_current_page()</programlisting>
+        <para>Alternatively, you may wish to set which page is shown while the application is running:</para>
+        <programlisting>notebook.set_current_page(page)</programlisting>
+        <para>If you have more tabs than can be displayed in the window size, the window will increase in size. To maintain the window size and add more tabs, we can set the notebook to become scrollable:</para>
+        <programlisting>notebook.set_scrollable(scrollable)</programlisting>
+        <para>When scrollable is set to True, arrows will appear on the tabs to allow viewing of tabs which are currently not on screen.</para>
+        <para>A useful feature may be to allow users to select the tab from a menu. This can be enabled and disabled with the following calls:</para>
+        <programlisting>notebook.popup_enable()
+notebook.popup_disable()</programlisting>
+        <para>The menu that appears holds the name of each tab, and switches to the tab which is selected.</para>
+        <para>An Action Area provides the ability to add any widget to the space on the left or right of the tabs in the Notebook. This can be done with the following methods:</para>
+        <programlisting>notebook.set_action_widget(widget, pack_type)</programlisting>
+        <para>The widget should be set to the name of the child widget being added. The pack_type should be set to one of the following:</para>
+        <programlisting>gtk.PACK_START
+gtk.PACK_END</programlisting>
+        <para>When using gtk.PACK_START, the Action Area is positioned before the first tab. gtk.PACK_END places the Action Area at the end of the tab row within the Notebook.</para>
+    </simplesect>
+    <simplesect>
+        <title>Signals</title>
+        <programlisting>"page-added"
+"page-removed"
+"switch-page"</programlisting>
+        <para>The "page-added" and "page-removed" signals emit when pages are added and removed from the Notebook widget. "switch-page" occurs when a user changes the page within the notebook.</para>
+    </simplesect>
+    <simplesect>
+        <title>Example</title>
+        <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class Notebook:
+    def __init__(self):
+        window = gtk.Window()
+        window.set_default_size(200, 200)
+        
+        notebook = gtk.Notebook()
+        for page in range(0, 3):
+            label = gtk.Label()
+            notebook.append_page(label)
+
+        window.connect("destroy", lambda w: gtk.main_quit())
+        
+        window.add(notebook)
+        window.show_all()
+
+Notebook()
+gtk.main()</programlisting>
+        <para>Download <ulink url="examples/notebook.py"><command>notebook.py</command></ulink></para>
+    </simplesect>
+</chapter>

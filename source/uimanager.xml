@@ -1,0 +1,89 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+
+<chapter id="uimanager">
+    <title>UIManager</title>
+    <para>The UIManager provides a way of creating menus and toolbars using an XML-like description. It allows for dynamically adding, removing and rearranging items within the interface. Utilising UIManager also allows for switching the application mode easily (for example from text to image editing).</para>
+    <simplesect>
+        <title>Constructor</title>
+        <programlisting>uimanager = gtk.UIManager()</programlisting>
+    </simplesect>
+    <simplesect>
+        <title>Methods</title>
+        <para>After construction of the UIManager, we need to load the interface string/file. If the menu and/or toolbar is relatively small in size, it may be better to include the interface definition with the remaining Python code. On the other hand, if the definition is large it may be helpful to include it in a separate file and have the UIManager read it in.</para>
+        <programlisting>merge_id = uimanager.add_ui_from_string(string)
+merge_id = uimanager.add_ui_from_file(file)</programlisting>
+        <para>The merge_id parameter allows us to remove the interface if necessary with:</para>
+        <programlisting>uimanager.remove_ui(merge_id)</programlisting>
+        <para>ActionGroup objects can be added to and removed from UIManager to allow access to menu items via the keyboard.</para>
+        <programlisting>uimanager.insert_action_group(actiongroup)
+uimanager.remove_action_group(actiongroup)</programlisting>
+        <para>To add tearoffs to the menus:</para>
+        <programlisting>uimanager.set_add_tearoffs(tearoffs)</programlisting>
+        <para>When the tearoffs argument is set to True, the menus will display a feature which allows them to be separated from the menubar and displayed in their own window.</para>
+    </simplesect>
+    <simplesect>
+        <title>Example</title>
+        <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class UIManager:
+    interface = """
+    &lt;ui&gt;
+        &lt;menubar name="MenuBar"&gt;
+            &lt;menu action="File"&gt;
+                &lt;menuitem action="New"/&gt;
+                &lt;menuitem action="Open"/&gt;
+                &lt;menuitem action="Save"/&gt;
+                &lt;menuitem action="Quit"/&gt;
+            &lt;/menu&gt;
+            &lt;menu action="Edit"&gt;
+                &lt;menuitem action="Preferences"/&gt;
+            &lt;/menu&gt;
+        &lt;/menubar&gt;
+    &lt;/ui&gt;
+    """
+
+    def __init__(self):
+        window = gtk.Window()
+        window.set_default_size(200, 200)
+        
+        vbox = gtk.VBox()
+        
+        uimanager = gtk.UIManager()
+        accelgroup = uimanager.get_accel_group()
+        window.add_accel_group(accelgroup)
+        
+        self.actiongroup = gtk.ActionGroup("UIManager Example")
+
+        self.actiongroup.add_actions([
+                                    ("New", gtk.STOCK_NEW, "_New", None, "Create a New Document"),
+                                    ("Open", gtk.STOCK_OPEN, "_Open", None, "Open an Existing Document"),
+                                    ("Save", gtk.STOCK_SAVE, "_Save", None, "Save the Current Document"),
+                                    ("Quit", gtk.STOCK_QUIT, "_Quit", None, "Quit the Application", self.quit_application),
+                                    ("File", None, "_File"), 
+                                    ("Preferences", gtk.STOCK_PREFERENCES, "_Preferences", None, "Edit the Preferences"),
+                                    ("Edit", "None", "_Edit")
+                                    ])
+        
+        uimanager.insert_action_group(self.actiongroup, 0)
+        uimanager.add_ui_from_string(self.interface)
+        
+        menubar = uimanager.get_widget("/MenuBar")
+        vbox.pack_start(menubar, False)
+        
+        window.connect("destroy", lambda w: gtk.main_quit())
+        
+        window.add(vbox)
+        window.show_all()
+    
+    def quit_application(self, widget):
+        gtk.main_quit()
+
+UIManager()
+gtk.main()</programlisting>
+        <para>Download <ulink url="examples/uimanager.py"><command>uimanager.py</command></ulink></para>
+    </simplesect>
+</chapter>

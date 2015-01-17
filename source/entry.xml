@@ -1,0 +1,96 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+
+<chapter id="entry">
+    <title>Entry</title>
+    <para>An Entry widget is the most common way of retrieving textual data from the user.</para>
+	<simplesect>
+	    <title>Constructor</title>
+	    <programlisting>entry = gtk.Entry(max_length)</programlisting>
+	    <para>The max_length argument is an integer value and can be set to limit the number of characters which can be entered into the Entry by the user. If you do not require this, it can be left out.</para>
+	</simplesect>
+	<simplesect>
+	    <title>Methods</title>
+	    <para>A common feature of the Entry widget is to set the text in the widget.</para>
+	    <programlisting>entry.set_text(text)</programlisting>
+	    <para>The most common function of an entry would be to retrieve the text which has been entered.</para>
+	    <programlisting>text = entry.get_text()</programlisting>
+	    <para>As seen at construction, we can limit the number of characters the Entry can take. This can also be done after construction with:</para>
+	    <programlisting>entry.set_max_length(max_length)</programlisting>
+	    <para>Entry widgets can also be used to retrieve passwords from the user. It is common practice to hide the characters typed into the entry to prevent revealing the password to a third party.</para>
+	    <programlisting>entry.set_visibility(visible)</programlisting>
+	    <para>When the visible parameter is set to False, the text inside the Entry will be masked.</para>
+	    <para>At some point in the application, you may wish to prevent the user from entering text into entry:</para>
+	    <programlisting>entry.set_editable(editable)</programlisting>
+	    <para>When editable is set to False, no text can be entered into the Entry. Text can still be selected by the user however.</para>
+	    <para>Retrieval of the number of characters currently entered into the Entry is possible with:</para>
+	    <programlisting>length = entry.get_text_length()</programlisting>
+	    <para>With new versions of GTK+, it is possible to use the Entry widget to display progress. This is similar to a Progress Bar widget and is commonly found in web browsers to indicate how much of a page download has been completed.</para>
+	    <para>The method to set how much of the progress which has been completed is:</para>
+	    <programlisting>entry.set_progress_fraction(fraction)</programlisting>
+	    <para>The fraction parameter is a number between 0.0 and 1.0, which indicates percentage completed. An example would be 0.25, indicating that 25% of the progress has been completed.</para>
+	    <para>The progress can also be retrieved with the call:</para>
+	    <programlisting>fraction = entry.get_progress_fraction()</programlisting>
+	    <para>Alternatively, we can pulse the progress to indicate activity. This can be done with:</para>
+	    <programlisting>entry.progress_pulse()</programlisting>
+	    <para>Each time .progress_pulse() is called, the pulse is changed.</para>
+	    <para>We can also change the amount used when pulsing with:</para>
+	    <programlisting>entry.set_progress_pulse_step(step)</programlisting>
+	    <para>The step value should be specified between 0.0 and 1.0. By default, this number is set to 0.1</para>
+	    <para>To set an EntryBuffer as the model for the Entry widget, the following call can be made:</para>
+	    <programlisting>entry.set_buffer(buffer)</programlisting>
+	</simplesect>
+	<simplesect>
+	    <title>Signals</title>
+	    <programlisting>"activate"
+"backspace"
+"move-cursor"</programlisting>
+        <para>The "activate" event is emitted when the Enter or Return key is pressed on the keyboard. Similarly, "backspace" is emitted when the backspace key is pressed. We can also emit a signal when the cursor is moved, via the arrow keys with "move-cursor".</para>
+    </simplesect>
+    <simplesect>
+        <title>Example</title>
+        <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class Entry:
+    def __init__(self):
+        window = gtk.Window()
+        vbox = gtk.VBox(False, 5)
+        
+        self.entry = gtk.Entry()
+        self.entry.set_text("PyGTK Tutorial")
+        self.check_editable = gtk.CheckButton("Entry text editable")
+        self.check_editable.set_active(True)
+        self.check_visible = gtk.CheckButton("Entry text visible")
+        self.check_visible.set_active(True)
+        
+        vbox.pack_start(self.entry, False, False, 0)
+        vbox.pack_start(self.check_editable, False, False, 0)
+        vbox.pack_start(self.check_visible, False, False, 0)
+        
+        window.connect("destroy", lambda w: gtk.main_quit())
+        self.check_editable.connect("toggled", self.editable)
+        self.check_visible.connect("toggled", self.visible)
+        
+        window.add(vbox)
+        window.show_all()
+    
+    def editable(self, widget):
+        if self.check_editable.get_active() == False:
+            self.entry.set_editable(False)
+        else:
+            self.entry.set_editable(True)
+    
+    def visible(self, widget):
+        if self.check_visible.get_active() == False:
+            self.entry.set_visibility(False)
+        else:
+            self.entry.set_visibility(True)
+
+Entry()
+gtk.main()</programlisting>
+        <para>Download <ulink url="examples/entry.py"><command>entry.py</command></ulink></para>
+    </simplesect>
+</chapter>

@@ -1,0 +1,302 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+
+<chapter id="textviewconstruction">
+    <title>TextView Construction</title>
+    <para>TextView widgets and their associated parts are some of the more powerful areas of PyGTK. Depending on your requirements, a TextView can be fairly simple to implement or can be very complex.</para>
+    <sect1 id="textview">
+        <title>TextView</title>
+        <para>The TextView is the frontend with which the user can add, edit and delete textual data. They are commonly used to edit multiple lines of text.</para>
+        <simplesect>
+            <title>Constructor</title>
+            <programlisting>textview = gtk.TextView(textbuffer)</programlisting>
+            <para>The textbuffer parameter is the name of a TextBuffer (which will be looked at in the next section).</para>
+        </simplesect>
+        <simplesect>
+            <title>Methods</title>
+            <para>We can change the buffer after construction of the TextView with the call:</para>
+            <programlisting>textview.set_buffer(textbuffer)</programlisting>
+            <para>When the TextView is created and no TextBuffer is specified, a TextBuffer is automatically created however is not accessible to us. This can be accessed with:</para>
+            <programlisting>textbuffer = textview.get_buffer()</programlisting>
+            <para>By default, text can be added, edited and removed from the TextView. We can disable this with:</para>
+            <programlisting>textview.set_editable(editable)</programlisting>
+            <para>When the editable argument is set to True, text may be added, edited and deleted within the TextView.</para>
+            <para>Preventing the text cursor from being displayed can be done with:</para>
+            <programlisting>textview.set_cursor_visible(cursor)</programlisting>
+            <para>When the cursor parameter is set to False, the text input cursor will not be displayed.</para>
+            <para>In some cases it may be useful to set the justification of the text:</para>
+            <programlisting>textview.set_justification(justification)</programlisting>
+            <para>The justification argument must be set to one of the following:</para>
+            <programlisting>gtk.JUSTIFY_LEFT
+gtk.JUSTIFY_RIGHT
+gtk.JUSTIFY_CENTER</programlisting>
+            <para>By default, the justification type is set to gtk.JUSTIFY_LEFT.</para>
+            <para>Another useful method is to retrieve the current justification setting from the TextView:</para>
+            <programlisting>justification = textview.get_justification()</programlisting>
+            <para>Another default setting of the TextView widget is long lines of text will continue horizontally until a break is entered. To wrap the text and prevent it going off the edges of the screen:</para>
+            <programlisting>textview.set_wrap_mode(mode)</programlisting>
+            <para>The mode argument must be set to one of the following items:</para>
+            <programlisting>gtk.WRAP_NONE
+gtk.WRAP_CHAR
+gtk.WRAP_WORD</programlisting>
+        </simplesect>
+    </sect1>
+    <sect1 id="textbuffer">
+        <title>TextBuffer</title>
+        <para>The TextBuffer is the core of the TextView widget, and is used to hold whatever text is being displayed in the TextView.</para>
+        <simplesect>
+            <title>Constructor</title>
+            <programlisting>textbuffer = gtk.TextBuffer(texttagtable)</programlisting>
+            <para>The table argument is the name of a TextTagTable widget created previously. If you do not wish to specify a table, leave this blank. The TextTagTable will be looked at in the forthcoming pages.</para>
+        </simplesect>
+        <simplesect>
+            <title>Methods</title>
+            <para>Alternatively, if no table is specified, one will be created with the TextBuffer. This can be accessed with:</para>
+            <programlisting>texttagtable = textbuffer.get_tag_table()</programlisting>
+            <para>Setting the text in the buffer can be set with the following method:</para>
+            <programlisting>textbuffer.set_text(text)</programlisting>
+            <para>Any text that is already in the buffer will be overwritten.</para>
+            <para>To append text to the buffer at a specific position:</para>
+            <programlisting>textbuffer.insert_text(iter, text)</programlisting>
+            <para>The iter argument is a TextIter created previously.</para>
+            <para>Another useful method is to insert text wherever the cursor may be currently positioned.</para>
+            <programlisting>textbuffer.insert_at_cursor(text)</programlisting>
+            <para>We can use TextBuffer to retrieve the number of characters and lines held in the TextBuffer:</para>
+            <programlisting>char_count = textbuffer.get_char_count()
+line_count = textbuffer.get_line_count()</programlisting>
+            <para>Another useful function will be to check when the contents of the buffer have been modified.</para>
+            <programlisting>modified = textbuffer.get_modified()</programlisting>
+            <para>This will return a True or False value depending on whether the contents have changed. This is useful prior to saving the text. To reset the value of modified use:</para>
+            <programlisting>textbuffer.set_modified(modified)</programlisting>
+        </simplesect>
+    </sect1>
+    <sect1 id="textiter">
+        <title>TextIter</title>
+        <para>A TextIter is used to specify a range within a TextBuffer. The TextIter widget is used to specify where methods should be applied (i.e. selecting a range of text and underlining it).</para>
+        <simplesect>
+            <title>Methods</title>
+            <para>To define the start and end iter of the entire text within a TextBuffer:</para>
+            <programlisting>start, end = textbuffer.get_bounds()</programlisting>
+            <para>Alternatively, we may want to retrieve the iter's of selected text:</para>
+            <programlisting>start, end = textbuffer.get_selection_bounds()</programlisting>
+            <para>TextIter's can also be created individually for the start and end:</para>
+            <programlisting>start = textbuffer.get_start_iter()
+end = textbuffer.get_end_iter()</programlisting>
+            <para>Using the TextIter, searches can be run on the buffer to locate textual matches. This can be done with one of the following calls:</para>
+            <programlisting>start.forward_search(text, flags, limit)
+end.backward_search(text, flags, limit)</programlisting>
+            <para>The start and end iters are used as the starting point of the search and move forwards/backwards depending on requirements. The text argument is the text which should be matched. The flags parameter can be set to one of the following:</para>
+            <programlisting>None
+gtk.TEXT_SEARCH_TEXT_ONLY
+gtk.TEXT_SEARCH_VISIBLE_ONLY</programlisting>
+            <para>The None value means that the search string must match exactly. Using gtk.TEXT_SEARCH_TEXT_ONLY will only search textual data, however may include hidden data such as Pixbufs included in the matches. Alternately, if gtk.TEXT_SEARCH_VISIBLE_ONLY is used, invisible text may be included in the results.</para>
+            <para>The final argument is the limit value, which can be set to 0 or higher. If the limit is 0, the search will run through all the text. A value other than 0 will mean that the search stops after the number of matches equals the limit.</para>
+        </simplesect>
+    </sect1>
+    <sect1 id="textmark">
+        <title>TextMark</title>
+        <para>TextMark's are similar to TextIter's, however they maintain location information across modifications.</para>
+        <simplesect>
+            <title>Methods</title>
+            <para>A TextBuffer contains two built-in marks; an insert mark (which is the position of the cursor) and the selection_bound mark. Both of them can be retrieve using:</para>
+            <programlisting>insert_mark = textbuffer.get_insert()
+selection_mark = textbuffer.get_selection_bound()</programlisting>
+            <para>By default, TextMark visibility is set to False. This can be changed with:</para>
+            <programlisting>textmark.set_visible(visible)</programlisting>
+        </simplesect>
+    </sect1>
+    <sect1 id="texttag">
+        <title>TextTag</title>
+        <para>TextTag's specify attributes which can be applied to text within in a TextBuffer. TextTag's belong to a TextTagTable.</para>
+        <simplesect>
+            <title>Constructor</title>
+            <programlisting>texttag = gtk.TextTag(name)</programlisting>
+            <para>The name value can be set to None (if the TextTag is to be anonymous), it can be left out to automatically create an anonymous tag or it can have a name specified. This allows for functions such as tag lookups.</para>
+        </simplesect>
+        <simplesect>
+            <title>Methods</title>
+            <para>After construction, we need to set the properties associated with that tag.</para>
+            <programlisting>texttag.set_property(name, value)</programlisting>
+            <para>Using .set_property, we can customise the text in a variety of ways. The following are some of the common styles applied to text:</para>
+            <itemizedlist>
+                <listitem>Background colour</listitem>
+                <listitem>Foreground color</listitem>
+                <listitem>Underline</listitem>
+                <listitem>Bold</listitem>
+                <listitem>Italics</listitem>
+                <listitem>Strikethrough</listitem>
+                <listitem>Justification</listitem>
+                <listitem>Size</listitem>
+                <listitem>Margins</listitem>
+                <listitem>Text wrapping</listitem>
+            </itemizedlist>
+        </simplesect>
+    </sect1>
+    <sect1 id="texttagtable">
+        <title>TextTagTable</title>
+        <para>A TextTagTable is used to hold a range of TextTag widgets. The tables can be shared between TextBuffer widgets to allow for consistent styles.</para>
+        <simplesect>
+            <title>Constructor</title>
+            <programlisting>texttagtable = gtk.TextTagTable()</programlisting>
+        </simplesect>
+        <simplesect>
+            <title>Methods</title>
+            <para>We can then add TextTag objects to the TextTagTable with the following method:</para>
+            <programlisting>texttagtable.add(texttag)</programlisting>
+            <para>They can also be removed:</para>
+            <programlisting>texttagtable.remove(texttag)</programlisting>
+            <para>Another useful operation would be to search the TextTagTable for tags:</para>
+            <programlisting>texttagtable.lookup(texttag)</programlisting>
+        </simplesect>
+    </sect1>
+    <sect1 id="textviewexamples">
+        <title>TextView Examples</title>
+        <simplesect>
+            <title>Basic Example</title>
+            <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class TextViewBasic:
+    def __init__(self):
+        window = gtk.Window()
+        window.set_default_size(-1, 350)
+        
+        vbox = gtk.VBox(False, 5)
+        scrolledwindow = gtk.ScrolledWindow()
+        scrolledwindow.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+        table = gtk.Table(3, 3, False)
+        
+        self.textview = gtk.TextView()
+        textbuffer = self.textview.get_buffer()
+        
+        check_editable = gtk.CheckButton("Editable")
+        check_editable.set_active(True)
+        check_cursor = gtk.CheckButton("Cursor Visible")
+        check_cursor.set_active(True)
+        radio_wrapnone = gtk.RadioButton(None, "No Wrapping")
+        radio_wrapchar = gtk.RadioButton(radio_wrapnone, "Character Wrapping")
+        radio_wrapword = gtk.RadioButton(radio_wrapnone, "Word Wrapping")
+        radio_justifyleft = gtk.RadioButton(None, "Justify Left")
+        radio_justifycenter = gtk.RadioButton(radio_justifyleft, "Justify Center")
+        radio_justifyright = gtk.RadioButton(radio_justifyleft, "Justify Right")
+        
+        table.attach(check_editable, 0, 1, 0, 1)
+        table.attach(check_cursor, 0, 1, 1, 2)
+        table.attach(radio_wrapnone, 1, 2, 0, 1)
+        table.attach(radio_wrapchar, 1, 2, 1, 2)
+        table.attach(radio_wrapword, 1, 2, 2, 3)
+        table.attach(radio_justifyleft, 2, 3, 0, 1)
+        table.attach(radio_justifycenter, 2, 3, 1, 2)
+        table.attach(radio_justifyright, 2, 3, 2, 3)
+        
+        window.connect("destroy", lambda w: gtk.main_quit())
+        check_editable.connect("toggled", self.toggle_editable)
+        check_cursor.connect("toggled", self.toggle_cursor)
+        radio_wrapnone.connect("toggled", self.configure_wrap, gtk.WRAP_NONE)
+        radio_wrapchar.connect("toggled", self.configure_wrap, gtk.WRAP_CHAR)
+        radio_wrapword.connect("toggled", self.configure_wrap, gtk.WRAP_WORD)
+        radio_justifyleft.connect("toggled", self.configure_justification, gtk.JUSTIFY_LEFT)
+        radio_justifycenter.connect("toggled", self.configure_justification, gtk.JUSTIFY_CENTER)
+        radio_justifyright.connect("toggled", self.configure_justification, gtk.JUSTIFY_RIGHT)
+        
+        window.add(vbox)
+        vbox.pack_start(scrolledwindow, True, True, 0)
+        vbox.pack_end(table, False, False, 0)
+        scrolledwindow.add(self.textview)
+        
+        window.show_all()
+    
+    def toggle_editable(self, widget):
+        self.textview.set_editable(widget.get_active())
+    
+    def toggle_cursor(self, widget):
+        self.textview.set_cursor_visible(widget.get_active())
+    
+    def configure_wrap(self, widget, wrap):
+        self.textview.set_wrap_mode(wrap)
+    
+    def configure_justification(self, widget, justification):
+        self.textview.set_justification(justification)
+
+TextViewBasic()
+gtk.main()</programlisting>
+            <para>Download <ulink url="examples/textviewbasic.py"><command>textviewbasic.py</command></ulink></para>
+        </simplesect>
+        <simplesect>
+            <title>Advanced Example</title>
+            <programlisting>#!/usr/bin/env python
+
+import gtk, pango
+
+class TextViewAdvanced:
+    def __init__(self):
+        window = gtk.Window()
+        window.set_default_size(-1, 350)
+        
+        vbox = gtk.VBox(False, 5)
+        scrolledwindow = gtk.ScrolledWindow()
+        scrolledwindow.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+        hbox = gtk.HBox(True, 5)
+        
+        texttagtable = gtk.TextTagTable()
+        self.textbuffer = gtk.TextBuffer(texttagtable)
+        self.textview = gtk.TextView(self.textbuffer)
+        self.textview.set_wrap_mode(gtk.WRAP_WORD)
+        
+        button_bold = gtk.Button("Bold", gtk.STOCK_BOLD)
+        button_italic = gtk.Button("Italic", gtk.STOCK_ITALIC)
+        button_underline = gtk.Button("Underline", gtk.STOCK_UNDERLINE)
+        
+        self.texttag_bold = gtk.TextTag("bold")
+        self.texttag_bold.set_property("weight", pango.WEIGHT_BOLD)
+        texttagtable.add(self.texttag_bold)
+        self.texttag_italic = gtk.TextTag("italic")
+        self.texttag_italic.set_property("style", pango.STYLE_ITALIC)
+        texttagtable.add(self.texttag_italic)
+        self.texttag_underline = gtk.TextTag("underline")
+        self.texttag_underline.set_property("underline", pango.UNDERLINE_SINGLE)
+        texttagtable.add(self.texttag_underline)
+        
+        hbox.pack_start(button_bold)
+        hbox.pack_start(button_italic)
+        hbox.pack_start(button_underline)
+        
+        window.connect("destroy", lambda w: gtk.main_quit())
+        button_bold.connect("clicked", self.bold_text)
+        button_italic.connect("clicked", self.italic_text)
+        button_underline.connect("clicked", self.underline_text)
+        
+        window.add(vbox)
+        vbox.pack_start(scrolledwindow, True, True, 0)
+        vbox.pack_start(hbox, False, False, 0)
+        scrolledwindow.add(self.textview)
+
+        file = open("gtk.txt", "r")
+        self.textbuffer.set_text(file.read())
+        file.close()
+        
+        window.show_all()
+    
+    def bold_text(self, widget):
+        if self.textbuffer.get_selection_bounds() != ():
+            start, end = self.textbuffer.get_selection_bounds()
+            self.textbuffer.apply_tag(self.texttag_bold, start, end)
+    
+    def italic_text(self, widget):
+        if self.textbuffer.get_selection_bounds() != ():
+            start, end = self.textbuffer.get_selection_bounds()
+            self.textbuffer.apply_tag(self.texttag_italic, start, end)
+    
+    def underline_text(self, widget):
+        if self.textbuffer.get_selection_bounds() != ():
+            start, end = self.textbuffer.get_selection_bounds()
+            self.textbuffer.apply_tag(self.texttag_underline, start, end)
+
+TextViewAdvanced()
+gtk.main()</programlisting>
+            <para>Download <ulink url="examples/textviewadvanced.py"><command>textviewadvanced.py</command></ulink></para>
+        </simplesect>
+    </sect1>
+</chapter>

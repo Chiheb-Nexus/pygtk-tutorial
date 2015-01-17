@@ -1,0 +1,114 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+
+<chapter id="calendar">
+    <title>Calendar</title>
+    <para>The calendar widget allows for simple displaying and retrieving of date information. It is a relatively powerful widget and can be manipulated in many ways.</para>
+	<simplesect>
+	    <title>Constructor</title>
+	    <programlisting>calendar = gtk.Calendar()</programlisting>
+	</simplesect>
+	<simplesect>
+	    <title>Methods</title>
+	    <para>Once we have setup our calendar, retrieving the date is as simple as using:</para>
+	    <programlisting>date = calendar.get_date()</programlisting>
+	    <para>This returns a list in the order of year, month, date. However, we can split them up into individual items with:</para>
+	    <programlisting>year, month, day = calendar.get_date()</programlisting>
+	    <para>Note: the month value returns the number of the month minus one. So for example, the number returned for January is 0, February is 1, etc. This works however, as if we create a Python list of month names, we can simply use the month number returned to access the list value.</para>
+	    <para>We can setup the calendar to have certain defaults after creation. To select a specific month and year on the calendar:</para>
+	    <programlisting>calendar.select_month(month, year)</programlisting>
+	    <para>Selecting a specific date is also possible:</para>
+	    <programlisting>calendar.select_day(day)</programlisting>
+	    <para>If no day is required, the day value should be set to zero.</para>
+	    <para>Days can also be marked and unmarked on the calendar. This is useful to mark an event that occurs on a specific day. Both actions can be done with:</para>
+	    <programlisting>calendar.mark_day(day)
+calendar.unmark_day(day)</programlisting>
+        <para>Finally, clearing all marks made on the calendar with:</para>
+        <programlisting>calendar.clear_marks()</programlisting>
+        <para>The Calendar widget can also be configured for multiple looks depending on your requirements:</para>
+        <programlisting>calendar.display_options(option)</programlisting>
+        <para>The option property can be set to any of these following options. If you require the use of more than one option, use the '|' character to separate them:</para>
+        <programlisting>gtk.CALENDAR_SHOW_HEADING
+gtk.CALENDAR_SHOW_DAY_NAMES
+gtk.CALENDAR_NO_MONTH_CHANGE
+gtk.CALENDAR_SHOW_WEEK_NUMBERS</programlisting>
+        <para>At times, you may wish to apply many changes to the calendar. Normally, this would cause the calendar to display many on screen changes. This can be changed:</para>
+        <programlisting>calendar.freeze()
+calendar.thaw()</programlisting>
+        <para>Before applying the changes to the calendar, use freeze(). Now, apply the changes and call thaw(). All changes to the calendar will now be viewable.</para>
+    </simplesect>
+	<simplesect>
+	    <title>Signals</title>
+	    <programlisting>"day-selected"
+"day-selected-double-click"
+"month-changed"
+"next-month"
+"next-year"
+"prev-month"
+"prev-year"</programlisting>
+        <para>The "day-selected" and "day-selected-double-click" are emitted when the user clicks or double clicks on a calendar date. "month-changed" is emitted when either the month or year values are changed. The "next-month", "next-year", "prev-month" and "prev-year" signals emit when the view is changed using the back and forward arrows.</para>
+	</simplesect>
+	<simplesect>
+	    <title>Example</title>
+	    <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class Calendar:
+    def __init__(self):
+        window = gtk.Window()
+        window.set_border_width(5)
+        
+        hbox = gtk.HBox(False, 5)
+        vbox = gtk.VBox(False, 5)
+        
+        self.calendar = gtk.Calendar()
+        self.calendar.set_property("show-heading", False)
+        self.calendar.set_property("show-day-names", False)
+        
+        check_heading = gtk.CheckButton("Show Month/Year Heading")
+        check_daynames = gtk.CheckButton("Show Day Names")
+        check_weeknumbers = gtk.CheckButton("Display Week Numbers")
+        check_nochange = gtk.CheckButton("Prevent Month/Year Changes")
+
+        window.connect("destroy", lambda w: gtk.main_quit())
+        self.calendar.connect("day-selected", self.date)
+        check_heading.connect("toggled", self.heading_toggle)
+        check_daynames.connect("toggled", self.daynames_toggle)
+        check_weeknumbers.connect("toggled", self.weeknumbers_toggle)
+        check_nochange.connect("toggled", self.nochange_toggle)
+
+        window.add(hbox)
+        hbox.pack_start(self.calendar, False, False, 0)
+        hbox.pack_start(vbox, False, False, 0)
+        vbox.pack_start(check_heading, False, False, 0)
+        vbox.pack_start(check_daynames, False, False, 0)
+        vbox.pack_start(check_weeknumbers, False, False, 0)
+        vbox.pack_start(check_nochange, False, False, 0)
+        
+        window.show_all()
+    
+    def date(self, widget):
+        date = self.calendar.get_date()
+        year, month, day = date
+        
+        print day, "/", month, "/", year
+    
+    def heading_toggle(self, widget):
+        self.calendar.set_property("show-heading", widget.get_active())
+    
+    def daynames_toggle(self, widget):
+        self.calendar.set_property("show-day-names", widget.get_active())
+    
+    def weeknumbers_toggle(self, widget):
+        self.calendar.set_property("show-week-numbers", widget.get_active())
+    
+    def nochange_toggle(self, widget):
+        self.calendar.set_property("no-month-change", widget.get_active())
+
+Calendar()
+gtk.main()</programlisting>
+        <para>Download <ulink url="examples/calendar.py"><command>calendar.py</command></ulink></para>
+    </simplesect>
+</chapter>

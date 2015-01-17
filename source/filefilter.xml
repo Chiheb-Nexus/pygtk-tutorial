@@ -1,0 +1,70 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+
+<chapter id="filefilter">
+    <title>FileFilter</title>
+    <para>The FileFilter object provides a way to filter files based on a set of predefined rules. It is commonly used in conjunction with file-selection widgets, to only allow selecting of files which are permitted. For example, a sound-editing application would realistically not allow image files to be opened or saved.</para>
+    <simplesect>
+        <title>Constructor</title>
+        <programlisting>filefilter = gtk.FileFilter()</programlisting>
+    </simplesect>
+    <simplesect>
+        <title>Methods</title>
+        <para>After construction of the FileFilter object, we can assign a human-readable name which appears when filtering the files. This is usually a name which describes the file types such as "Images", "Videos", "Saved Games", etc.</para>
+        <programlisting>filefilter.set_name(name)</programlisting>
+        <para>We can also retrieve the name set with:</para>
+        <programlisting>name = filefilter.get_name()</programlisting>
+        <para>After setting the name, specifying which files are to be filtered is required. This can be done in two ways:</para>
+        <programlisting>filter.add_pattern(pattern)
+filter.add_mime_type(mime_type)</programlisting>
+        <para>The .add_pattern() method is used to match the filename based on items such as extension, characters, numbers, ranges or any combination. To filter based on filename, we need to use special characters, a term which is known as globbing to match the filename to the pattern. These special characters are as follows:</para>
+        <itemizedlist>
+            <listitem>'*' - match any character. For example, *.mkv would take any filename, however only match against names with the .mkv extension.</listitem>
+            <listitem>'?' - match a single character. For example, t?m would match the filename specifically to the first and third characters in the pattern, but allow any match for the second character.</listitem>
+            <listitem>'[' and ']' - enclose a set of characters. For example, p[a-m]t would match the filename specifically to the first and third characters, but allow any match in the range of letters 'a' to 'm' for the second character.</listitem>
+            <listitem>'\' - escape the proceeding character. For example, we could use this to allow for matching a filename which has an asterisk or question mark in.</listitem>
+        </itemizedlist>
+        <para>The second method of .add_mime_type() uses the type of file to match rather than the filename. Each type of file has its own mime type which is commonly used to recognise file types on Unix-based systems, as opposed to Windows which recognises files based on file extension.</para>
+        <para>Finally, FileFilter objects are added to file-selection widgets (i.e. FileChooserDialog, FileChooserButton, FileChooserWidget) with:</para>
+        <programlisting>filewidget.add_filter(filter)</programlisting>
+        <para>The filter parameter should be set to the name of the FileFilter we specified at construction.</para>
+        <para>When the FileFilter is added to the file-selection widget, a ComboBox appears near the bottom-right corner allowing the selection of a particular type of file, as declared in the filters.</para>
+        <para>Note: It is important to remember that more than one pattern or mime type can be added to a filter, and more than one filter can be added to a file-selection widget. It should also be noted that when using a FileFilter, to display all files, a pattern must be declared, otherwise none will be displayed.</para>
+    </simplesect>
+    <simplesect>
+        <title>Example</title>
+        <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class FileFilter:
+    def __init__(self):
+        dialog = gtk.FileChooserDialog("Select a File", None, gtk.FILE_CHOOSER_ACTION_OPEN, (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL, gtk.STOCK_OPEN, gtk.RESPONSE_OK), None)
+        
+        filter_all = gtk.FileFilter()
+        filter_all.set_name("All Files")
+        filter_all.add_pattern("*")
+        
+        filter_images = gtk.FileFilter()
+        filter_images.set_name("Images")
+        filter_images.add_pattern("*.png")
+        filter_images.add_pattern("*.jpg")
+        filter_images.add_pattern("*.bmp")
+        
+        filter_sounds = gtk.FileFilter()
+        filter_sounds.set_name("Sounds")
+        filter_sounds.add_pattern("*.ogg")
+        filter_sounds.add_pattern("*.flac")
+        
+        dialog.add_filter(filter_all)
+        dialog.add_filter(filter_images)
+        dialog.add_filter(filter_sounds)
+        
+        dialog.run()
+        dialog.destroy()
+        
+FileFilter()</programlisting>
+        <para>Download <ulink url="examples/filefilter.py"><command>filefilter.py</command></ulink></para>
+    </simplesect>
+</chapter>

@@ -1,0 +1,63 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+
+<chapter id="ruler">
+    <title>Ruler</title>
+    <para>A ruler is a bar with a scale and associated marker which indicates the position of the mouse cursor. It is commonly used in word processors and image editing applications. There are two variants of a ruler, horizontal and vertical.</para>
+	<simplesect>
+	    <title>Constructor</title>
+	    <programlisting>ruler = gtk.HRuler()
+ruler = gtk.VRuler()</programlisting>
+	</simplesect>
+	<simplesect>
+	    <title>Ruler</title>
+	    <para>Once created, the scale of displayed on the ruler can be configured. By default, the ruler scale is in pixels, however options exist for inches and centimeters.</para>
+	    <programlisting>ruler.set_metric(metric)</programlisting>
+        <para>The metric value can be set to one of the following:</para>
+        <programlisting>gtk.PIXELS
+gtk.INCHES
+gtk.CENTIMETERS</programlisting>
+        <para>Another important feature of the ruler is the ability to set the scale. This includes setting the minimum, maximum, position and maximum size values. This can be done using the following:</para>
+        <programlisting>ruler.set_range(lower, upper, position, maximum_size)</programlisting>
+        <para>The lower value is the lowest value shown on the scale. The upper value is the highest value shown on the scale. The position is the default starting position of the marker. The maximum_size value is the maximum size of the ruler. All values entered into the ruler are floats.</para>
+    </simplesect>
+    <simplesect>
+        <title>Example</title>
+        <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class Ruler:
+    def __init__(self):
+        window = gtk.Window()
+        window.set_default_size(400, 400)
+        
+        table = gtk.Table(2, 2, False)
+        drawingarea = gtk.DrawingArea()
+        drawingarea.set_size_request(400, 400)
+        drawingarea.set_events(gtk.gdk.POINTER_MOTION_MASK | gtk.gdk.POINTER_MOTION_HINT_MASK)
+        hruler = gtk.HRuler()
+        hruler.set_range(0, 10, 0, 0)
+        vruler = gtk.VRuler()
+        vruler.set_range(0, 10, 0, 0)
+        
+        window.connect("destroy", lambda w: gtk.main_quit())
+        drawingarea.connect_object("motion-notify-event", self.motion_notify, hruler)
+        drawingarea.connect_object("motion-notify-event", self.motion_notify, vruler)
+        
+        window.add(table)
+        table.attach(hruler, 1, 2, 0, 1, gtk.EXPAND | gtk.FILL, gtk.FILL)
+        table.attach(vruler, 0, 1, 1, 2, gtk.FILL, gtk.EXPAND | gtk.FILL)
+        table.attach(drawingarea, 1, 2, 1, 2, gtk.FILL, gtk.FILL)
+        
+        window.show_all()
+        
+    def motion_notify(self, ruler, event):
+        ruler.emit("motion-notify-event", event)
+
+Ruler()
+gtk.main()</programlisting>
+        <para>Download <ulink url="examples/ruler.py"><command>ruler.py</command></ulink></para>
+    </simplesect>
+</chapter>

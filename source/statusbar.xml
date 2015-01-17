@@ -1,0 +1,76 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+
+<chapter id="statusbar">
+    <title>Statusbar</title>
+    <para>Statusbars are widgets which display textual data, usually about a process that has run in an application such as completing a file download or loading a webpage. Statusbars use the terms 'push' (add a message to the statusbar) and 'pop' (remove a message from the statusbar). Using this method, messages are stacked in a last-in, first-out order.</para>
+    <simplesect>
+        <title>Constructor</title>
+        <programlisting>statusbar = gtk.Statusbar()</programlisting>
+    </simplesect>
+    <simplesect>
+        <title>Methods</title>
+        <para>After creating the statusbar, we create the first context identifier.</para>
+        <programlisting>context_id = statusbar.get_context_id(description)</programlisting>
+        <para>The description parameter is simply a string of text identifying the message type.</para>
+        <para>Next, we can add a message to the statusbar using:</para>
+        <programlisting>message_id = statusbar.push(context_id, text)</programlisting>
+        <para>The context_id is the one we created earlier and the text is whatever we wish the statusbar to show. When adding the message, a message_id is generated. This can be used later to remove the message from the statusbar.</para>
+        <para>To remove the message which is highest in the stack with a specific context_id:</para>
+        <programlisting>statusbar.pop(context_id)</programlisting>
+        <para>Finally, we can remove messages with the method, using the context_id and message_id created previously:</para>
+        <programlisting>statusbar.remove_message(context_id, message_id)</programlisting>
+        <para>Using the .remove_message() method, we can remove any message in the stack.</para>
+        <para>On the right-hand side of the statusbar, there is a resize grip for adjusting the window size. By default this is enabled, however can be turned off:</para>
+        <programlisting>statusbar.set_has_resize_grip(has_grip)</programlisting>
+        <para>When the has_grip parameter is set to False, the resizing grip is not displayed.</para>
+    </simplesect>
+    <simplesect>
+        <title>Signals</title>
+        <programlisting>"text-pushed"
+"text-popped"</programlisting>
+        <para>The "text-pushed" signal is emitted when a new message is pushed onto the Statusbar. "text-popped" is emitted when text is popped or removed from the Statusbar.</para>
+    </simplesect>
+    <simplesect>
+        <title>Example</title>
+        <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class Statusbar:
+    def __init__(self):
+        self.count = 0
+    
+        window = gtk.Window()
+        vbox = gtk.VBox(False, 5)
+        hbox = gtk.HBox(True, 5)
+        
+        button_push = gtk.Button("Push Message")
+        button_pop = gtk.Button("Pop Message")
+        self.statusbar = gtk.Statusbar()
+        context = self.statusbar.get_context_id("example")
+
+        window.connect("destroy", lambda w: gtk.main_quit())
+        button_push.connect("clicked", self.push_message, context)
+        button_pop.connect("clicked", self.pop_message, context)
+
+        window.add(vbox)
+        vbox.pack_start(hbox, False, False, 0)
+        vbox.pack_start(self.statusbar, False, False, 0)
+        hbox.pack_start(button_push)
+        hbox.pack_start(button_pop)
+        window.show_all()
+    
+    def push_message(self, widget, context):
+        self.count += 1
+        self.statusbar.push(context, "Message number %s" % str(self.count))
+    
+    def pop_message(self, widget, context):
+        self.statusbar.pop(context)
+
+Statusbar()
+gtk.main()</programlisting>
+        <para>Download <ulink url="examples/statusbar.py"><command>statusbar.py</command></ulink></para>
+    </simplesect>
+</chapter>

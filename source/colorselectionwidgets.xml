@@ -1,0 +1,139 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+
+<chapter id="colorselectionwidgets">
+    <title>Color Selection Widgets</title>
+    <sect1 id="colorselection">
+        <title>ColorSelection</title>
+        <para>A ColorSelection widget provides way of selecting colours from a palette based on user clicks or values inputted. The widget is similar to a ColorSelectionDialog except it does not have its own window. This allows its to be inserted into applications rather than launched in its own window.</para>
+        <simplesect>
+            <title>Constructor</title>
+            <programlisting>colorselection = gtk.ColorSelection()</programlisting>
+        </simplesect>
+        <simplesect>
+            <title>Methods</title>
+            <para>In some cases, you may wish to allow the user to select the level of transparency (known as alpha) a colour may have. To enable the ColorSelection to have a alpha control:</para>
+            <programlisting>colorselection.set_has_opacity_control(Boolean)</programlisting>
+            <para>We can also set the widget to have a colour palette:</para>
+            <programlisting>colorselection.set_has_palette(Boolean)</programlisting>
+            <para>To retrieve the currently selected colour or alpha value:</para>
+            <programlisting>colorselection.get_current_color()
+colorselection.get_current_alpha()</programlisting>
+            <para>Alternatively, we can set the colour or alpha value to the ColorSelection:</para>
+            <programlisting>colorselection.set_current_color(gtk.gdk.Color(red, green, blue))
+colorselection.set_current_alpha(alpha)</programlisting>
+            <para>The red, green, blue and alpha argument values should be in the range of 0 and 65535.</para>
+        </simplesect>
+        <simplesect>
+            <title>Example</title>
+            <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class ColorSelection:
+    def __init__(self):
+        window = gtk.Window()
+        colorselection = gtk.ColorSelection()
+        
+        window.connect("destroy", lambda w: gtk.main_quit())
+        colorselection.connect("color-changed", self.color_selected)
+        
+        window.add(colorselection)
+        
+        window.show_all()
+    
+    def color_selected(self, widget):
+        print "Colour selected:", widget.get_current_color()
+
+ColorSelection()
+gtk.main()</programlisting>
+            <para>Download <ulink url="examples/colorselection.py"><command>colorselection.py</command></ulink></para>
+        </simplesect>
+    </sect1>
+    <sect1 id="colorselectiondialog">
+        <title>ColorSelectionDialog</title>
+        <para>A ColorSelectionDialog provides access to a ColorSelection widget via a dialog.</para>
+        <simplesect>
+            <title>Constructor</title>
+            <programlisting>colorselectiondialog = gtk.ColorSelectionDialog(title)</programlisting>
+            <para>The text parameter should be set to None or the text which will be displayed on the dialog window.</para>
+        </simplesect>
+        <simplesect>
+            <title>Methods</title>
+            <para>Alternatively, we can set the title on the dialog after its construction.</para>
+            <programlisting>colorselectiondialog.set_title(text)</programlisting>
+            <para>To be able to access the colour selection element, we need to retrieve it:</para>
+            <programlisting>selector = colorselectiondialog.get_color_selection()</programlisting>
+            <para>After you have created the colour selector, it can be used in exactly the same way as a ColorSelection.</para>
+        </simplesect>
+        <simplesect>
+            <title>Example</title>
+            <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class ColorSelectionDialog:
+    def __init__(self):
+        colorselectiondialog = gtk.ColorSelectionDialog("ColorSelectionDialog Example")
+        selector = colorselectiondialog.get_color_selection()
+        
+        response = colorselectiondialog.run()
+
+        if response == gtk.RESPONSE_OK:
+            print "Colour selected:", selector.get_current_color()
+        
+        colorselectiondialog.destroy()
+
+ColorSelectionDialog()</programlisting>
+            <para>Download <ulink url="examples/colorselectiondialog.py"><command>colorselectiondialog.py</command></ulink></para>
+        </simplesect>
+    </sect1>
+    <sect1 id="colorbutton">
+        <title>ColorButton</title>
+        <para>A ColorButton provides a convenient way of accessing a ColorSelectionDialog. The ColorButton handles accessing, displaying and retrieving the colour values from the dialog.</para>
+        <simplesect>
+            <title>Constructor</title>
+            <programlisting>colorbutton = gtk.ColorButton(gtk.gdk.Color(red, green, blue))</programlisting>
+            <para>The red, green and blue values are in the range of 0 to 65535 and are adjusted to set the default colour selected. Alternatively, no colour can be specified as default.</para>
+        </simplesect>
+        <simplesect>
+            <title>Methods</title>
+            <para>Setting the title of the dialog which appears upon clicking the button can be done using:</para>
+            <programlisting>colorbutton.set_title(text)</programlisting>
+            <para>To set the colour of the button after creation:</para>
+            <programlisting>colorbutton.set_color(gtk.gdk.Color(red, green, blue))</programlisting>
+            <para>Retrieve the colour from the button with the following method:</para>
+            <programlisting>colorbutton.get_color()</programlisting>
+            <para>To enable alpha colour values on the Color Button:</para>
+            <programlisting>colorbutton.set_use_alpha(boolean)</programlisting>
+            <para>When set_use_alpha is set to True, the alpha value can be retrieved with:</para>
+            <programlisting>colorbutton.get_alpha()</programlisting>
+        </simplesect>
+        <simplesect>
+            <title>Example</title>
+            <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class ColorButton:
+    def __init__(self):
+        window = gtk.Window()
+        window.set_default_size(200, -1)
+        colorbutton = gtk.ColorButton(gtk.gdk.Color(0, 0, 0))
+
+        window.connect("destroy", lambda w: gtk.main_quit())
+        colorbutton.connect("color-set", self.color_selected)
+        
+        window.add(colorbutton)
+        window.show_all()
+    
+    def color_selected(self, widget):
+        print "Colour selected:", widget.get_color()
+        
+ColorButton()
+gtk.main()</programlisting>
+            <para>Download <ulink url="examples/colorbutton.py"><command>colorbutton.py</command></ulink></para>
+        </simplesect>
+    </sect1>
+</chapter>

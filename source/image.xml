@@ -1,0 +1,70 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+
+<chapter id="image">
+    <title>Image</title>
+    <para>The image widget can hold a variety of image types, regardless of the format. The most common formats used are BMP, JPG, PNG, GIF, TIFF, XPM and SVG.</para>
+    <para>If the image specified can not be loaded or is corrupted, the Image widget will display a "missing" icon similar to those found in web browsers when an image can not be loaded.</para>
+	<simplesect>
+	    <title>Constructor</title>
+	    <programlisting>image = gtk.Image()</programlisting>
+	</simplesect>
+	<simplesect>
+	    <title>Methods</title>
+	    <para>The image is then loaded using one of the following methods:</para>
+	    <programlisting>image.set_from_pixbuf(pixbuf)
+image.set_from_pixmap(pixmap, mask)
+image.set_from_file(filename)
+image.set_from_image(image)
+image.set_from_stock(stock_image, size)
+image.set_from_icon_set(icon_set, size)
+image.set_from_animation(animation)</programlisting>
+        <para>Arguably, the most common methods used would be set_from_file and set_from_stock.</para>
+        <para>The .set_from_stock() and .set_from_icon_set() methods both can take a size argument. This size must be one of the following:</para>
+        <programlisting>gtk.ICON_SIZE_MENU
+gtk.ICON_SIZE_SMALL_TOOLBAR
+gtk.ICON_SIZE_LARGE_TOOLBAR
+gtk.ICON_SIZE_BUTTON
+gtk.ICON_SIZE_DND
+gtk.ICON_SIZE_DIALOG</programlisting>
+        <para>To remove the loaded image from the Image widget:</para>
+        <programlisting>image.clear()</programlisting>
+    </simplesect>
+    <simplesect>
+        <title>Example</title>
+        <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class Image:
+    def __init__(self):
+        window = gtk.Window()
+        window.set_default_size(800, 600)
+        
+        vbox = gtk.VBox(False, 5)
+        
+        scrolledwindow = gtk.ScrolledWindow()
+        
+        self.image = gtk.Image()       
+        self.button = gtk.FileChooserButton("Select Image", None)
+        
+        window.connect("destroy", lambda w: gtk.main_quit())
+        self.button.connect("file-set", self.load_image)
+        
+        window.add(vbox)
+        vbox.pack_start(scrolledwindow, True, True, 0)
+        vbox.pack_start(self.button, False, False, 0)
+        
+        scrolledwindow.add_with_viewport(self.image)
+        
+        window.show_all()
+    
+    def load_image(self, widget):
+        self.image.set_from_file(self.button.get_filename())
+
+Image()
+gtk.main()</programlisting>
+        <para>Download <ulink url="examples/image.py"><command>image.py</command></ulink> (also required: <ulink url="resources/gtk.png"><command>gtk.png</command></ulink>)</para>
+    </simplesect>
+</chapter>

@@ -1,0 +1,348 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+
+<chapter id="actionobjects">
+    <title>Action Objects</title>
+    <para>Action objects operate together to provide text, images, accelerators and callbacks for menus and toolbars within an application. Action objects are commonly used together with the <link linkend="uimanager">UIManager</link>.</para>
+    <sect1 id="action">
+        <title>Action</title>
+        <para>An Action object represents an action that can occur within an application.</para>
+        <simplesect>
+            <title>Constructor</title>
+            <programlisting>action = gtk.Action(name, label, tooltip, stock_id)</programlisting>
+            <para>The name argument is the identifier of the Action. The label parameter is the text which will be displayed on the widget, and the tooltip value is the text displayed when the mouse hovers over the widget. Finally, the stock_id argument can be set to an image from the <link linkend="stockimages">Stock Images</link> page.</para>
+        </simplesect>
+        <simplesect>
+            <title>Methods</title>
+            <para>Using the Action objects, menu widgets can be constructed using:</para>
+            <programlisting>action.create_menu_item()
+action.create_tool_item()</programlisting>
+            <para>To set an item as invisible or insensitive, we can use:</para>
+            <programlisting>action.set_visible(visible)
+action.set_sensitive(sensitive)</programlisting>
+            <para>When the visible or sensitive parameters are set to False, the item will either be invisible to the user to unable to receive user input.</para>
+            <para>To prevent having to duplicate functionality, it is possible to connect standard widgets such as buttons to the Action object via a proxy.</para>
+            <programlisting>action.connect_proxy(widget)</programlisting>
+            <para>There is also a function to disconnect proxies.</para>
+            <programlisting>action.disconnect_proxy(widget)</programlisting>
+        </simplesect>
+        <simplesect>
+            <title>Example</title>
+            <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class Action:
+    def __init__(self):
+        window = gtk.Window()
+        window.set_default_size(300, -1)
+        vbox = gtk.VBox()
+        
+        menubar = gtk.MenuBar()
+        menu_file = gtk.Menu()
+        
+        action_file = gtk.Action("File", "_File", None, None)
+        action_new = gtk.Action("New", "_New", "New Document", gtk.STOCK_NEW)
+        action_open = gtk.Action("Open", "_Open", "Open Document", gtk.STOCK_OPEN)
+        action_save = gtk.Action("Save", "_Save", "Save Document", gtk.STOCK_SAVE)
+        
+        actiongroup = gtk.ActionGroup("actions")
+        actiongroup.add_action(action_file)
+        actiongroup.add_action(action_new)
+        actiongroup.add_action(action_open)
+        actiongroup.add_action(action_save)
+
+        menuitem_file = action_file.create_menu_item()
+        menubar.append(menuitem_file)
+        menuitem_file.set_submenu(menu_file)
+        
+        menuitem_new = action_new.create_menu_item()
+        menu_file.add(menuitem_new)
+        menuitem_open = action_open.create_menu_item()
+        menu_file.add(menuitem_open)
+        menuitem_save = action_save.create_menu_item()
+        menu_file.add(menuitem_save)
+        
+        toolbar = gtk.Toolbar()
+        toolitem_new = action_new.create_tool_item()
+        toolbar.add(toolitem_new)
+        toolitem_open = action_open.create_tool_item()
+        toolbar.add(toolitem_open)
+        toolitem_save = action_save.create_tool_item()
+        toolbar.add(toolitem_save)
+        
+        window.connect("destroy", lambda w: gtk.main_quit())
+        action_new.connect("activate", self.item_activated)
+        action_open.connect("activate", self.item_activated)
+        action_save.connect("activate", self.item_activated)
+        
+        window.add(vbox)
+        vbox.pack_start(menubar, False)
+        vbox.pack_start(toolbar, False)
+        window.show_all()
+    
+    def item_activated(self, widget):
+        print "Item activated"
+
+Action()
+gtk.main()</programlisting>
+            <para>Download <ulink url="examples/action.py"><command>action.py</command></ulink></para>
+        </simplesect>
+    </sect1>
+    <sect1 id="toggleaction">
+        <title>ToggleAction</title>
+        <para>The ToggleAction object allows for the construction of ToggleButton widgets. A ToggleButton is similar to a normal Button widget, however it operates in two states; pressed and unpressed.</para>
+        <simplesect>
+            <title>Constructor</title>
+            <programlisting>toggleaction = gtk.ToggleAction(name, label, tooltip, stock_id)</programlisting>
+            <para>The name argument is the identifier of the Action. The label parameter is the text which will be displayed on the widget, and the tooltip value is the text displayed when the mouse hovers over the widget. Finally, the stock_id argument can be set to an image from the <link linkend="stockimages">Stock Images</link> page.</para>
+        </simplesect>
+        <simplesect>
+            <title>Methods</title>
+            <para>Note: The ToggleAction object can also use any methods specified on the <link linkend="action">Action</link> object page.</para>
+            <para>To set an item as active, the following method can be used.</para>
+            <programlisting>toggleaction.set_active(active)</programlisting>
+            <para>When active is set to True, the ToggleAction will be in the pressed state.</para>
+            <para>To retrieve the state of a ToggleAction, we can use:</para>
+            <programlisting>active = toggleaction.get_active()</programlisting>
+            <para>The .get_active method will return True if the ToggleAction is currently selected. If not selected, False will be returned.</para>
+            <para>It is possible to draw the ToggleAction objects as RadioAction's, to enable the selection of more than one item per group. This can be done with:</para>
+            <programlisting>toggleaction.set_draw_as_radio(radio)</programlisting>
+            <para>The radio parameter should be set to True if the Radio-style is required.</para>
+        </simplesect>
+        <simplesect>
+            <title>Example</title>
+            <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class RadioAction:
+    def __init__(self):
+        window = gtk.Window()
+        window.set_default_size(300, -1)
+        vbox = gtk.VBox()
+        
+        menubar = gtk.MenuBar()
+        menu_file = gtk.Menu()
+        
+        action_file = gtk.Action("File", "_File", None, None)
+        action_new = gtk.ToggleAction("New", "_New", "New Document", gtk.STOCK_NEW)
+        action_open = gtk.ToggleAction("Open", "_Open", "Open Document", gtk.STOCK_OPEN)
+        action_save = gtk.ToggleAction("Save", "_Save", "Save Document", gtk.STOCK_SAVE)
+        action_new.set_active(True)
+        
+        actiongroup = gtk.ActionGroup("actions")
+        actiongroup.add_action(action_file)
+        actiongroup.add_action(action_new)
+        actiongroup.add_action(action_open)
+        actiongroup.add_action(action_save)
+
+        menuitem_file = action_file.create_menu_item()
+        menubar.append(menuitem_file)
+        menuitem_file.set_submenu(menu_file)
+        
+        menuitem_new = action_new.create_menu_item()
+        menu_file.add(menuitem_new)
+        menuitem_open = action_open.create_menu_item()
+        menu_file.add(menuitem_open)
+        menuitem_save = action_save.create_menu_item()
+        menu_file.add(menuitem_save)
+        
+        toolbar = gtk.Toolbar()
+        toolitem_new = action_new.create_tool_item()
+        toolbar.add(toolitem_new)
+        toolitem_open = action_open.create_tool_item()
+        toolbar.add(toolitem_open)
+        toolitem_save = action_save.create_tool_item()
+        toolbar.add(toolitem_save)
+        
+        window.connect("destroy", lambda w: gtk.main_quit())
+        action_new.connect("activate", self.item_activated)
+        action_open.connect("activate", self.item_activated)
+        action_save.connect("activate", self.item_activated)
+        
+        window.add(vbox)
+        vbox.pack_start(menubar, False)
+        vbox.pack_start(toolbar, False)
+        window.show_all()
+    
+    def item_activated(self, widget):
+        print "Item activated"
+
+RadioAction()
+gtk.main()</programlisting>
+            <para>Download <ulink url="examples/toggleaction.py"><command>toggleaction.py</command></ulink></para>
+        </simplesect>
+    </sect1>
+    <sect1 id="radioaction">
+        <title>RadioAction</title>
+        <para>The RadioAction object allows for the construction of RadioButton widgets. A RadioButton is combined in a group with other RadioButton widgets, of which only one in the group can be activated at a single time.</para>
+        <simplesect>
+            <title>Constructor</title>
+            <programlisting>radioaction = gtk.RadioAction(name, label, tooltip, stock_id, value)</programlisting>
+            <para>The name argument is the identifier of the Action. The label parameter is the text which will be displayed on the widget, and the tooltip value is the text displayed when the mouse hovers over the widget. Finally, the stock_id argument can be set to an image from the <link linkend="stockimages">Stock Images</link> page. The value parameter is set to a number of zero or high, with each number in the group of RadioAction widgets being unique.</para>
+        </simplesect>
+        <simplesect>
+            <title>Methods</title>
+            <para>Note: The ToggleAction object can also use any methods specified on the <link linkend="action">Action</link> object page.</para>
+            <para>To set the group which the RadioAction belongs, use the method:</para>
+            <programlisting>radioaction.set_group(radioaction2)</programlisting>
+            <para>The radioaction2 parameter should be set to the name of another RadioAction object which the new one relates to. The first RadioAction in the group does not need this method, however all subsequent RadioAction objects require it to work correctly.</para>
+            <para>To retrieve the state of a RadioAction, we can use:</para>
+            <programlisting>active = radioaction.get_active()</programlisting>
+            <para>The .get_active method will return True if the RadioAction is currently selected. If not selected, False will be returned.</para>
+            <para>Alternatively, to set a particular RadioAction as the active one, by setting the active parameter to True:</para>
+            <programlisting>radioaction.set_active(active)</programlisting>
+        </simplesect>
+        <simplesect>
+            <title>Example</title>
+            <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class RadioAction:
+    def __init__(self):
+        window = gtk.Window()
+        window.set_default_size(300, -1)
+        vbox = gtk.VBox()
+        
+        menubar = gtk.MenuBar()
+        menu_file = gtk.Menu()
+        
+        action_file = gtk.Action("File", "_File", None, None)
+        action_new = gtk.RadioAction("New", "_New", "New Document", gtk.STOCK_NEW, 0)
+        action_open = gtk.RadioAction("Open", "_Open", "Open Document", gtk.STOCK_OPEN, 1)
+        action_save = gtk.RadioAction("Save", "_Save", "Save Document", gtk.STOCK_SAVE, 2)
+        action_new.set_active(True)
+        action_open.set_group(action_new)
+        action_save.set_group(action_new)
+        
+        actiongroup = gtk.ActionGroup("actions")
+        actiongroup.add_action(action_file)
+        actiongroup.add_action(action_new)
+        actiongroup.add_action(action_open)
+        actiongroup.add_action(action_save)
+
+        menuitem_file = action_file.create_menu_item()
+        menubar.append(menuitem_file)
+        menuitem_file.set_submenu(menu_file)
+        
+        menuitem_new = action_new.create_menu_item()
+        menu_file.add(menuitem_new)
+        menuitem_open = action_open.create_menu_item()
+        menu_file.add(menuitem_open)
+        menuitem_save = action_save.create_menu_item()
+        menu_file.add(menuitem_save)
+        
+        toolbar = gtk.Toolbar()
+        toolitem_new = action_new.create_tool_item()
+        toolbar.add(toolitem_new)
+        toolitem_open = action_open.create_tool_item()
+        toolbar.add(toolitem_open)
+        toolitem_save = action_save.create_tool_item()
+        toolbar.add(toolitem_save)
+        
+        window.connect("destroy", lambda w: gtk.main_quit())
+        action_new.connect("activate", self.item_activated)
+        action_open.connect("activate", self.item_activated)
+        action_save.connect("activate", self.item_activated)
+        
+        window.add(vbox)
+        vbox.pack_start(menubar, False)
+        vbox.pack_start(toolbar, False)
+        window.show_all()
+    
+    def item_activated(self, widget):
+        print "Item activated"
+
+RadioAction()
+gtk.main()</programlisting>
+            <para>Download <ulink url="examples/radioaction.py"><command>radioaction.py</command></ulink></para>
+        </simplesect>
+    </sect1>
+    <sect1 id="actiongroup">
+        <title>ActionGroup</title>
+        <para>ActionGroup objects provide a way to collect <link linkend="action">Action</link> objects into groups. This provides a way to keep control over Action objects visibilty and sensitivity. An example could be a drawing application, which keeps all image manipulation functionality within a single group. Another example would be to keep all standard application functionality such as creating, opening and saving documents within a single ActionGroup.</para>
+        <simplesect>
+            <title>Constructor</title>
+            <programlisting>actiongroup = gtk.ActionGroup(name)</programlisting>
+            <para>The name parameter should be set to identify the group. It is recommended to name the group after its functionality, however the name must be unique.</para>
+        </simplesect>
+        <simplesect>
+            <title>Methods</title>
+            <para>We can add an <link linkend="action">Action</link> object to the ActionGroup with:</para>
+            <programlisting>actiongroup.add_action(action)</programlisting>
+            <para>Multiple actions can also be added:</para>
+            <programlisting>actiongroup.add_actions(actions, data)</programlisting>
+            <para>The actions parameter should be set to the following values within a tuple:</para>
+            <itemizedlist>
+                <listitem>name - the name of the Action</listitem>
+                <listitem>stock-id - the <link linkend="stockimages">Stock Image</link> used on the widget</listitem>
+                <listitem>label - the text displayed on the item</listitem>
+                <listitem>accelerator - the mnemonic key used to access the item via the keyboard</listitem>
+                <listitem>tooltip - text displayed when the mouse cursor hovers over the item</listitem>
+                <listitem>callback - the function called when the Action is activated</listitem>
+            </itemizedlist>
+            <para>Finally, the data parameter is a piece of information passed to the function when the Action is activated. This can be set to None if no data is required to be passed.</para>
+            <para>Using .add_actions adds standard button items. It is also possible to add toggle and radio items with the following calls:</para>
+            <programlisting>actiongroup.add_toggle_actions(actions, data)
+actiongroup.add_radio_actions(actions, data)</programlisting>
+            <para>The name parameter is the name of the item, which was defined when adding the item to the ActionGroup.</para>
+            <para>To remove actions from the group:</para>
+            <programlisting>actiongroup.remove_action(action)</programlisting>
+            <para>The usage of ActionGroup objects allows for manipulation of all the objects in that group. Two useful functions are:</para>
+            <programlisting>actiongroup.set_sensitive(sensitive)
+actiongroup.set_visible(visible)</programlisting>
+            <para>The sensitive and visible parameters both take Boolean values. When sensitive is set to False, the items in the group are set to be "greyed-out". Setting visible to False removes the items from view.</para>
+            <para>We can also retrieve the state of the group sensitivity and visibility with the following calls:</para>
+            <programlisting>sensitive = actiogroup.get_sensitive()
+visibility = actiongroup.get_visible()</programlisting>
+        </simplesect>
+        <simplesect>
+            <title>Example</title>
+            <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class ActionGroup:
+    def __init__(self):
+        window = gtk.Window()
+        window.set_default_size(200, -1)
+        
+        accelgroup = gtk.AccelGroup()
+        window.add_accel_group(accelgroup)
+        
+        actiongroup = gtk.ActionGroup("actiongroup")
+        actiongroup.add_actions([
+                               ("new", gtk.STOCK_NEW, "New", None, "Create a dew document", self.button_clicked),
+                               ("open", gtk.STOCK_OPEN, "Open", None, "Open an existing document", self.button_clicked),
+                               ("save", gtk.STOCK_SAVE, "Save", None, "Save the current document", self.button_clicked)
+                               ])
+                               
+        newaction = actiongroup.get_action("new")
+        newtoolitem = newaction.create_tool_item()
+        openaction = actiongroup.get_action("open")
+        opentoolitem = openaction.create_tool_item()
+        saveaction = actiongroup.get_action("save")
+        savetoolitem = saveaction.create_tool_item()
+        
+        toolbar = gtk.Toolbar()
+        toolbar.insert(newtoolitem, 0)
+        toolbar.insert(opentoolitem, 1)
+        toolbar.insert(savetoolitem, 2)
+        
+        window.connect("destroy", lambda w: gtk.main_quit())
+        
+        window.add(toolbar)
+        window.show_all()
+    
+    def button_clicked(self, widget):
+        print "%s toolitem clicked" % widget.get_property("label")
+
+ActionGroup()
+gtk.main()</programlisting>
+            <para>Download <ulink url="examples/actiongroup.py"><command>actiongroup.py</command></ulink></para>
+        </simplesect>
+    </sect1>
+</chapter>

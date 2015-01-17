@@ -1,0 +1,545 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+
+<chapter id="cellrendererwidgets">
+    <title>CellRenderer Widgets</title>
+    <para>CellRenderer widgets are used to display information within widgets such as the TreeView, ComboBox or ComboBoxEntry. They work closely with the associated widgets and are very powerful, with lots of configuration options for displaying a large amount of data in different ways. There are seven CellRenderer widgets which can be used for different purposes:</para>
+    <itemizedlist>
+        <listitem>CellRendererText</listitem>
+        <listitem>CellRendererToggle</listitem>
+        <listitem>CellRendererPixbuf</listitem>
+        <listitem>CellRendererCombo</listitem>
+        <listitem>CellRendererProgress</listitem>
+        <listitem>CellRendererSpinner</listitem>
+        <listitem>CellRendererSpin</listitem>
+        <listitem>CellRendererAccel</listitem>
+    </itemizedlist>
+    <para>Each of the CellRenderer variants are similar in style and purpose to the widgets which can be attached to a Window.</para>
+    <sect1 id="cellrenderertext">
+        <title>CellRendererText</title>
+        <para>The CellRendererText object controls rendering of text into a number of widgets. This allows for different fonts, sizes, text alignment, font weight and many more attributes.</para>
+        <simplesect>
+            <title>Constructor</title>
+            <programlisting>cellrenderertext = gtk.CellRendererText()</programlisting>
+        </simplesect>
+        <simplesect>
+            <title>Methods</title>
+            <para>By default, text in CellRendererText widgets is not editable. This can be changed with:</para>
+            <programlisting>cellrenderertext.set_property("editable", editable)</programlisting>
+            <para>When the editable parameter is set to True, the cell can be double-clicked and text can be entered. Pressing Enter/Return or clicking outside of the cell stops the editing process.</para>
+        </simplesect>
+        <simplesect>
+            <title>Signals</title>
+            <para>A CellRenderer allows for the following two signals:</para>
+            <programlisting>"editing-canceled"
+"editing-started"</programlisting>
+            <para>Both of the signals listed are emitted only when the editable property of the cell is set to True.</para>
+        </simplesect>
+        <simplesect>
+            <title>Example</title>
+            <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class CellRendererText:
+    def __init__(self):
+        window = gtk.Window()
+        window.set_default_size(200, 200)
+        
+        liststore = gtk.ListStore(str, str)
+        liststore.append(["Fedora", "http://fedoraproject.org/"])
+        liststore.append(["Slackware", "http://www.slackware.com/"])
+        liststore.append(["Sidux", "http://sidux.com/"])
+        
+        treeview = gtk.TreeView(liststore)
+        column_text = gtk.TreeViewColumn("Text")
+        column_editabletext = gtk.TreeViewColumn("Editable Text")
+        treeview.append_column(column_text)
+        treeview.append_column(column_editabletext)
+        
+        cellrenderer_text = gtk.CellRendererText()
+        column_text.pack_start(cellrenderer_text, False)
+        column_text.add_attribute(cellrenderer_text, "text", 0)
+        
+        cellrenderer_editabletext = gtk.CellRendererText()
+        cellrenderer_editabletext.set_property("editable", True)
+        column_editabletext.pack_start(cellrenderer_editabletext, False)
+        column_editabletext.add_attribute(cellrenderer_editabletext, "text", 1)
+        
+        window.connect("destroy", lambda w: gtk.main_quit())
+        cellrenderer_editabletext.connect("edited", self.text_edited, liststore)
+
+        window.add(treeview)
+        window.show_all()
+    
+    def text_edited(self, widget, path, text, model):
+        model[path][1] = text
+
+CellRendererText()
+gtk.main()</programlisting>
+            <para>Download <ulink url="examples/cellrenderertext.py"><command>cellrenderertext.py</command></ulink></para>
+        </simplesect>
+    </sect1>
+    <sect1 id="cellrenderertoggle">
+        <title>CellRendererToggle</title>
+        <para>A CellRendererToggle draws a Check Button widget inside a TreeView. Its allows two states of operation, ticked and unticked. When the user clicks on the CellRendererToggle, the state of the object changes.</para>
+        <para>Note: The CellRendererToggle is very similar in appearance to a Check Button / Radio Button (depending on configuration), however it is a little more complex in getting the correct functionality.</para>
+        <simplesect>
+            <title>Constructor</title>
+            <programlisting>cellrenderertoggle = gtk.CellRendererToggle()</programlisting>
+        </simplesect>
+        <simplesect>
+            <title>Methods</title>
+            <para>We can set whether the CellRendererToggle is ticked or not in code with:</para>
+            <programlisting>cellrenderertoggle.set_active(state)</programlisting>
+            <para>When the Boolean value is set to True, the CellRendererToggle will display a tick. When False is passed, no tick is displayed.</para>
+            <para>Retrieval of the state of the CellRendererToggle can be done using the method:</para>
+            <programlisting>state = cellrenderertoggle.get_active()</programlisting>
+            <para>In some cases it may be useful to draw Radio Button-style widgets as opposed to Check Button-style. This can be changed using:</para>
+            <programlisting>cellrenderertoggle.set_radio(radio)</programlisting>
+            <para>By default, this value is False.</para>
+            <para>The default setting is that all CellRendererToggle widgets are set to not active. To specify as active use:</para>
+            <programlisting>cellrenderertoggle.set_property("active", active)</programlisting>
+            <para>When the active parameter is set to True, the cell will display a tick.</para>
+        </simplesect>
+        <simplesect>
+            <title>Signals</title>
+            <programlisting>"toggled"</programlisting>
+            <para>When the cell is clicked, the "toggled" signal is emitted to indicate the change in state.</para>
+        </simplesect>
+        <simplesect>
+            <title>Example</title>
+            <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class CellRendererToggle:
+    def __init__(self):
+        window = gtk.Window()
+        window.set_default_size(200, 200)
+        
+        liststore = gtk.ListStore(str, bool)
+        liststore.append(["Debian", False])
+        liststore.append(["OpenSuse", True])
+        liststore.append(["Fedora", False])
+        
+        treeview = gtk.TreeView(liststore)
+        column_text = gtk.TreeViewColumn("Text")
+        column_toggle = gtk.TreeViewColumn("Toggle")
+        treeview.append_column(column_text)
+        treeview.append_column(column_toggle)
+        
+        cellrenderer_text = gtk.CellRendererText()
+        column_text.pack_start(cellrenderer_text, False)
+        column_text.add_attribute(cellrenderer_text, "text", 0)
+        
+        cellrenderer_toggle = gtk.CellRendererToggle()
+        column_toggle.pack_start(cellrenderer_toggle, True)
+        column_toggle.add_attribute(cellrenderer_toggle, "active", 1)
+        
+        window.connect("destroy", lambda w: gtk.main_quit())
+        cellrenderer_toggle.connect("toggled", self.cell_toggled, liststore)
+        
+        window.add(treeview)
+        window.show_all()
+    
+    def cell_toggled(self, widget, path, model):
+        model[path][1] = not model[path][1]
+
+CellRendererToggle()
+gtk.main()</programlisting>
+            <para>Download <ulink url="examples/cellrenderertoggle.py"><command>cellrenderertoggle.py</command></ulink></para>
+        </simplesect>
+    </sect1>
+    <sect1 id="cellrendererpixbuf">
+        <title>CellRendererPixbuf</title>
+        <para>The CellRendererPixbuf object allows images to be rendered into a TreeView widget.</para>
+        <simplesect>
+            <title>Constructor</title>
+            <programlisting>cellrendererpixbuf = gtk.CellRendererPixbuf()</programlisting>
+        </simplesect>
+        <simplesect>
+            <title>Methods</title>
+            <para>To specify a <link linkend="stockimages">Stock Image</link> to display in the cell, use:</para>
+            <programlisting>cellrendererpixbuf.set_property("stock-id", stock-id)</programlisting>
+            <para>Alternatively, a pixbuf can be rendered into the cell. Any image loaded from file, can be converted to a pixbuf and displayed using:</para>
+            <programlisting>cellrendererpixbuf.set_property("pixbuf", pixbuf)</programlisting>
+        </simplesect>
+        <simplesect>
+            <title>Example</title>
+            <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class CellRendererPixbuf:
+    def __init__(self):
+        window = gtk.Window()
+        window.set_default_size(200, 200)
+        
+        liststore = gtk.ListStore(str, str)
+        liststore.append(["New", gtk.STOCK_NEW])
+        liststore.append(["Open", gtk.STOCK_OPEN])
+        liststore.append(["Save", gtk.STOCK_SAVE])
+        
+        treeview = gtk.TreeView(liststore)
+        column_text = gtk.TreeViewColumn("Text")
+        column_pixbuf = gtk.TreeViewColumn("Image")
+        treeview.append_column(column_text)
+        treeview.append_column(column_pixbuf)
+        
+        cellrenderer_text = gtk.CellRendererText()
+        column_text.pack_start(cellrenderer_text, False)
+        column_text.add_attribute(cellrenderer_text, "text", 0)
+        
+        cellrenderer_pixbuf = gtk.CellRendererPixbuf()
+        column_pixbuf.pack_start(cellrenderer_pixbuf, False)
+        column_pixbuf.add_attribute(cellrenderer_pixbuf, "stock-id", 1)
+        
+        window.connect("destroy", lambda w: gtk.main_quit())
+
+        window.add(treeview)
+        window.show_all()
+
+CellRendererPixbuf()
+gtk.main()</programlisting>
+            <para>Download <ulink url="examples/cellrendererpixbuf.py"><command>cellrendererpixbuf.py</command></ulink></para>
+        </simplesect>
+    </sect1>
+    <sect1 id="cellrenderercombo">
+        <title>CellRendererCombo</title>
+        <para>Using the CellRendererCombo, a ComboBox-style and ComboBoxEntry-style object can be rendered into a TreeView. This allows selection of items from a list within a TreeView.</para>
+        <simplesect>
+            <title>Constructor</title>
+            <programlisting>cellrenderercombo = gtk.CellRendererCombo()</programlisting>
+        </simplesect>
+        <simplesect>
+            <title>Methods</title>
+            <para>After construction of the CellRendererCombo, a data store needs to be attached.</para>
+            <programlisting>cellrenderercombo.set_property("model", model)</programlisting>
+            <para>The model parameter is the name of a <link linkend="liststore">ListStore</link> which will be used to hold data for the Combo.</para>
+            <para>We also need to specify which column within the ListStore will be accessed by the Combo.</para>
+            <programlisting>cellrenderercombo.set_property("column", column)</programlisting>
+            <para>The column parameter is the number of the column within the ListStore. Remember that the first column number is 0.</para>
+            <para>A CellRendererCombo can operate in two modes. It can be used with and without an associated Entry widget.</para>
+            <programlisting>cellrenderercombo.set_property("has-entry", entry)</programlisting>
+            <para>When the entry property is set to False, the CellRendererCombo can not accept any textual input from the user.</para>
+        </simplesect>
+        <simplesect>
+            <title>Example</title>
+            <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class CellRendererCombo:
+    def __init__(self):
+        window = gtk.Window()
+        window.set_default_size(200, 200)
+        
+        liststore_manufacturers = gtk.ListStore(str)
+        manufacturers = ["Sony", "LG", "Panasonic", "Toshiba", "Nokia", "Samsung"]
+        for item in manufacturers:
+            liststore_manufacturers.append([item])
+        
+        liststore_hardware = gtk.ListStore(str, str)
+        liststore_hardware.append(["Television", "Samsung"])
+        liststore_hardware.append(["Mobile Phone", "LG"])
+        liststore_hardware.append(["DVD Player", "Sony"])
+        
+        treeview = gtk.TreeView(liststore_hardware)
+        column_text = gtk.TreeViewColumn("Text")
+        column_combo = gtk.TreeViewColumn("Combo")
+        treeview.append_column(column_text)
+        treeview.append_column(column_combo)
+        
+        cellrenderer_text = gtk.CellRendererText()
+        column_text.pack_start(cellrenderer_text, False)
+        column_text.add_attribute(cellrenderer_text, "text", 0)
+        
+        cellrenderer_combo = gtk.CellRendererCombo()
+        cellrenderer_combo.set_property("editable", True)
+        cellrenderer_combo.set_property("model", liststore_manufacturers)
+        cellrenderer_combo.set_property("text-column", 0)
+        column_combo.pack_start(cellrenderer_combo, False)
+        column_combo.add_attribute(cellrenderer_combo, "text", 1)
+        
+        window.connect("destroy", lambda w: gtk.main_quit())
+        cellrenderer_combo.connect("edited", self.combo_changed, liststore_hardware)
+
+        window.add(treeview)
+        window.show_all()
+    
+    def combo_changed(self, widget, path, text, model):
+        model[path][1] = text
+        
+CellRendererCombo()
+gtk.main()</programlisting>
+            <para>Download <ulink url="examples/cellrenderercombo.py"><command>cellrenderercombo.py</command></ulink></para>
+        </simplesect>
+    </sect1>
+    <sect1 id="cellrendererprogress">
+        <title>CellRendererProgress</title>
+        <para>A CellRendererProgress object draws a Progress Bar widget into a TreeView.</para>
+        <simplesect>
+            <title>Constructor</title>
+            <programlisting>cellrendererprogress = gtk.CellRendererProgress()</programlisting>
+        </simplesect>
+        <simplesect>
+            <title>Methods</title>
+            <para>To set the percentage value of the Progress Bar, use:</para>
+            <programlisting>cellrendererprogress.set_property("value", value)</programlisting>
+            <para>The value argument should be a value between 0 and 100.</para>
+            <para>Text can also be set of the CellRendererProgress with:</para>
+            <programlisting>cellrendererprogress.set_property("text", text)</programlisting>
+            <para>In some cases, you may not wish to show the percentage of a job process, however still indicate activity.</para>
+            <programlisting>cellrendererprogress.set_property("pulse", pulse)</programlisting>
+            <para>The pulse argument when set to True shows a bouncing block indicating that a process is running.</para>
+            <para>Another useful feature of the CellRendererProgress is to configure the orientation of the Progress Bar.</para>
+            <programlisting>cellrendererprogress.set_property("orientation", orientation)</programlisting>
+            <para>The orientation property should be set to one of the following:</para>
+            <programlisting>gtk.PROGRESS_LEFT_TO_RIGHT
+gtk.PROGRESS_RIGHT_TO_LEFT
+gtk.PROGRESS_TOP_TO_BOTTOM
+gtk.PROGRESS_BOTTOM_TO_TOP</programlisting>
+            <para>By default, the CellRendererProgress uses gtk.PROGRESS_LEFT_TO_RIGHT.</para>
+        </simplesect>
+        <simplesect>
+            <title>Example</title>
+            <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class CellRendererProgress:
+    def __init__(self):
+        window = gtk.Window()
+        window.set_default_size(200, 200)
+        
+        liststore = gtk.ListStore(str, int)
+        liststore.append(["Sabayon", 75])
+        liststore.append(["Zenwalk", 20])
+        liststore.append(["SimplyMepis", 62])
+        
+        treeview = gtk.TreeView(liststore)
+        column_text = gtk.TreeViewColumn("Text")
+        column_progress = gtk.TreeViewColumn("Progress Bar")
+        treeview.append_column(column_text)
+        treeview.append_column(column_progress)
+        
+        cellrenderer_text = gtk.CellRendererText()
+        column_text.pack_start(cellrenderer_text, False)
+        column_text.add_attribute(cellrenderer_text, "text", 0)
+        
+        cellrenderer_progress = gtk.CellRendererProgress()
+        column_progress.pack_start(cellrenderer_progress, True)
+        column_progress.add_attribute(cellrenderer_progress, "value", 1)
+        
+        window.connect("destroy", lambda w: gtk.main_quit())
+
+        window.add(treeview)
+        window.show_all()
+
+CellRendererProgress()
+gtk.main()</programlisting>
+            <para>Download <ulink url="examples/cellrendererprogress.py"><command>cellrendererprogress.py</command></ulink></para>
+        </simplesect>
+    </sect1>
+    <sect1 id="cellrendererspinner">
+        <title>CellRendererSpinner</title>
+        <para>A CellRendererSpinner provides a way to render a <link linkend="spinner">Spinner</link> inside another widget such as <link linkend="treeview">TreeView</link>.</para>
+        <simplesect>
+            <title>Constructor</title>
+            <programlisting>cellrendererspinner = gtk.CellRendererSpinner()</programlisting>
+        </simplesect>
+        <simplesect>
+            <title>Methods</title>
+            <para>By default, the active property of the CellRendererSpinner is False, meaning that it is not displayed. To display the spinner:</para>
+            <programlisting>cellrendererspinner.set_property("active", active)</programlisting>
+            <para>When the active value is set to True, the CellRendererSpinner will be displayed to the user.</para>
+            <para>Once the spinner is displayed, it will be required to activate it.</para>
+            <programlisting>cellrendererspinner.set_property("pulse", pulse)</programlisting>
+            <para>When the pulse parameter is True, the widget will spin. This is usually activated by a timeout which starts when a process begins, and stops when a process finishes.</para>
+        </simplesect>
+        <simplesect>
+            <title>Example</title>
+            <programlisting>#!/usr/bin/env python
+
+import gtk
+import gobject
+
+class CellRendererSpinner:
+    def __init__(self):
+        window = gtk.Window()
+        window.set_default_size(200, 200)
+        
+        liststore = gtk.ListStore(str, bool, int)
+        liststore.append(["Copying Files", True, 0])
+        liststore.append(["Downloading Access Logs", False, 0])
+        liststore.append(["Connecting To Torrent", True, 0])
+        
+        treeview = gtk.TreeView(liststore)
+        column_text = gtk.TreeViewColumn("Text")
+        column_spinner = gtk.TreeViewColumn("Spinner")
+        treeview.append_column(column_text)
+        treeview.append_column(column_spinner)
+        
+        cellrenderer_text = gtk.CellRendererText()
+        column_text.pack_start(cellrenderer_text, False)
+        column_text.add_attribute(cellrenderer_text, "text", 0)
+        
+        cellrenderer_spinner = gtk.CellRendererSpinner()
+        column_spinner.pack_start(cellrenderer_spinner, True)
+        column_spinner.add_attribute(cellrenderer_spinner, "active", 1)
+
+        window.connect("destroy", lambda w: gtk.main_quit())
+
+        window.add(treeview)
+        window.show_all()
+        
+        self.count = 0
+        gobject.timeout_add(100, self.pulse, liststore, column_spinner, cellrenderer_spinner)
+    
+    def pulse(self, liststore, column, spinner):
+        column.add_attribute(spinner, "pulse", 2)
+        
+        self.count+=1
+        
+        for item in liststore:
+            item[2] = self.count
+        
+        return True
+
+CellRendererSpinner()
+gtk.main()</programlisting>
+        </simplesect>
+    </sect1>
+    <sect1 id="cellrendererspin">
+        <title>CellRendererSpin</title>
+        <para>A CellRendererSpin places a Spin Button widget inside a TreeView column. The CellRendererSpin is an Entry widget with two small buttons which allow the adjusting of the number within the Entry.</para>
+        <simplesect>
+            <title>Constructor</title>
+            <programlisting>cellrendererspin = gtk.CellRendererSpin()</programlisting>
+        </simplesect>
+        <simplesect>
+            <title>Methods</title>
+            <para>A CellRendererSpin uses an <link linkend="adjustment">Adjustment</link> widget to hold the values it can accept. This includes the lowest, highest and starting values. To add this use:</para>
+            <programlisting>cellrendererspin.set_property("adjustment", adjustment)</programlisting>
+            <para>Another useful feature is the ability to display decimal points. To configure the how many numbers are displayed after a decimal use:</para>
+            <programlisting>cellrendererspin.set_property("digits", digits)</programlisting>
+            <para>By default, integers (whole numbers) are displayed in the CellRendererSpin.</para>
+        </simplesect>
+        <simplesect>
+            <title>Example</title>
+            <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class CellRendererSpin:
+    def __init__(self):
+        window = gtk.Window()
+        window.set_default_size(200, 200)
+        
+        liststore = gtk.ListStore(str, int)
+        liststore.append(["Oranges", 5])
+        liststore.append(["Apples", 4])
+        liststore.append(["Bananas", 2])
+        
+        treeview = gtk.TreeView(liststore)
+        column_text = gtk.TreeViewColumn("Text")
+        column_spin = gtk.TreeViewColumn("Spin Button")
+        treeview.append_column(column_text)
+        treeview.append_column(column_spin)
+        
+        cellrenderer_text = gtk.CellRendererText()
+        column_text.pack_start(cellrenderer_text, False)
+        column_text.add_attribute(cellrenderer_text, "text", 0)
+        
+        adjustment = gtk.Adjustment(0, 0, 100, 1, 10, 0)        
+        cellrenderer_spin = gtk.CellRendererSpin()
+        cellrenderer_spin.set_property("editable", True)
+        cellrenderer_spin.set_property("adjustment", adjustment)
+        column_spin.pack_start(cellrenderer_spin, True)
+        column_spin.add_attribute(cellrenderer_spin, "text", 1)
+        
+        window.connect("destroy", lambda w: gtk.main_quit())
+        cellrenderer_spin.connect("edited", self.spin_changed, liststore)
+        
+        window.add(treeview)
+        window.show_all()
+    
+    def spin_changed(self, widget, path, value, model):
+        model[path][1] = int(value)        
+
+CellRendererSpin()
+gtk.main()</programlisting>
+            <para>Download <ulink url="examples/cellrendererspin.py"><command>cellrendererspin.py</command></ulink></para>
+        </simplesect>
+    </sect1>
+    <sect1 id="cellrendereraccel">
+        <title>CellRendererAccel</title>
+        <para>The CellRendererAccel object displays a keyboard accelerator inside a TreeView.</para>
+        <simplesect>
+            <title>Constructor</title>
+            <programlisting>cellrendereraccel = gtk.CellRendererAccel()</programlisting>
+        </simplesect>
+        <simplesect>
+            <title>Signals</title>
+            <programlisting>"accel-edited"
+"accel-cleared"</programlisting>
+            <para>The "accel-edited" signal is emitted when the accelerator defined is changed. This happens when no accelerator was previously set as well as when one has already been defined. "accel-cleared" occurs when the accelerator defined is removed using the Backspace key.</para>
+        </simplesect>
+        <simplesect>
+            <title>Example</title>
+            <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class CellRendererAccel:
+    def __init__(self):
+        window = gtk.Window()
+        window.set_default_size(200, 200)
+        
+        liststore = gtk.ListStore(str, str)
+        liststore.append(["Up", "Up"])
+        liststore.append(["Down", "Down"])
+        liststore.append(["Left", "Left"])
+        liststore.append(["Right", "Right"])
+        liststore.append(["Fire", "Return"])
+        liststore.append(["Menu", "Escape"])
+        
+        treeview = gtk.TreeView(liststore)
+        column_text = gtk.TreeViewColumn("Text")
+        column_accel = gtk.TreeViewColumn("Accelerator")
+        treeview.append_column(column_text)
+        treeview.append_column(column_accel)
+        
+        cellrenderer_text = gtk.CellRendererText()
+        column_text.pack_start(cellrenderer_text, False)
+        column_text.add_attribute(cellrenderer_text, "text", 0)
+        
+        cellrenderer_accel = gtk.CellRendererAccel()
+        cellrenderer_accel.set_property("editable", True)
+        column_accel.pack_start(cellrenderer_accel, True)
+        column_accel.add_attribute(cellrenderer_accel, "text", 1)
+        
+        window.connect("destroy", lambda w: gtk.main_quit())
+        cellrenderer_accel.connect("accel-edited", self.accel_edited, liststore)
+        cellrenderer_accel.connect("accel-cleared", self.accel_cleared, liststore)
+
+        window.add(treeview)
+        window.show_all()
+
+    def accel_edited(self, widget, path, key, mods, hwcode, model):
+        accel = gtk.accelerator_name(key, mods)
+        iter = model.get_iter(path)
+        model.set_value(iter, 1, accel)
+
+    def accel_cleared(self, widget, path, model):
+        iter = model.get_iter(path)
+        model.set_value(iter, 1, None)
+
+CellRendererAccel()
+gtk.main()</programlisting>
+            <para>Download <ulink url="examples/cellrendereraccel.py"><command>cellrendereraccel.py</command></ulink></para>
+        </simplesect>
+    </sect1>
+</chapter>

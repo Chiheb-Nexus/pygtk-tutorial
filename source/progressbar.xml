@@ -1,0 +1,86 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+
+<chapter id="progressbar">
+    <title>Progress Bar</title>
+    <para>A Progress Bar can be used to indicate the progress made by an operation within an application. They are recommended for use with processes that may take a long time to complete for two reasons; indicating how much of the job has been completed and to indicate that the application is still running a particular process.</para>
+	<simplesect>
+	    <title>Constructor</title>
+	    <programlisting>progressbar = gtk.ProgressBar()</programlisting>
+	    <para>The adjustment property is the name of an Adjustment which provides the range of numbers used on the progress bar. Alternatively, if you decide not to specify an Adjustment, one will be created with the Progress Bar widget automatically.</para>
+	</simplesect>
+	<simplesect>
+	    <title>Methods</title>
+	    <para>A progress bar can have a number of orientations which can be set using:</para>
+	    <programlisting>progressbar.set_orientation(orientation)</programlisting>
+	    <para>The orientation property can be set to one of the following:</para>
+	    <programlisting>gtk.PROGRESS_LEFT_TO_RIGHT
+gtk.PROGRESS_RIGHT_TO_LEFT
+gtk.PROGRESS_BOTTOM_TO_TOP
+gtk.PROGRESS_TOP_TO_BOTTOM</programlisting>
+        <para>A progress bar can also display text to indicate a number of things such as percentage completion, time remaining, time passed, number of items remaining, etc. This can be set using:</para>
+        <programlisting>progressbar.set_text(text)</programlisting>
+        <para>We can also retrieve the text from the progress bar:</para>
+        <programlisting>text = progressbar.get_text()</programlisting>
+        <para>To set the completion of the progress bar, we can use the following:</para>
+        <programlisting>progressbar.set_fraction(fraction)</programlisting>
+        <para>The fraction value is in the range 0.0 to 1.0 with 0.0 indicating 0% completion, 1.0 indicating 100% completion, 0.5 indicating 50% completion, etc.</para>
+        <para>The Progress Bar can be set to another mode known as "activity mode". This causes the indicator inside the Progress Bar to bounce from left-to-right and right-to-left. It is used to indicate activity of the application when the progress of a process is not known.</para>
+        <programlisting>progressbar.pulse()</programlisting>
+    </simplesect>
+    <simplesect>
+        <title>Example</title>
+        <para>Note: the following example contains some advanced functions of PyGTK, which will be looked at in depth further on in the tutorial.</para>
+        <programlisting>#!/usr/bin/env python
+
+import gtk, gobject
+
+class ProgressBar:
+    def __init__(self):
+        window = gtk.Window()
+        window.set_default_size(200, -1)
+        
+        vbox = gtk.VBox(False, 5)
+
+        self.progressbar = gtk.ProgressBar()
+        self.check_text = gtk.CheckButton("Display text")
+        
+        vbox.pack_start(self.progressbar)
+        vbox.pack_start(self.check_text)
+        
+        window.connect("destroy", lambda w: gtk.main_quit())
+        self.check_text.connect("toggled", self.text)
+        
+        window.add(vbox)
+        window.show_all()
+        
+        self.run()
+    
+    def run(self):
+        gobject.timeout_add(500, self.update)
+    
+    def update(self):       
+        if self.progressbar.get_fraction() >= 1.0:
+            value = 0.0
+        else:
+            value = self.progressbar.get_fraction() + 0.1
+            
+        self.progressbar.set_fraction(value)
+        
+        if self.check_text.get_active():
+            percent = value * 100
+            percent = str(int(percent))
+            self.progressbar.set_text(percent + "%")
+        
+        return True
+    
+    def text(self, widget):
+        if self.check_text.get_active() == False:
+            self.progressbar.set_text("")
+
+ProgressBar()
+gtk.main()</programlisting>
+        <para>Download <ulink url="examples/progressbar.py"><command>progressbar.py</command></ulink></para>
+    </simplesect>
+</chapter>

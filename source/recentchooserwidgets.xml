@@ -1,0 +1,229 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+
+<chapter id="recentchooserwidgets">
+    <title>RecentChooser Widgets</title>
+    <para>RecentChooser widgets allow the selection of files which have recently been accessed. They display the file lists in a last-opened, first listed display. They are relatively powerful widgets which also allow the configuration of file types shown.</para>
+    <sect1 id="recentmanager">
+        <title>RecentManager</title>
+        <para>The RecentManager object provides a facility for adding, removing and searching for recently accessed files. In most cases, a RecentManager object will not need to be created as the RecentChooser widgets create their own internally.</para>
+        <simplesect>
+            <title>Constructor</title>
+            <programlisting>recentmanager = gtk.RecentManager()</programlisting>
+        </simplesect>
+        <simplesect>
+            <title>Methods</title>
+            <para>Files can be added to and removed from the RecentChooser widgets with:</para>
+            <programlisting>recentmanager.add_item(uri)
+recentmanager.remove_item(uri)</programlisting>
+            <para>The (Uniform Resource Identifier) uri parameter looks similar to the filepath of the item. An example includes:</para>
+            <programlisting>file:///path/to/file/on/disk</programlisting>
+            <para>To remove all the items from the recently access list:</para>
+            <programlisting>recentmanager.purge_items()</programlisting>
+            <para>We can also move items to a new URI:</para>
+            <programlisting>recentmanager.move_item(uri, new_uri)</programlisting>
+            <para>Items within a RecentManager can be searched for, and if found can return information about that item. This is all done using a URI of a file:</para>
+            <programlisting>recentmanager.lookup_item(uri)</programlisting>
+            <para>One of the common methods related to RecentChooser widgets is the ability to limit the number of recent items displayed.</para>
+            <programlisting>recentmanager.set_limit(limit)</programlisting>
+            <para>The limit value can be set to 0 or greater to return that many items, or -1 to return all items.</para>
+        </simplesect>
+    </sect1>
+    <sect1 id="recentinfo">
+        <title>RecentInfo</title>
+        <para>The RecentInfo object is used to retrieve information about files within the recent files list.</para>
+        <simplesect>
+            <para>A RecentInfo object is created automatically with a RecentManager and can not exist on its own. We can access it with the following call:</para>
+            <programlisting>selected = recentchooser.get_current_item()</programlisting>
+            <para>This call returns a RecentInfo object, which can then be used in conjunction with the methods listed below.</para>
+            <title>Methods</title>
+            <para>We can retrieve date information about items in the recently used list with:</para>
+            <programlisting>recentinfo.get_added()
+recentinfo.get_modified()
+recentinfo.get_visited()</programlisting>
+            <para>Other information which can be retrieved about files are:</para>
+            <programlisting>recentinfo.get_uri()
+recentinfo.get_display_name()
+recentinfo.get_short_name()
+recentinfo.get_mime_type()</programlisting>
+            <para>A check can also be made on whether the file still exists, as in some cases a file will be deleted after it has been accessed:</para>
+            <programlisting>recentinfo.exists()</programlisting>
+            <para>We can also query whether files in the recent list are local or remote:</para>
+            <programlisting>recentinfo.is_local()</programlisting>
+            <para>If the file is local, True is returned. Non-local files, such as those on a Network share will return False.</para>
+        </simplesect>
+    </sect1>
+    <sect1 id="recentfilter">
+        <title>RecentFilter</title>
+        <para>A RecentFilter object allows for accessing a subset of recently used files based on specified criteria. It is commonly used to limit what files are displayed, particularly inside an application RecentChooser widget (e.g. open display video files within a video editor). Another common use is to limit which files can be opened and saved using FileSelection widgets.</para>
+        <simplesect>
+            <title>Constructor</title>
+            <programlisting>recentfilter = gtk.RecentFilter()</programlisting>
+        </simplesect>
+        <simplesect>
+            <para>After construction of the RecentFilter, it can be customised. One common example is to limit the RecentChooser to only display files with a specific extension:</para>
+            <programlisting>recentfilter.add_pattern(pattern)</programlisting>
+            <para>Examples of the pattern parameter are "*.txt", "*.png", "*.py", etc. The asterisks are known as wilcards any allow any filename, but limit the file extension. To show any file, regardless of the file extension simply use "*".</para>
+            <para>Alternatively, we can specify to match recent items against the mime type.</para>
+            <programlisting>recentfilter.add_mime_type(mime_type)</programlisting>
+            <para>After creating the filters, a human-readable name is suggested.</para>
+            <programlisting>recentfilter.add_name(name)</programlisting>
+        </simplesect>
+    </sect1> 
+    <sect1 id="recentchooserwidget">
+        <title>RecentChooserWidget</title>
+        <para>A RecentChooserWidget provides a way to access a list of the most recently opened files. It can be placed inside a window or dialog.</para>
+        <simplesect>
+            <title>Constructor</title>
+            <programlisting>recentchooserwidget = gtk.RecentChooserWidget(manager)</programlisting>
+            <para>The manager parameter can be set to None if not required or can be set to the name of a RecentManager object created previously.</para>
+        </simplesect>
+        <simplesect>
+            <title>Example</title>
+            <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class RecentChooserWidget:
+    def __init__(self):
+        window = gtk.Window()
+        vbox = gtk.VBox(False, 5)
+
+        self.manager = gtk.RecentManager()
+        self.recentchooser = gtk.RecentChooserWidget(self.manager)
+        button = gtk.Button("Recent Information")
+        
+        window.connect("destroy", lambda w: gtk.main_quit())
+        button.connect("clicked", self.retrieve_info)
+        
+        window.add(vbox)
+        vbox.pack_start(self.recentchooser)
+        vbox.pack_start(button, False, False, 0)
+        window.show_all()
+    
+    def retrieve_info(self, widget):
+        selected = self.recentchooser.get_current_item()
+        print "Display name:", selected.get_display_name()
+        print "File URI:", selected.get_uri()
+        print "Last application:", selected.last_application()
+
+RecentChooserWidget()
+gtk.main()</programlisting>
+            <para>Download <ulink url="examples/recentchooserwidget.py"><command>recentchooserwidget.py</command></ulink></para>
+        </simplesect>
+    </sect1>
+    <sect1 id="recentchooserdialog">
+        <title>RecentChooserDialog</title>
+        <para>Launches a dialog window with a list of recently accessed files.</para>
+        <simplesect>
+            <title>Constructor</title>
+            <programlisting>recentchooserdialog = gtk.RecentChooserDialog(title, parent, manager, buttons)</programlisting>
+            <para>The title parameter is the text which should be displayed as the title of the dialog. The parent is the name of a window which owns the dialog. If no parent needs to be set, this parameter can be set to None. The manager value can be set to None if not required or it can be set to the name of an already existing RecentManager object. Finally, the buttons parameter is a tuple of buttons which should be displayed on the dialog.</para>
+        </simplesect>
+        <simplesect>
+            <title>Example</title>
+            <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class RecentChooserDialog:
+    def __init__(self):
+        manager = gtk.RecentManager()
+        recentchooser = gtk.RecentChooserDialog("Select a file", None, manager, (gtk.STOCK_OK, gtk.RESPONSE_OK, gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL))
+        
+        response = recentchooser.run()
+        
+        if response == gtk.RESPONSE_OK:
+            selected = recentchooser.get_current_item()
+            print "Display name:", selected.get_display_name()
+            print "File URI:", selected.get_uri()
+            print "Last application:", selected.last_application()
+        
+        recentchooser.destroy()
+
+RecentChooserDialog()</programlisting>
+            <para>Download <ulink url="examples/recentchooserdialog.py"><command>recentchooserdialog.py</command></ulink></para>
+        </simplesect>
+    </sect1>
+    <sect1 id="recentchoosermenu">
+        <title>RecentChooserMenu</title>
+        <para>Displays a menu containing recently opened files. This can be useful in a variety of applications (e.g. an image editing application which lists the five most recently opened image files).</para>
+        <simplesect>
+            <title>Constructor</title>
+            <programlisting>recentchoosermenu = gtk.RecentChooserMenu(manager)</programlisting>
+            <para>The manager parameter can be set to None if not required or can be set to the name of a RecentManager object created previously.</para>
+        </simplesect>
+        <simplesect>
+            <title>Methods</title>
+            <para>Numbers can be displays to the left of the filename to indicate the most recently accessed files with the method:</para>
+            <programlisting>recentchoosermenu.set_show_numbers(numbers)</programlisting>
+            <para>The numbers argument should be set to True if numbers are required or False to not display numbers.</para>
+        </simplesect>
+        <simplesect>
+            <title>Example</title>
+            <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class RecentChooserMenu:
+    def __init__(self):
+        window = gtk.Window()
+        
+        manager = gtk.recent_manager_get_default()
+        self.recentchooser = gtk.RecentChooserMenu(manager)
+        
+        menubar = gtk.MenuBar()
+        file_menuitem = gtk.MenuItem("Recent Items")
+        menubar.append(file_menuitem)
+        
+        file_menuitem.set_submenu(self.recentchooser)
+        
+        window.connect("destroy", lambda w: gtk.main_quit())
+        self.recentchooser.connect("item-activated", self.display_info)
+        
+        window.add(menubar)
+        
+        window.show_all()
+    
+    def display_info(self, widget):
+        selected = self.recentchooser.get_current_item()
+        print "Display name:", selected.get_display_name()
+        print "File URI:", selected.get_uri()
+        print "Last application:", selected.last_application()
+
+RecentChooserMenu()
+gtk.main()</programlisting>
+            <para>Download <ulink url="examples/recentchoosermenu.py"><command>recentchoosermenu.py</command></ulink></para>
+        </simplesect>
+    </sect1>
+    <sect1 id="recentchooser">
+        <title>RecentChooser</title>
+        <para>The RecentChooser is the base of the RecentChooserWidget, RecentChooserDialog and RecentChooserMenu. Those three widgets can all access the following methods:</para>
+        <para>A primary function of the RecentChooser is to retrieve file path data from the RecentManger:</para>
+        <programlisting>item = recentchooser.get_current_item()
+items = recentchooser.get_items()
+uri = recentchooser.get_current_uri()
+uris = recentchooser.get_uris()</programlisting>
+        <para>The .get_items() and .get_uris() methods retrieve the information about all items in the RecentManager, even if they are not selected.</para>
+        <para>A useful function may be to allow the user to select multiple items from the RecentChooser.</para>
+        <programlisting>recentchooser.set_select_multiple(select)</programlisting>
+        <para>When the select value is set to True, the user can hold the CTRL key on the keyboard and click items on the RecentChooser with the mouse. This allows for multiple items to be selected.</para>
+        <para>Assuming the .set_select_multiple() method is set to True, we can select and unselect all items from the RecentChooser.</para>
+        <programlisting>recentchooser.select_all()
+recentchooser.unselect_all()</programlisting>
+        <para>Another function to use would be to prevent items from being displayed on the RecentChooser widgets which no longer exist on the filesystem.</para>
+        <programlisting>recentchooser.set_show_not_found(show_not_found)</programlisting>
+        <para>When show_not_found is set to False, items which can not be found (i.e. have been deleted, moved or renamed) will not be displayed.</para>
+        <para>We can configure whether icons are displayed on the widget with:</para>
+        <programlisting>recentchooser.set_show_icons(icons)</programlisting>
+        <para>When the icons paramater is set to False, no icons are shown.</para>
+        <para>The sorting type used can also be configured.</para>
+        <programlisting>recentchooser.set_sort_type(sort_type)</programlisting>
+        <para>The sort_type paramter should be set to one of the following:</para>
+        <programlisting>gtk.RECENT_SORT_NONE
+gtk.RECENT_SORT_MRU
+gtk.RECENT_SORT_LRU</programlisting>
+        <para>gtk.RECENT_SORT_MRU sorts items by the most recently used. gtk.RECENT_SORT_LRU sorts with the least recently used items being first in the list.</para>
+    </sect1>
+</chapter>

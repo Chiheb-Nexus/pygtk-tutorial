@@ -1,0 +1,87 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+
+<chapter id="clipboard">
+    <title>Clipboard</title>
+    <para>A Clipboard widget provides a storage area for a range of data, including text and images. Using a Clipboard allows for sharing of this data between processes and applications. In simple terms, it allows your application to cut, copy and paste data. These actions are often performed in three ways; using keyboard shortcuts, using a MenuItem or connecting the functions to Button widgets.</para>
+    <simplesect>
+        <title>Constructor</title>
+        <programlisting>clipboard = gtk.Clipboard(display, selection)</programlisting>
+        <para>The display argument is set to the display which should be used. This will usually be set to the value "gtk.gdk.clipboard_get_default()". The selection argument can be set to one of the following:</para>
+        <programlisting>"PRIMARY"
+"SECONDARY"
+"CLIPBOARD"
+"BITMAP"
+"COLORMAP"
+"DRAWABLE"
+"PIXMAP"
+"STRING"
+"WINDOW"</programlisting>
+        <para>In most circumstances, the selection parameter will be set to "CLIPBOARD". "PRIMARY" is another common setting which is activated when the user selects text with the cursor.</para>
+    </simplesect>
+    <simplesect>
+        <title>Methods</title>
+        <para>To set text on the Clipboard, use:</para>
+        <programlisting>clipboard.set_text(text, length)</programlisting>
+        <para>The text argument is the text which should be placed in the clipboard. The length is the number of characters to store. If the length is going to be variable, use -1.</para>
+        <para>Alternatively, an image can be set on the clipboard. The image passed to the clipboard must be a pixbuf so the following two calls are used:</para>
+        <programlisting>image = image.get_pixbuf()
+clipboard.set_image(image)</programlisting>
+        <para>To retrieve text or images from the Clipboard, we would use:</para>
+        <programlisting>text = clipboard.wait_for_text()
+image = clipboard.wait_for_image()</programlisting>
+        <para>If you copy data to the Clipboard and exit the application, the data will be removed. To prevent the data from being removed, use the method:</para>
+        <programlisting>clipboard.store()</programlisting>
+        <para>We can also clear the Clipboard. However, clear will remove items stored in the clipboard by other applications so its use must be considered carefully.</para>
+        <programlisting>clipboard.clear()</programlisting>
+    </simplesect>
+    <simplesect>
+        <title>Example</title>
+        <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class Clipboard:
+    def __init__(self):
+        window = gtk.Window()
+        hbox = gtk.HBox(False, 5)
+        hbox2 = gtk.HBox(True, 5)
+        
+        self.entry = gtk.Entry()
+        button_cut = gtk.Button("Cut Text")
+        button_copy = gtk.Button("Copy Text")
+        button_paste = gtk.Button("Paste Text")
+        
+        hbox.pack_start(self.entry)
+        hbox.pack_start(hbox2)
+        hbox2.pack_start(button_cut)
+        hbox2.pack_start(button_copy)
+        hbox2.pack_start(button_paste)
+        window.add(hbox)
+        
+        window.connect("destroy", gtk.main_quit)
+        button_cut.connect("clicked", self.copy, "cut")
+        button_copy.connect("clicked", self.copy, "copy")
+        button_paste.connect("clicked", self.paste)
+        
+        window.show_all()
+        
+        self.clipboard = gtk.Clipboard(gtk.gdk.display_get_default(), "CLIPBOARD")
+    
+    def copy(self, widget, mode):
+        self.clipboard.set_text(self.entry.get_text())
+        
+        if mode == "cut":
+            self.entry.set_text("")
+    
+    def paste(self, widget):
+        text = self.clipboard.wait_for_text()
+        if text != None:
+            self.entry.set_text(text)
+        
+Clipboard()
+gtk.main()</programlisting>
+        <para>Download <ulink url="examples/clipboard.py"><command>clipboard.py</command></ulink></para>
+    </simplesect>
+</chapter>

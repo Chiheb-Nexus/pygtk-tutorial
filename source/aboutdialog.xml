@@ -1,0 +1,58 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+
+<chapter id="aboutdialog">
+    <title>About Dialog</title>
+    <para>An About Dialog is used to show information about the application. This often includes the name, version, website, license information, copyright string, authors, etc. Usually, About Dialogs can be accessed through the Help menu.</para>
+    <simplesect>
+        <title>Constructor</title>
+        <programlisting>aboutdialog = gtk.AboutDialog()</programlisting>
+    </simplesect>
+    <simplesect>
+        <title>Methods</title>
+        <para>Once the About Dialog has been created, it will be empty with the exception of the name of the Python script. Now we can add a variety of information:</para>
+        <programlisting>aboutdialog.set_name(name)
+aboutdialog.set_version(version)
+aboutdialog.set_copyright(copyright)
+aboutdialog.set_comments(comment)
+aboutdialog.set_website(website)
+aboutdialog.set_website_label(label)
+aboutdialog.set_authors([authors])
+aboutdialog.set_documentors([documentors])
+aboutdialog.set_artists([artists])
+aboutdialog.set_logo(filepath)
+aboutdialog.set_license(license)
+aboutdialog.set_wrap_license(boolean)</programlisting>
+        <para>Most of the options available are relatively self-explanatory. The set_comments() string is a simple message about what the application does. set_wrap_license() ensures that the license is displayed neatly in its dialog and in most cases would be set to True.</para>
+        <para>The .set_authors(), .set_documenters() and .set_artists() methods require a Python list. The list can contain one or more names which are separated by commas.</para>
+        <para>We then display the About Dialog with the method:</para>
+        <programlisting>aboutdialog.run()</programlisting>
+        <para>At this point, the About Dialog enters its own loop and waits for a response from the user. Immediately after issuing the aboutdialog.run() method, use:</para>
+        <programlisting>aboutdialog.destroy()</programlisting>
+        <para>One current problem with About Dialog windows is that they position themselves at the center of the screen, rather than at the center of the parent window (if you have one). This is beneficial in some cases, however can be annoying when using a non-maximized application. To position the About Dialog over the window use:</para>
+        <programlisting>aboutdialog.set_transient_for(window)</programlisting>
+    </simplesect>
+    <simplesect>
+        <title>Example</title>
+        <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class AboutDialog():
+    def __init__(self):
+        aboutdialog = gtk.AboutDialog()
+        aboutdialog.set_name("PyGTK Tutorial")
+        aboutdialog.set_version("0.00")
+        aboutdialog.set_comments("New PyGTK Tutorial featuring updated widgets and methods")
+        aboutdialog.set_website("http://www.learngtk.org/")
+        aboutdialog.set_website_label("LearnGTK Website")
+        aboutdialog.set_authors(["Andrew Steele"])
+
+        aboutdialog.run()
+        aboutdialog.destroy()
+
+AboutDialog()</programlisting>
+        <para>Download <ulink url="examples/aboutdialog.py"><command>aboutdialog.py</command></ulink></para>
+    </simplesect>
+</chapter>

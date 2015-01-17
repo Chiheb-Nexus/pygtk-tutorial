@@ -1,0 +1,74 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+
+<chapter id="handlebox">
+    <title>HandleBox</title>
+    <para>The HandleBox widget allows a part of a window to be "extracted" and displayed separately. A child widget is placed inside the HandleBox, which has a handle to allow for separation and dragging. It is not commonly used, however it can be useful when containing a Toolbar.</para>
+	<simplesect>
+	    <title>Constructor</title>
+        <programlisting>handlebox = gtk.HandleBox()</programlisting>
+    </simplesect>
+    <simplesect>
+        <title>Methods</title>
+        <para>The default position of the handle is the left side of the HandleBox. This can be adjusted using:</para>
+        <programlisting>handlebox.set_handle_position(position)</programlisting>
+        <para>The position attribute can be set to one of the following:</para>
+        <programlisting>gtk.POS_LEFT
+gtk.POS_RIGHT
+gtk.POS_TOP
+gtk.POS_BOTTOM</programlisting>
+        <para>In most cases, the handle will be set to gtk.POS_LEFT for horizontal handleboxes, and gtk.POS_TOP for vertical.</para>
+        <para>To reattach the box back to the main window, a snap edge is set. By default this is chosen based on the position of the original HandleBox widget. To change this use the method:</para>
+        <programlisting>handlebox.set_snap_edge(edge)</programlisting>
+        <para>The edge attribute can be set to one of the following:</para>
+        <programlisting>gtk.POS_LEFT
+gtk.POS_RIGHT
+gtk.POS_TOP
+gtk.POS_BOTTOM</programlisting>
+        <para>The edge value should be set to ensure it does not move when the HandleBox is detached. For example, if the HandleBox is being used to hold a Toolbar, the snap edge is recommended to be set to either gtk.POS_TOP or gtk.POS_LEFT.</para>
+        <para>To check whether the HandleBox is detached, use:</para>
+        <programlisting>detached = handlebox.get_child_detached()</programlisting>
+        <para>If the child is detached, a True value will be returned.</para>
+    </simplesect>
+    <simplesect>
+        <title>Signals</title>
+        <programlisting>"child-attached"
+"child-detached"</programlisting>
+        <para>The "child-attached" and "child-detached" signals are emitted when the child widget is removed from or added to the HandleBox.</para>
+    </simplesect>
+    <simplesect>
+        <title>Example</title>
+        <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class HandleBox:
+    def __init__(self):
+        window = gtk.Window()
+        window.set_default_size(200, -1)
+        
+        handlebox = gtk.HandleBox()
+        handlebox.set_snap_edge(gtk.POS_LEFT)
+        
+        toolbar = gtk.Toolbar()
+        toolbar.set_size_request(200, -1)
+        
+        toolbutton1 = gtk.ToolButton(gtk.STOCK_NEW)
+        toolbutton2 = gtk.ToolButton(gtk.STOCK_OPEN)
+        toolbutton3 = gtk.ToolButton(gtk.STOCK_SAVE)
+        toolbar.insert(toolbutton1, 0)
+        toolbar.insert(toolbutton2, 1)
+        toolbar.insert(toolbutton3, 2)
+        
+        window.connect("destroy", lambda w: gtk.main_quit())
+
+        window.add(handlebox)
+        handlebox.add(toolbar)
+        window.show_all()
+
+HandleBox()
+gtk.main()</programlisting>
+        <para>Download <ulink url="examples/handlebox.py"><command>handlebox.py</command></ulink></para>
+    </simplesect>
+</chapter>

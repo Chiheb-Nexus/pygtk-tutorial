@@ -1,0 +1,74 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+
+<chapter id="eventbox">
+    <title>EventBox</title>
+    <para>The EventBox widget is used for widgets which don't have associated windows that can receive events. An EventBox can also be used to prevent overwriting on widgets such as a Label, where the text can be relatively long. In simple terms, an EventBox provided functionality to some widgets, which they do not have on their own.</para>
+    <para>There are benefits to a widget not having an X window; reduced resources and increased speed being two of them. However, this imposes limitations on what a widget can do.</para>
+    <simplesect>
+        <title>Constructor</title>
+        <programlisting>eventbox = gtk.EventBox()</programlisting>
+    </simplesect>
+    <simplesect>
+        <title>Methods</title>
+        <para>Once created, a child widget can be added:</para>
+        <programlisting>eventbox.add(child)</programlisting>
+        <para>To set the background or foreground color of the widget, use:</para>
+        <programlisting>eventbox.modify_bg(0, color)
+eventbox.modify_fg(0, color)</programlisting>
+        <para>The color argument should be a gtk.gdk.Color() value.</para>
+        <para>We can also change the style of mouse cursor as it passes over the EventBox. However, this must be called after the window.show() or window.show_all() call has been made, otherwise the program will cause an exception.</para>
+        <programlisting>eventbox.window.set_cursor(gtk.gdk.Cursor(cursor))</programlisting>
+        <para>The cursor argument should be set to one of the following:</para>
+        <programlisting>gtk.gdk.BOTTOM_LEFT_CORNER
+gtk.gdk.BOTTOM_RIGHT_CORNER
+gtk.gdk.BOTTOM_SIDE
+gtk.gdk.CENTER_PTR
+gtk.gdk.CROSS
+gtk.gdk.DOUBLE_ARROW
+gtk.gdk.FLEUR
+gtk.gdk.HAND1
+gtk.gdk.HAND2
+gtk.gdk.LEFT_SIDE
+gtk.gdk.LEFT_TEE
+gtk.gdk.LL_ANGLE
+gtk.gdk.LR_ANGLE
+gtk.gdk.PENCIL
+gtk.gdk.RIGHT_SIDE
+gtk.gdk.RIGHT_TEE
+gtk.gdk.SB_H_DOUBLE_ARROW
+gtk.gdk.TOP_LEFT_CORNER
+gtk.gdk.TOP_RIGHT_CORNER
+gtk.gdk.TOP_SIDE
+gtk.gdk.UL_ANGLE
+gtk.gdk.UR_ANGLE</programlisting>
+        <para>Note: there are a wider range of cursors available for use. However, the current list are the most suitable for use in everyday applications.</para>
+    </simplesect>
+    <simplesect>
+        <title>Example</title>
+        <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class EventBox:
+    def __init__(self):
+        window = gtk.Window()
+        label = gtk.Label("Label in an EventBox")
+        eventbox = gtk.EventBox()
+        
+        window.connect("destroy", lambda w: gtk.main_quit())
+        eventbox.connect("button_press_event", self.eventbox_event)
+        
+        window.add(eventbox)
+        eventbox.add(label)
+        window.show_all()
+    
+    def eventbox_event(self, widget, event):
+        print "Label received a click!"
+
+EventBox()
+gtk.main()</programlisting>
+        <para>Download <ulink url="examples/eventbox.py"><command>eventbox.py</command></ulink></para>
+    </simplesect>
+</chapter>

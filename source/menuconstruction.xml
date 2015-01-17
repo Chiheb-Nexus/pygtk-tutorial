@@ -1,0 +1,298 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+
+<chapter id="menuwidgets">
+    <title>Menu Widgets</title>
+    <sect1 id="menu">
+        <title>Menu</title>
+        <para>The Menu widget provides the popup menu which holds child <link linkend="menuitem">MenuItem</link> widgets.</para>
+        <simplesect>
+            <title>Constructor</title>
+            <programlisting>menu = gtk.Menu()</programlisting>
+        </simplesect>
+        <simplesect>
+            <title>Methods</title>
+            <para>Items are added to the Menu with:</para>
+            <programlisting>menu.add(menuitem)
+menu.append(item)
+menu.prepend(item)</programlisting>
+            <para>The .add() and .append() methods work in much the same way in that items are added to the Menu in the order they are read in the code. The .prepend() method adds items in front of the previous one which was added.</para>
+            <para>Items can be removed from the Menu with the method:</para>
+            <programlisting>menu.remove(menuitem)</programlisting>
+            <para>A child MenuItem can be reordered using:</para>
+            <programlisting>menu.reorder_child(child, position)</programlisting>
+            <para>The child parameter is the name of the child which is to be reordered. The position value starts at 0, indicating the first item in the menu.</para>
+            <para>A useful feature of menu widgets is that they can be detached from a widget, allowing them to be displayed in a window. This allows for quick access to items that are usually found on a menu. To set a particular menu to be detached, use:</para>
+            <programlisting>menu.set_tearoff_state(state)</programlisting>
+            <para>When the state value is set to True, the menu items are displayed in a separate window.</para>
+            <para>When using a Menu which is to be torn off, it is useful to set the title of the window within which it will be displayed. This is done with the method:</para>
+            <programlisting>menu.set_title(title)</programlisting>
+            <para>To retrieve the widget which the menu is attached to:</para>
+            <programlisting>widget = menu.get_attach_widget()</programlisting>
+        </simplesect>
+    </sect1>
+    <sect1 id="menubar">
+        <title>MenuBar</title>
+        <para>A MenuBar is used in applications to provide an <link linkend="applicationmenu">Application Menu</link>, which allows access to all functions of the program.</para>
+        <simplesect>
+            <title>Constructor</title>
+            <programlisting>menubar = gtk.MenuBar()</programlisting>
+        </simplesect>
+        <simplesect>
+            <title>Methods</title>
+            <para>There are three methods which can be used to add items to the MenuBar.</para>
+            <programlisting>menubar.add(menuitem)
+menubar.append(menuitem)
+menubar.prepend(menuitem)</programlisting>
+            <para>The .add() and .append() methods work in much the same way in that items are added to the MenuBar in the order they are read in the code. The .prepend() method adds items in front of the previous one which was added.</para>
+            <para>To remove an item from the MenuBar:</para>
+            <programlisting>menubar.remove(menuitem)</programlisting>
+        </simplesect>
+    </sect1>
+    <sect1 id="menuitem">
+        <title>MenuItem</title>
+        <para>MenuItem widgets are used on menus for two purposes:</para>
+        <itemizedlist>
+            <listitem>Provide a clickable item which activates a process</listitem>
+            <listitem>Allow submenus to be created</listitem>
+        </itemizedlist>
+        <simplesect>
+            <title>Constructor</title>
+            <programlisting>menuitem = gtk.MenuItem(label, underline)</programlisting>
+            <para>The label parameter is the text which should be displayed on the MenuItem. The underline value is a Boolean which allows for access to the item via the keyboard when set to True.</para>
+        </simplesect>
+        <simplesect>
+            <title>Methods</title>
+            <para>A submenu can be added to the MenuItem with:</para>
+            <programlisting>menu.set_submenu(submenu)</programlisting>
+            <para>The submenu paramter is the name of the Menu widget which should be added.</para>
+            <para>A submenu can also be removed:</para>
+            <programlisting>menu.remove_submenu(submenu)</programlisting>
+            <para>To check if a menu has a submenu or not, the following method can be called:</para>
+            <programlisting>submenu = menu.get_submenu()</programlisting>
+            <para>The submenu value will return the widget which is the current submenu, or if there is no submenu, None will be returned.</para>
+        </simplesect>
+        <simplesect>
+            <title>Signals</title>
+            <programlisting>"activate" (menuitem)</programlisting>
+            <para>When the item is clicked on via the mouse or keyboard, the "activate" signal is emitted.</para>
+        </simplesect>
+    </sect1>
+    <sect1 id="imagemenuitem">
+        <title>ImageMenuItem</title>
+        <para>An ImageMenuItem is similar to a <link linkend="menuitem">MenuItem</link> widget, however allows the displaying of an icon to the left of the text. All of the methods used with the MenuItem can also be used with the ImageMenuItem.</para>
+        <para>Note: If you are using a recent version of the GNOME desktop environment, images may not be displayed on ImageMenuItem widgets. This is due to a recent change in setting within GNOME and needs to be re-enabled.</para>
+        <simplesect>
+            <title>Constructor</title>
+            <programlisting>imagemenuitem = gtk.ImageMenuItem(stock_id)</programlisting>
+            <para>The stock_id parameter should be set to an image from the stock images page.</para>
+        </simplesect>
+        <simplesect>
+            <title>Methods</title>
+            <para>The image can be set on the ImageMenuItem after construction with:</para>
+            <programlisting>imagemenuitem.set_image(stock_id)</programlisting>
+        </simplesect>
+        <simplesect>
+            <title>Signals</title>
+            <programlisting>"activate" (menuitem)</programlisting>
+            <para>When the item is clicked on via the mouse or keyboard, the "activate" signal is emitted.</para>
+        </simplesect>
+    </sect1>
+    <sect1 id="checkmenuitem">
+        <title>CheckMenuItem</title>
+        <para>A CheckMenuItem allows for a Check Button style widget to be placed on a menu. It is simular to a MenuItem however provides a box indicating the state to the left of the label.</para>
+        <simplesect>
+            <title>Constructor</title>
+            <programlisting>checkmenuitem = gtk.CheckMenuItem(label, underline)</programlisting>
+            <para>The label value should be set to the text which is to be displayed on the CheckMenuItem. The underline paramter can be set to True to allow access to the item via the keyboard.</para>
+        </simplesect>
+        <simplesect>
+            <title>Methods</title>
+            <para>In some cases, we may want the CheckMenuItem to be set to a specific state prior to loading the application or after an option changes. This can be done with the following method:</para>
+            <programlisting>checkmenuitem.set_active(active)</programlisting>
+            <para>When the active parameter is set to True, a tick will be displayed in the CheckBox on the item.</para>
+            <para>We can also retrieve the state from the item:</para>
+            <programlisting>active = checkmenuitem.get_active()</programlisting>
+            <para>If the item currently has a tick, True will be retured. If there is no tick, False is returned.</para>
+            <para>Usually a CheckMenuItem will only have two states; True and False. However, it can have a third state known as "inconsistent". This is used to indicate when a range of values does not equal True or False. The item can be set to use "inconsistent" with:</para>
+            <programlisting>checkmenuitem.set_inconsistent(inconsistent)</programlisting>
+            <para>When set to True, the inconsistent state of the CheckMenuItem will be activated.</para>
+        </simplesect>
+        <simplesect>
+            <title>Signals</title>
+            <programlisting>"toggled" (checkmenuitem)</programlisting>
+            <para>When the user clicks on the CheckMenuItem, the "toggled" signal is emitted to indicate that the state of the item has changed.</para>
+        </simplesect>
+    </sect1>
+    <sect1 id="radiomenuitem">
+        <title>RadioMenuItem</title>
+        <para>The RadioMenuItem allows a menu to draw a Radio Button-like widget inside a menu. They are used to allow the selection of one item from multiple choices.</para>
+        <simplesect>
+            <title>Constructor</title>
+            <programlisting>radiomenuitem = gtk.RadioMenuItem(group, label, underline)</programlisting>
+            <para>To work correctly, RadioMenuItem widgets must belong to a group. Within this group, only one of the widgets can be selected at a time. The first widget create should have its group parameter set to None. The subsequent items created should have their group paramater set to the name of the first RadioMenuItem. The label parameter is set to the text which should be displayed on the widget. The underline value, when set to True allows access to the RadioMenuItem via the keyboard.</para>
+        </simplesect>
+        <simplesect>
+            <title>Methods</title>
+            <para>The group of the RadioMenuItem can be changed after construction with:</para>
+            <programlisting>radiomenuitem.set_group(group)</programlisting>
+        </simplesect>
+        <simplesect>
+            <title>Signals</title>
+            <programlisting>"toggled" (radiomenuitem)
+"group-changed" (radiomenuitem)</programlisting>
+            <para>The "toggled" signal is emitted by the RadioMenuItem when the selected item is changed. When the group of the RadioMenuItem is changed, the "group-changed" signal is emitted.</para>
+        </simplesect>
+    </sect1>
+    <sect1 id="separatormenuitem">
+        <title>SeparatorMenuItem</title>
+        <para>The SeparatorMenuItem widget allows the adding of a separator to a menu. It is used to group widgets and is displayed as a horizontal line embedded into the menu.</para>
+        <simplesect>
+            <title>Constructor</title>
+            <programlisting>separatormenuitem = gtk.SeparatorMenuItem()</programlisting>
+        </simplesect>
+    </sect1>
+    <sect1 id="tearoffmenuitem">
+        <title>TearoffMenuItem</title>
+        <para>A TearoffMenuItem can be added to a menu to allow it to be displayed in its own window. This allows for menu items to be accessed without the need to click and open the menu. The menu is displayed as a broken horizontal line on the open menu, which when clicked activates the dialog.</para>
+        <para>It is rarely used except in edge-cases, as a <link linkend="toolbar">Toolbar</link> widget is often preferred for quickly accessing common functions.</para>
+        <simplesect>
+            <title>Constructor</title>
+            <programlisting>tearoffmenuitem = gtk.TearoffMenuItem()</programlisting>
+        </simplesect>
+    </sect1>
+    <sect1 id="menuexamples">
+        <title>Menu Examples</title>
+        <sect2 id="applicationmenu">
+            <title>Application Menu</title>
+            <simplesect>
+                <title>Construction</title>
+                <para>An Application Menu is usually provided in all but trivial applications. It provides access to all the functions of the application via a bar with associated menus. It is positioned at the top of the window and usually contains three or more menus.</para>
+                <para>To construct an Application Menu, there are several parts that need to be placed in the correct order.</para>
+                <para>First, we create the MenuBar. This is the basis of the Application Menu upon which all other widgets are placed.</para>
+                <programlisting>menubar = gtk.MenuBar()</programlisting>
+                <para>Now, we need to construct the MenuItem which is placed on the Menubar and attach it.</para>
+                <programlisting>menuitem = gtk.MenuItem(text)
+menubar.append(menuitem)</programlisting>
+                <para>At this point, we have a Menubar with a MenuItem added.</para>
+                <para>We can now create the Menu and attach it to the existing MenuItem.</para>
+                <programlisting>menu = gtk.Menu()
+menuitem.set_submenu(menu)</programlisting>
+                <para>To display items on the menu, we need to create items for each item to display and again, append it to the Menu.</para>
+                <programlisting>submenuitem = gtk.MenuItem(text)
+menu.append(submenuitem)</programlisting>
+                <para>Constructing an Application Menu is relatively simple and logical as long as each child is constructed and attached to its parent in the correct order.</para>
+            </simplesect>
+            <simplesect>
+                <title>Example</title>
+                <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class ApplicationMenu:
+    def __init__(self):
+        window = gtk.Window()
+
+        menubar = gtk.MenuBar()
+        
+        menu_file = gtk.Menu()
+        menu_edit = gtk.Menu()
+        menu_help = gtk.Menu()
+        
+        item_open = gtk.MenuItem("Open")
+        item_save = gtk.MenuItem("Save")
+        item_quit = gtk.MenuItem("Quit")
+        menu_file.append(item_open)
+        menu_file.append(item_save)
+        menu_file.append(item_quit)
+
+        item_cut = gtk.MenuItem("Cut")
+        item_copy = gtk.MenuItem("Copy")
+        item_paste = gtk.MenuItem("Paste")
+        menu_edit.append(item_cut)
+        menu_edit.append(item_copy)
+        menu_edit.append(item_paste)
+        
+        item_about = gtk.MenuItem("About")
+        menu_help.append(item_about)
+        
+        item_file = gtk.MenuItem("File")
+        item_edit = gtk.MenuItem("Edit")
+        item_help = gtk.MenuItem("Help")
+        
+        item_file.set_submenu(menu_file)
+        item_edit.set_submenu(menu_edit)
+        item_help.set_submenu(menu_help)
+        
+        menubar.append(item_file)
+        menubar.append(item_edit)
+        menubar.append(item_help)
+
+        window.connect("destroy", lambda w: gtk.main_quit())
+        
+        window.add(menubar)
+        window.show_all()
+
+ApplicationMenu()
+gtk.main()</programlisting>
+                <para>Download <ulink url="examples/applicationmenu.py"><command>applicationmenu.py</command></ulink></para>
+            </simplesect>
+        </sect2>
+        <sect2 id="contextmenu">
+        <title>Context Menu</title>
+            <simplesect>
+                <title>Construction</title>
+                <para>A Context Menu appears when the user right-clicks on a specific area. For example, this could be on an image, and on the menu which appears options to resize or rotate the image are available. It still uses the Menu and MenuItem widgets as with the Application Menu, however implementing it is slightly tricky in some circumstances.</para>
+                <para>The first step in creating a Context Menu is to construct a Menu.</para>
+                <programlisting>menu = gtk.Menu()</programlisting>
+                <para>Items then need to be constructed and appended for everything we want to place on the menu.</para>
+                <programlisting>menuitem = gtk.MenuItem(text)
+menu.append(menuitem)</programlisting>
+                <para>Some widgets such as the Label cannot accept button clicks. In these circumstances, we need to use an EventBox. If you wish to add a Context Menu to a widget such as a Button or ComboBox, you will not need an EventBox.</para>
+                <para>We connect our widget (either the EventBox or Button, ComboBox, etc.) using the "button_release_event" event. This allows GTK to respond to any button events from the mouse.</para>
+                <para>A function to handle the event generated will be needed. If we displayed the menu at this point, any clicks from the mouse on the widget would cause the menu to appear. Since the menu is only required to be displayed when a right-click is detected, we check when event.button is equal to 3. At which point, we popup the menu.</para>
+                <para>The following button numbers relate to each mouse button:</para>
+                <itemizedlist>
+                    <listitem>1 = left mouse button</listitem>
+                    <listitem>2 = middle mouse button / scroll wheel button</listitem>
+                    <listitem>3 = right mouse button</listitem>
+                </itemizedlist>
+            </simplesect>
+            <simplesect>
+                <title>Example</title>
+                <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class ContextMenu:
+    def __init__(self):
+        window = gtk.Window()
+        eventbox = gtk.EventBox()
+        
+        self.menu = gtk.Menu()
+        menuitem1 = gtk.MenuItem("MenuItem 1")
+        menuitem2 = gtk.MenuItem("MenuItem 2")
+        menuitem3 = gtk.MenuItem("MenuItem 3")
+        self.menu.append(menuitem1)
+        self.menu.append(menuitem2)
+        self.menu.append(menuitem3)
+
+        window.connect("destroy", lambda w: gtk.main_quit())
+        eventbox.connect("button-release-event", self.menu_display)
+        
+        window.add(eventbox)
+        window.show_all()
+    
+    def menu_display(self, widget, event):
+        if event.button == 3:
+            self.menu.popup(None, None, None, event.button, event.time, None)
+            self.menu.show_all()
+
+ContextMenu()
+gtk.main()</programlisting>
+                <para>Download <ulink url="examples/contextmenu.py"><command>contextmenu.py</command></ulink></para>
+            </simplesect>
+        </sect2>
+    </sect1>
+</chapter>

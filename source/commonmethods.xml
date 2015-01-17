@@ -1,0 +1,54 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+
+<appendix id="commonmethods">
+    <title>Common Methods</title>
+    <para>Each widget has a unique set of methods which can be applied to it. However, many widgets share certain methods which a developer may require. Some of the most common of these are:</para>
+    <simplesect>
+        <title>General</title>
+        <para>A common method is the ability to disable or "grey-out" a widget. This prevents the user from being able to interact with the widget.</para>
+        <programlisting>widget.set_sensitive(sensitive)</programlisting>
+        <para>When the sensitive parameter is set to False, the widget will be disabled.</para>
+        <para>The size of widgets can also be set with:</para>
+        <programlisting>widget.set_size_request(width, height)</programlisting>
+        <para>If only one value needs to be set, you can use -1 for the other value.</para>
+        <para>Another way to configure the displaying of widgets is to use:</para>
+        <programlisting>widget.set_visible(visible)</programlisting>
+        <para>When visible is set to True, the widget will be shown. It is recommended to use .show() or .show_all() as the .set_visible() method is only available in recent PyGTK releases.</para>
+        <para>Widgets which provide a horizontal and vertical (e.g. Boxes, Separators, Rulers, etc.) variant can also have their orientation changed while the application is running with the method:</para>
+        <programlisting>widget.set_orientation(orientation)</programlisting>
+        <para>The orientation value must be set to one of the following:</para>
+        <programlisting>gtk.ORIENTATION_VERTICAL
+gtk.ORIENTATION_HORIZONTAL</programlisting>
+    </simplesect>
+    <simplesect>
+        <title>Child / Parent</title>
+        <para>Many GTK+ widgets are built using other widgets, meaning that there is a parent-child heirarchy in their construction. For example, when a Button is created with a Label, we can access the label as with a standard Label widget. The calls for these are:</para>
+        <programlisting>child = widget.get_child()
+children = widget.get_children()</programlisting>
+        <para>When .get_child() is called, details about the child widget will be retrieved. Alternatively, when using .get_children(), a list of child widgets are returned. If no child widgets are present, .get_child() will return None and .get_children() will return an empty list.</para>
+        <para>The .get_child() method can also be reversed to allow us to get the parent widget with:</para>
+        <programlisting>parent = widget.get_parent()</programlisting>
+    </simplesect>
+    <simplesect>
+        <title>Display</title>
+        <para>The tutorial has displayed widgets on screen with the following methods:</para>
+        <programlisting>widget.show()
+widget.show_all()</programlisting>
+        <para>A widget or widgets can be hidden from view with the calls:</para>
+        <programlisting>widget.hide()
+widget.hide_all()</programlisting>
+    </simplesect>
+    <simplesect>
+        <title>Focus</title>
+        <para>We can make a widget take the focus with the call:</para>
+        <programlisting>widget.grab_focus()</programlisting>
+    </simplesect>
+    <simplesect>
+        <title>Name</title>
+        <para>A useful function when utilising the styling options of PyGTK is to name widgets. This allows styling functions to be applied to a specific widget, rather than all widgets of a particular type. For example, we can specific style properties on a named button, rather than all buttons in an application.</para>
+        <programlisting>widget.set_name(name)
+name = widget.get_name()</programlisting>
+    </simplesect>
+</appendix>

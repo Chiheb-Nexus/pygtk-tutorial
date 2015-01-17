@@ -1,0 +1,107 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+
+<chapter id="assistant">
+    <title>Assistant</title>
+    <para>An Assistant widget is used to provide a step-by-step walkthrough for configuration of many options. It is often used when many settings are to be retrieved from the user, for example when setting up an email account.</para>
+    <para>It should be noted that the Assistant widget is relatively obscure to create and can be relatively complex to implement correctly.</para>
+    <simplesect>
+        <title>Constructor</title>
+        <programlisting>assistant = gtk.Assistant()</programlisting>
+    </simplesect>
+    <simplesect>
+        <title>Methods</title>
+        <para>There are several ways which pages can be added to the Assistant.</para>
+        <programlisting>assistant.append_page(widget)
+assistant.prepend_page(widget)
+assistant.insert_page(widget, position)</programlisting>
+        <para>The widget argument is a child widget which is contained within the page. The position argument is an integer of where the page should be placed in relation to other pages held in the Assistant.</para>
+        <para>There are a variety of page types which can be specified. Each page type provides different buttons and content depending on the action which is necessary. The method for setting the page type is:</para>
+        <programlisting>assistant.set_page_type(type)</programlisting>
+        <para>The type argument can be set to one of the following:</para>
+        <programlisting>gtk.ASSISTANT_PAGE_CONTENT
+gtk.ASSISTANT_PAGE_SUMMARY
+gtk.ASSISTANT_PAGE_CONFIRM
+gtk.ASSISTANT_PAGE_INTRO
+gtk.ASSISTANT_PAGE_PROGRESS</programlisting>
+        <para>gtk.ASSISTANT_PAGE_CONTENT is the standard page which contains Cancel, Last and Forward buttons. gtk.ASSISTANT_PAGE_SUMMARY is used to list the changes which are to be made and is usually displayed as the second to last page, or after a page which has marked a large number of changes. gtk.ASSISTANT_PAGE_CONFIRM allows for the confirmation or denial of changes to be made. gtk.ASSISTANT_PAGE_INTRO is used to contain text which describes what the Assistant will do. Finally, gtk.ASSISTANT_PAGE_PROGRESS is a blocking type which prevents the user from switching pages until the page is marked as complete.</para>
+        <para>The Assistant should contain a title which displays what the page does:</para>
+        <programlisting>assistant.set_page_title(widget, text)</programlisting>
+        <para>The widget argument is a widget on the page of which the title is going to be set (this can be any widget such as a VBox, Button, etc.). The text argument is whatever text should be displayed in the title area of the page.</para>
+        <para>Before being able to switch pages, we need to mark the page as complete. This would be done at two points depending on requirements. First, we can mark the page as complete immediately after it has been loaded. This would be used if none of the options are absolutely required or the page only contains text/images. Secondly, we can mark the page as complete once a Button is pressed, text has been entered or an option is selected.</para>
+        <programlisting>assistant.set_page_complete(widget, complete)</programlisting>
+        <para>The widget argument should be set to a child widget contained on the page. The complete parameter when set to True, will enable the Next/Confirm button to allow the user to continue.</para>
+        <para>Alternatively, we can check whether a page is currently set to complete or not with:</para>
+        <programlisting>complete = assistant.get_page_complete()</programlisting>
+        <para>If the page has been completed by the user, the .get_page_complete() method will return True.</para>
+        <para>We can retrieve the number of pages which are in the Assistant if necessary with:</para>
+        <programlisting>pages = assistant.get_n_pages()</programlisting>
+        <para>In some circumstances, the page which is to be displayed may not be the next page by design. For example, if the user selects a specific option, we may wish to skip a page.</para>
+        <programlisting>assistant.set_forward_page_func(function, data)</programlisting>
+        <para>The function argument is the function which handles the page. If the value is set to None, the Assistant will simply load the page which is next. The data argument is any data which needs to be passed to the function.</para>
+    </simplesect>
+    <simplesect>
+        <title>Signals</title>
+        <programlisting>"apply" (assistant)
+"cancel" (assistant)
+"close" (assistant)
+"prepare" (assistant, page)</programlisting>
+        <para>The "apply" signal is emitted when the Apply button is pressed on the final page. It is used to begin the application of settings which have been configured during the Assistant. The "cancel" button emits the cancel signal, when the user exits the assistant. The "cancel" signal is also emitted when the user clicks the X on the Assistant window. The "close" signal emits when the Close button on the Summary page is pressed. Finally, the "prepare" signal is used at the end of a current page to signal construction of the next page. This allows the preparation of data for the next page before it is displayed to the user.</para>
+    </simplesect>
+    <simplesect>
+        <title>Example</title>
+        <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class Assistant:
+    def __init__(self):        
+        assistant = gtk.Assistant()
+        
+        assistant.connect("apply", self.button_pressed, "Apply")
+        assistant.connect("cancel", self.button_pressed, "Cancel")
+        
+        vbox = gtk.VBox()
+        vbox.set_border_width(5)
+        page = assistant.append_page(vbox)
+        assistant.set_page_title(vbox, "Page 1: Starting Out")
+        assistant.set_page_type(vbox, gtk.ASSISTANT_PAGE_INTRO)
+        label = gtk.Label("This is an example label within an Assistant. The Assistant is used to guide a user through configuration of an application.")
+        label.set_line_wrap(True)
+        vbox.pack_start(label, True, True, 0)
+        assistant.set_page_complete(vbox, True)
+        
+        vbox = gtk.VBox()
+        vbox.set_border_width(5)
+        assistant.append_page(vbox)
+        assistant.set_page_title(vbox, "Page 2: Moving On...")
+        assistant.set_page_type(vbox, gtk.ASSISTANT_PAGE_CONTENT)
+        label = gtk.Label("This is an example of a label and button within a page. This is a content page primarily used to display options to the end user.")
+        label.set_line_wrap(True)
+        button = gtk.Button("Button Example")
+        vbox.pack_start(label, True, True, 0)
+        vbox.pack_start(button, False, False, 0)
+        assistant.set_page_complete(vbox, True)
+        
+        vbox = gtk.VBox()
+        vbox.set_border_width(5)
+        assistant.append_page(vbox)
+        assistant.set_page_title(vbox, "Page 3: The Finale")
+        assistant.set_page_type(vbox, gtk.ASSISTANT_PAGE_CONFIRM)
+        label = gtk.Label("This is the final page of the Assistant widget. It would be used to confirm the preferences we have set in the previous pages.")
+        label.set_line_wrap(True)
+        vbox.pack_start(label, True, True, 0)
+        assistant.set_page_complete(vbox, True)
+        
+        assistant.show_all()
+    
+    def button_pressed(self, assistant, button):
+        print "%s button pressed" % button
+        gtk.main_quit()
+
+Assistant()
+gtk.main()</programlisting>
+        <para>Download <ulink url="examples/assistant.py"><command>assistant.py</command></ulink></para>
+    </simplesect>
+</chapter>

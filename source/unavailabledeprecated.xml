@@ -1,0 +1,29 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+
+<appendix id="unavailabledeprecated">
+    <title>Deprecated &amp; Unavailable Widgets</title>
+    <simplesect>
+        <title>Deprecated Widgets</title>
+        <para>There are a number of PyGTK widgets which are now marked as deprecated. This occurs as GTK+ advances and older widgets are replaced by newer, more featureful and / or easier to use widgets. Deprecated widgets are not receommended for use in new applications and remain accessible due to backwards compatibility reasons. It should be noted that widgets marked as deprecated may be removed from PyGTK in the future.</para>
+        <para>The current list of deprecated widgets is:</para>
+        <itemizedlist>
+            <listitem>ItemFactory - use UIManager.</listitem>
+            <listitem>Option Menu - use ComboBox.</listitem>
+            <listitem>Combo - use ComboBoxEntry.</listitem>
+            <listitem>Tooltips - use Tooltip.</listitem>
+        </itemizedlist>
+        <para>There are a large number of deprecated methods within widgets which are not marked as deprecated. For the reasons mentioned above, these methods should also not be used.</para>
+    </simplesect>
+    <simplesect>
+        <title>Unavailable Widgets</title>
+        <para>PyGTK is usually a little behind the standard GTK+ release, meaning that the latest version of PyGTK does not include some widgets and methods which are found in the latest version of GTK+. Currently, those which are not accessible in PyGTK version 2.17 are:</para>
+        <itemizedlist>
+            <listitem>ToolPalette - holds large numbers of icons. Has similar properties to a Toolbar widget. It is often seen in advanced image editing applications for quick access.</listitem>
+            <listitem>CellRendererSpinner - similar to the Spinner widget in that it provides a spinning animation however it is positioned within a cell.</listitem>
+            <listitem>EntryBuffer - allows for storage of text for use across different Entry widgets. Similar to a TextBuffer, bu tailored for small amounts of text.</listitem>
+            <listitem>HSV - 'color wheel' widget allowing for selection of colours. Is used as part of the Color-Selection group of widgets.</listitem>
+        </itemizedlist>
+    </simplesect>
+</appendix>

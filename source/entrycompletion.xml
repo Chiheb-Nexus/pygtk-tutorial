@@ -1,0 +1,57 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+
+<chapter id="entrycompletion">
+    <title>Entry Completion</title>
+    <para>An entry completion allows for completion of text as it is typed into an entry. As characters are entered, GTK+ uses data provided to narrow down the potential choices that the user may want to enter.</para>
+    <simplesect>
+        <title>Constructor</title>
+        <programlisting>completion = gtk.EntryCompletion()</programlisting>
+    </simplesect>
+    <simplesect>
+        <title>Methods</title>
+        <para>After creating the completion, we need to provide a model which holds data to be displayed. This is usually a ListStore which has been created earlier. To attach the model:</para>
+        <programlisting>completion.set_model(model)</programlisting>
+        <para>Now, we can attach the completion to our already created entry.</para>
+        <programlisting>entry.set_completion(completion)</programlisting>
+        <para>From this point, when we type our first character into the entry, GTK checks the liststore to find any matches. Any matches are then displayed in a dropdown below the entry. When we enter our second character, the search results are filtered again. This continues until we either have an exact match or no match.</para>
+        <para>We can also reduce the amount of typing required to complete the value with the following method.</para>
+        <programlisting>entry.set_inline_completion(completion)</programlisting>
+        <para>When set .set_inline_completion() is set to True, any values matching what we have typed are automatically filled into the EntryCompletion. This allows the user to press the Tab keyboard to confirm the completion.</para>
+        <para>To set the number of characters that must be typed before the completion is displayed:</para>
+        <programlisting>completion.set_minimum_key_length(integer)</programlisting>
+    </simplesect>
+    <simplesect>
+        <title>Example</title>
+        <programlisting>#!/usr/bin/env python
+
+import gtk
+
+distributions = ["Ubuntu", "Debian", "Sabayon", "Fedora", "Arch", "Mint", "Slackware", "Mandriva", "Sidux", "Mepis"]
+
+class EntryCompletion:
+    def __init__(self):
+        window = gtk.Window()
+        entry = gtk.Entry()
+        completion = gtk.EntryCompletion()
+        liststore = gtk.ListStore(str)
+        
+        entry.set_completion(completion)
+        completion.set_model(liststore)
+        completion.set_text_column(0)
+        
+        window.add(entry)
+        
+        window.connect("destroy", lambda w: gtk.main_quit())
+        
+        for item in distributions:
+            liststore.append([item])
+        
+        window.show_all()
+
+EntryCompletion()
+gtk.main()</programlisting>
+        <para>Download <ulink url="examples/entrycompletion.py"><command>entrycompletion.py</command></ulink></para>
+    </simplesect>
+</chapter>

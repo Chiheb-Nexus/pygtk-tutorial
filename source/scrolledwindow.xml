@@ -1,0 +1,58 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+
+<chapter id="scrolledwindow">
+    <title>Scrolled Window</title>
+    <para>Scrolled Window widgets are used to create a scrollable area inside another widget. Virtually any widget can be inserted into the Scrolled Window. The child widget will be completely accessible regardless of the size due to scrollbars appearing if the child widget exceeds the space allocated to the Scrolled Window.</para>
+    <simplesect>
+        <title>Constructor</title>
+        <programlisting>scrolledwindow = gtk.ScrolledWindow()</programlisting>
+    </simplesect>
+    <simplesect>
+        <title>Methods</title>
+        <para>In some cases, you may wish for the Scrolled Window to always display scrollbars. In others, you may want them never to be displayed. This can be achieved using the policy method:</para>
+        <programlisting>scrolledwindow.set_policy(horizontal_policy, vertical_policy)</programlisting>
+        <para>The horizontal_policy and vertical_policy arguments must be set to one of three available:</para>
+        <programlisting>gtk.POLICY_AUTOMATIC
+gtk.POLICY_NEVER
+gtk.POLICY_ALWAYS</programlisting>
+        <para>If the policy is set to gtk.POLICY_AUTOMATIC, the scrollbars will only appear if the child widget is larger than the space provided by the Scrolled Window.</para>
+        <para>To add a child widget to the Scrolled Window:</para>
+        <programlisting>scrolledwindow.add(child)
+scrolledwindow.add_with_viewport(child)</programlisting>
+        <para>The .add() method is used to add child widgets which include their own scrolling abilities. This includes TextView and TreeView widgets. Widgets which do not have a scrolling method, with examples including VBox, HBox and Table, should use .add_with_viewport() method instead.</para>
+        <para>By default, the scrollbars on the Scrolled Window appear on the bottom and right sides of the widget. This behaviour can be configured with:</para>
+        <programlisting>scrolledwindow.set_placement(placement)</programlisting>
+        <para>The placement value must be set to one of the following:</para>
+        <programlisting>gtk.CORNER_TOP_LEFT
+gtk.CORNER_TOP_RIGHT
+gtk.CORNER_BOTTOM_LEFT
+gtk.CORNER_BOTTOM_RIGHT</programlisting>
+        <para>Note: It is recommended that the default setting of gtk.CORNER_BOTTOM_RIGHT is used unless specific requirements for another setting are needed.</para>
+    </simplesect>
+    <simplesect>
+        <title>Example</title>
+        <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class ScrolledWindow:
+    def __init__(self):
+        window = gtk.Window()
+        window.set_default_size(200, 200)
+        
+        scrolledwindow = gtk.ScrolledWindow()
+        textview = gtk.TextView()
+        
+        window.connect("destroy", lambda w: gtk.main_quit())
+        
+        window.add(scrolledwindow)
+        scrolledwindow.add(textview)
+        window.show_all()
+
+ScrolledWindow()
+gtk.main()</programlisting>
+        <para>Download <ulink url="examples/scrolledwindow.py"><command>scrolledwindow.py</command></ulink></para>
+    </simplesect>
+</chapter>

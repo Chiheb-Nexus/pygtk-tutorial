@@ -1,0 +1,81 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+
+<chapter id="toolbar">
+    <title>Toolbar</title>
+    <para>Toolbar widgets are used for quick accessibility to commonly used functions of an application. Examples include creating a new document, printing a page or undoing an operation. They utilise a set style, which can match other GTK+ applications.</para>
+    <simplesect>
+        <title>Constructor</title>
+        <programlisting>toolbar = gtk.Toolbar()</programlisting>
+    </simplesect>
+    <simplesect>
+        <title>Methods</title>
+        <para>After construction of the Toolbar, items will need to be added. This can be done with the following methods:</para>
+        <programlisting>toolbar.add(widget)
+toolbar.insert(widget, position)</programlisting>
+        <para>The widget parameter is the name of the ToolItem which is to be added to the Toolbar. The position value, used by the second method is the numeric location value, with 0 being the first position in the Toolbar. Using the .add() method allows for items to be added to the toolbar as they are read from the script.</para>
+        <para>We can also remove items from the Toolbar:</para>
+        <programlisting>toolbar.remove(widget)</programlisting>
+        <para>The widget parameter takes the name of the item which is to be removed from the Toolbar.</para>
+        <para>By default, Toolbar widgets are horizontally oriented. This can be configure with:</para>
+        <programlisting>toolbar.set_orientation(orientation)</programlisting>
+        <para>The orientation argument can be set to one of the following values:</para>
+        <programlisting>gtk.ORIENTATION_HORIZONTAL
+gtk.ORIENTATION_VERTICAL</programlisting>
+        <para>We can also adjust the style of the Toolbar:</para>
+        <programlisting>toolbar.set_style(style)</programlisting>
+        <para>The style value can be set to one of the following:</para>
+        <programlisting>gtk.TOOLBAR_ICONS
+gtk.TOOLBAR_TEXT
+gtk.TOOLBAR_BOTH
+gtk.TOOLBAR_BOTH_HORIZ</programlisting>
+        <para>gtk.TOOLBAR_ICONS displays only icons on the Toolbar. gtk.TOOLBAR_TEXT displays only the textual labels on the Toolbar. gtk.TOOLBAR_BOTH allows the Toolbar to show both text and icons for each item. gtk.TOOLBAR_BOTH_HORIZ places the text to the right hand side of the item.</para>
+        <para>Note: It is highly recommended that you do not set a style on the Toolbar. GTK+ provides a global setting which allows all applications to look the same as per the users preference. Setting a style may make your application look different to others.</para>
+        <para>Note: When using gtk.TOOLBAR_BOTH_HORIZ and setting the Toolbar to gtk.ORIENTATION_HORIZONTAL, the text will not be displayed unless the "is-important" property is set on the ToolItem.</para>
+    </simplesect>
+    <simplesect>
+        <title>Example</title>
+        <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class Toolbar:
+    def __init__(self):
+        window = gtk.Window()
+        window.set_default_size(500, -1)
+        
+        toolbar = gtk.Toolbar()
+        
+        button1 = gtk.ToolButton(gtk.STOCK_ADD)
+        button2 = gtk.ToolButton(gtk.STOCK_REMOVE)
+        separator1 = gtk.SeparatorToolItem()
+        toggle = gtk.ToggleToolButton(gtk.STOCK_MEDIA_PLAY)
+        separator2 = gtk.SeparatorToolItem()
+        menu1 = gtk.MenuToolButton(gtk.STOCK_GO_BACK)
+        menu2 = gtk.MenuToolButton(gtk.STOCK_GO_FORWARD)
+        separator3 = gtk.SeparatorToolItem()
+        radio1 = gtk.RadioToolButton(None, gtk.STOCK_NEW)
+        radio2 = gtk.RadioToolButton(radio1, gtk.STOCK_OPEN)
+        
+        window.connect("destroy", lambda w: gtk.main_quit())
+        
+        window.add(toolbar)
+        toolbar.insert(button1, 0)
+        toolbar.insert(button2, 1)
+        toolbar.insert(separator1, 2)
+        toolbar.insert(toggle, 3)
+        toolbar.insert(separator2, 4)
+        toolbar.insert(menu1, 5)
+        toolbar.insert(menu2, 6)
+        toolbar.insert(separator3, 7)
+        toolbar.insert(radio1, 8)
+        toolbar.insert(radio2, 9)
+        
+        window.show_all()
+
+Toolbar()
+gtk.main()</programlisting>
+        <para>Download <ulink url="examples/toolbar.py"><command>toolbar.py</command></ulink></para>
+    </simplesect>
+</chapter>

@@ -1,0 +1,319 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+
+<chapter id="buttonwidgets">
+    <title>Button Widgets</title>
+	<sect1 id="button">
+	    <title>Button</title>
+	    <para>The Button widget is another commonly used widget. It allows a user to interact with the application via clicking.</para>
+        <simplesect>
+            <title>Constructor</title>
+            <programlisting>button = gtk.Button(label, stock_id, underline)</programlisting>
+            <para>The label argument is the text which should be shown on the Button. The stock_id parameter is an image from the <link linkend="stockimages">Stock Images</link>. Finally, the underline property is a Boolean value which when set to True, shows an underline beneath a character which allows access via the keyboard.</para>
+        </simplesect>
+        <simplesect>
+            <title>Methods</title>
+            <para>When creating the button, we can also add two additional properties. These are text, which is shown on the button and a stock image (see more about stock images below). Neither of these options are required and it is also possible to just use one. In most cases, the text property will be used as follows:</para>
+            <programlisting>button = gtk.Button(text)</programlisting>
+            <para>Alternatively, we can add an image:</para>
+            <programlisting>button = gtk.Button(text, stock_image)</programlisting>
+            <para>Note: GTK+ provides a default set of images for use with common features. Take a look at most GTK+ applications and the common functions such as New, Open, Save, Find, Print, etc. all share the same icon. These images are stored in the stock images function and are recommended for use with your application whenever possible. Using them is encouraged to ensure a common look across all applications.</para>
+            <para>To change the label of the button after construction, use:</para>
+            <programlisting>button.set_label(text)</programlisting>
+        </simplesect>
+        <simplesect>
+            <title>Signals</title>
+            <programlisting>"clicked"
+"pressed"
+"released"
+"enter"
+"leave"</programlisting>
+            <para>The "clicked" signal is emitted when the mouse button is pressed and released on the button. "pressed" is emitted when the mouse button is depressed over the button and the "released" signal is given when the mouse button is released over the button. Finally, the "enter" and "leave" signals are created when the mouse cursor moves over or out of the button area. In most cases, only "clicked" will be commonly used.</para>
+        </simplesect>
+        <simplesect>
+            <title>Example</title>
+            <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class Button:
+    def __init__(self):
+        window = gtk.Window()
+        button = gtk.Button("Button")
+ 
+        window.connect("destroy", lambda w: gtk.main_quit())
+        button.connect("clicked", self.button_clicked)
+        
+        window.add(button)
+        window.show_all()
+    
+    def button_clicked(self, widget):
+        print "Button was pressed"
+
+Button()
+gtk.main()</programlisting>
+            <para>Download <ulink url="examples/button.py"><command>button.py</command></ulink></para>
+        </simplesect>
+    </sect1>
+    <sect1 id="togglebutton">
+        <title>ToggleButton</title>
+        <para>A ToggleButton is similar in appearance to a Button widget and shares many properties. The major difference is that a ToggleButton has two states, on and off. When the ToggleButton is clicked, it becomes depressed and when clicked again, it pops back up.</para>
+	    <simplesect>
+	        <title>Constructor</title>
+            <programlisting>togglebutton = gtk.ToggleButton(label, underline)</programlisting>
+            <para>The label argument is the text which should be added to the ToggleButton. The underline parameter can be set to True to allow keyboard shortcut access.</para>
+        </simplesect>
+        <simplesect>
+            <title>Methods</title>
+            <para>To set whether a ToggleButton is depressed or not:</para>
+            <programlisting>togglebutton.set_active(active)</programlisting>
+            <para>The active value can be set to True, to depress the ToggleButton or False, to not depress the ToggleButton.</para>
+            <para>We can also retrieve whether ToggleButton is depressed or not using:</para>
+            <programlisting>active = togglebutton.get_active()</programlisting>
+            <para>A ToggleButton is also able to have an "inconsistent" state. This method can be used to indicate that a range of specified values are not within the boundaries set. For example, 0 could be False, 1 could be True, and values in between could be set as inconsistent.</para>
+            <programlisting>togglebutton.set_inconsistent(inconsistent)</programlisting>
+        </simplesect>
+        <simplesect>
+            <title>Signals</title>
+            <programlisting>"toggled"</programlisting>
+            <para>When the state of the ToggleButton is changed, the "toggled" signal is emitted.</para>
+        </simplesect>
+        <simplesect>
+            <title>Example</title>
+            <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class ToggleButton:
+    def __init__(self):
+        window = gtk.Window()
+        vbox = gtk.VBox()
+        
+        togglebutton1 = gtk.ToggleButton("ToggleButton 1")
+        togglebutton2 = gtk.ToggleButton("ToggleButton 2")
+        togglebutton2.set_active(True)
+            
+        window.add(vbox)
+        vbox.add(togglebutton1)
+        vbox.add(togglebutton2)
+            
+        window.connect("destroy", lambda w: gtk.main_quit())
+        togglebutton1.connect("toggled", self.toggled, "1")
+        togglebutton2.connect("toggled", self.toggled, "2")
+            
+        window.show_all()
+    
+    def toggled(self, widget, button):
+        print "ToggleButton", button, "was turned %s" % ("off", "on")[widget.get_active()]
+
+ToggleButton()
+gtk.main()</programlisting>
+            <para>Download <ulink url="examples/togglebutton.py"><command>togglebutton.py</command></ulink></para>
+        </simplesect>
+    </sect1>
+    <sect1 id="checkbutton">
+        <title>CheckButton</title>
+        <para>The CheckButton works in a similar way to ToggleButton widget, however on the face of it the two look very different. The widget has two parts; a square and an associated label. The square is either empty or has a tick inserted depending on the state (note: the CheckButton can have a third state which will be covered later).</para>
+        <simplesect>
+            <title>Constructor</title>
+            <programlisting>checkbutton = gtk.CheckButton(label, underline)</programlisting>
+            <para>The label argument is the string of text which should be placed on the widget. The underline parameter is a Boolean value which when set to True, allows access to the CheckButton using the keyboard.</para>
+        </simplesect>
+        <simplesect>
+            <title>Methods</title>
+            <para>By default, we may wish to have some CheckButton widgets set to True at runtime.</para>
+            <programlisting>checkbutton.set_active(active)</programlisting>
+            <para>To retrieve the state of the CheckButton, use the following method:</para>
+            <programlisting>active = checkbutton.get_active()</programlisting>
+            <para>If the CheckButton is ticked, the value returned will be True. If unticked, False will be returned.</para>
+            <para>As with a ToggleButton, a CheckButton can also have an "inconsistent" state.</para>
+            <programlisting>checkbutton.set_inconsistent(inconsistent)</programlisting>
+            <para>In some cases, it may be useful to draw the CheckButton in a similar way to a ToggleButton. This can be done by using:</para>
+            <programlisting>checkbutton.set_mode(mode)</programlisting>
+            <para>When the mode is set to False, the widget is drawn similar to a ToggleButton. Setting mode to True returns the button to the default appearance.</para>
+        </simplesect>
+        <simplesect>
+            <title>Signals</title>
+            <programlisting>"toggled"</programlisting>
+            <para>When the state of the CheckButton is changed from True to False or vice-versa, the "toggled" event is emitted.</para>
+        </simplesect>
+        <simplesect>
+            <title>Example</title>
+            <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class CheckButton:
+    def __init__(self):
+        window = gtk.Window()
+        vbox = gtk.VBox()
+        checkbutton1 = gtk.CheckButton("CheckButton 1")
+        checkbutton2 = gtk.CheckButton("CheckButton 2")
+
+        vbox.pack_start(checkbutton1, False, False, 0)
+        vbox.pack_start(checkbutton2, False, False, 0)
+            
+        window.connect("destroy", lambda w: gtk.main_quit())
+            
+        window.add(vbox)
+        window.show_all()
+
+CheckButton()
+gtk.main()</programlisting>
+            <para>Download <ulink url="examples/checkbutton.py"><command>checkbutton.py</command></ulink></para>
+        </simplesect>
+    </sect1>
+    <sect1 id="radiobutton">
+        <title>RadioButton</title>
+        <para>RadioButton widgets are styled on the old-style television sets which allowed for the depressing of one button at a time. When one button was pressed, the other button was popped back up. They are useful for a short list of options in which only one option should be selected. A RadioButton is also similar to a CheckButton in appearance, however it contains a circle rather than square indicating status.</para>
+	    <simplesect>
+	        <title>Constructor</title>
+	        <programlisting>radiobutton = gtk.RadioButton(group, label, underline)</programlisting>
+	        <para>The RadioButton constructor contains a group parameter. To allow the RadioButton widgets to work in a group, this needs to be set. If the RadioButton is the first in the group, we set this to None. If there is already a RadioButton constructed, we set the group parameter to the name of the first RadioButton. For example:</para>
+	        <programlisting>radiobutton1 = gtk.RadioButton(None, "RadioButton 1")
+radiobutton2 = gtk.RadioButton(first_radio_button, "RadioButton 2")
+radiobutton3 = gtk.RadioButton(first_radio_button, "RadioButton 3")</programlisting>
+            <para>The final two arguments are label and underline. The label argument is the text which is displayed to the end-user on the widget. The underline value, when set to True allows access to the widget using the keyboard.</para>
+	    </simplesect>
+	    <simplesect>
+	        <title>Methods</title>
+	        <para>When first run, the first RadioButton in the group will be active. This can be changed using the following method:</para>
+	        <programlisting>radiobutton.set_active(active)</programlisting>
+	        <para>If the active parameter is set to True, the RadioButton will be active. Only one RadioButton in a particular group should be set to active at a time.</para>
+	        <para>At some point, it may be useful to allow changing of a RadioButton widgets group after its creation. This can be done using:</para>
+	        <programlisting>radiobutton.set_group(group)</programlisting>
+	        <para>In some cases, it may be useful to draw the RadioButton in a similar way to a ToggleButton. This can be done by using:</para>
+            <programlisting>radiobutton.set_mode(mode)</programlisting>
+            <para>When the mode is set to False, the widget is drawn similar to a ToggleButton. Setting mode to True returns the button to the default appearance.</para>
+	    </simplesect>
+	    <simplesect>
+	        <title>Signals</title>
+	        <programlisting>"toggled"</programlisting>
+	        <para>The "toggled" event is emitted when the user clicks on a RadioButton in the group. When emitted, two changes will occur. These are that one RadioButton will change to False and another will change to True.</para>
+	    </simplesect>
+	    <simplesect>
+	        <title>Example</title>
+	        <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class RadioButton:
+    def __init__(self):
+        window = gtk.Window()
+        vbox = gtk.VBox()
+        
+        radiobutton1 = gtk.RadioButton(None, "RadioButton 1")
+        radiobutton2 = gtk.RadioButton(radiobutton1, "RadioButton 2")
+            
+        window.add(vbox)
+        vbox.pack_start(radiobutton1)
+        vbox.pack_start(radiobutton2)
+            
+        window.connect("destroy", lambda w: gtk.main_quit())
+            
+        window.show_all()
+
+RadioButton()
+gtk.main()</programlisting>
+            <para>Download <ulink url="examples/radiobutton.py"><command>radiobutton.py</command></ulink></para>
+        </simplesect>
+    </sect1>
+    <sect1 id="spinbutton">
+        <title>SpinButton</title>
+        <para>A SpinButton widget consists of an entry, with two internal up/down buttons to allow the adjustment of the value held in the entry. Along with adjusting the value using the buttons, a value can also be entered manually. The combination of a SpinButton makes for a powerful, yet relatively simple widget to implement and use.</para>
+        <simplesect>
+            <title>Constructor</title>
+            <programlisting>spinbutton = gtk.SpinButton(adjustment)</programlisting>
+            <para>The adjustment parameter is the name of an Adjustment widget created previously. These will be looked at in depth in the next coming chapters.</para>
+        </simplesect>
+        <simplesect>
+            <title>Methods</title>
+            <para>We can change the adjustment a SpinButton uses with the following:</para>
+            <programlisting>spinbutton.set_adjustment(adjustment)</programlisting>
+            <para>To change the value that the SpinButton is showing:</para>
+            <programlisting>spinbutton.set_value(value)</programlisting>
+            <para>The value entered can either be an integer or float, depending on your requirements.</para>
+            <para>The most common operation will be retrieving the value from the SpinButton:</para>
+            <programlisting>value = spinbutton.get_value()
+value = spinbutton.get_value_as_int()</programlisting>
+            <para>When using get_value(), the value retrieved will be a float. Rather than using Python to convert that to an integer, we can retrieve the value as an integer directly from GTK+ using .get_value_as_int().</para>
+            <para>When you allow the displaying of float values in the SpinButton, you may wish to adjust the number of decimal spaces displayed.</para>
+            <programlisting>spinbutton.set_digits(integer)</programlisting>
+            <para>By default, the SpinButton can accept textual data. If you wish to limit this to numerical values only the numeric value can be set to True or False:</para>
+            <programlisting>spinbutton.set_numeric(numeric)</programlisting>
+            <para>We can also adjust the update policy of the SpinButton. There are two options here; by defaul the SpinButton updates the value even if the data entered is invalid. Alternatively, we can set the policy to only update when the value entered is valid.</para>
+            <programlisting>spinbutton.set_update_policy(policy)</programlisting>
+            <para>The policy value can be one of the following:</para>
+            <programlisting>gtk.UPDATE_ALWAYS
+gtk.UPDATE_IF_VALID</programlisting>
+        </simplesect>
+        <simplesect>
+            <title>Example</title>
+            <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class SpinButton:
+    def __init__(self):
+        window = gtk.Window()
+        vbox = gtk.VBox(False, 5)
+        
+        adjustment = gtk.Adjustment(0, 0, 100, 1, 10, 0)
+        self.spinbutton = gtk.SpinButton(adjustment)
+        check_snapticks = gtk.CheckButton("Snap to Ticks")
+        
+        window.connect("destroy", lambda w: gtk.main_quit())
+        check_snapticks.connect("toggled", self.snapticks)
+        
+        window.add(vbox)
+        vbox.pack_start(self.spinbutton, False, False, 0)
+        vbox.pack_start(check_snapticks, False, False, 0)
+        
+        window.show_all()
+    
+    def snapticks(self, widget):
+        self.spinbutton.set_snap_to_ticks(widget.get_active())
+        
+SpinButton()
+gtk.main()</programlisting>
+            <para>Download <ulink url="examples/spinbutton.py"><command>spinbutton.py</command></ulink></para>
+        </simplesect>
+    </sect1>
+    <sect1 id="linkbutton">
+        <title>LinkButton</title>
+        <para>A LinkButton is similar to a normal button, however it holds an URL and when interacted with, loads the URL in a web browser. These widgets are commonly used to allow a user quick access to a website from the application.</para>
+	    <simplesect>
+	        <title>Constructor</title>
+            <programlisting>linkbutton = gtk.LinkButton(uri, label)</programlisting>
+            <para>The uri property is the address of the website which should be loaded. The label is set as the text which should be displayed on the LinkButton. If it is set to None or missed completely, the web address will be displayed instead.</para>
+        </simplesect>
+        <simplesect>
+            <title>Methods</title>
+            <para>The uri can be changed after the creation of the LinkButton:</para>
+            <programlisting>linkbutton.set_uri(uri)</programlisting>
+            <para>Alternatively, we can retrieve the uri from the LinkButton using:</para>
+            <programlisting>uri = linkbutton.get_uri()</programlisting>
+        </simplesect>
+        <simplesect>
+            <title>Example</title>
+            <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class LinkButton:
+    def __init__(self):
+        window = gtk.Window()
+        linkbutton = gtk.LinkButton("http://www.pygtk.org/", "LinkButton")
+
+        window.connect("destroy", lambda w: gtk.main_quit())
+            
+        window.add(linkbutton)
+        window.show_all()
+
+LinkButton()
+gtk.main()</programlisting>
+            <para>Download <ulink url="examples/linkbutton.py"><command>linkbutton.py</command></ulink></para>
+        </simplesect>
+    </sect1>
+</chapter>

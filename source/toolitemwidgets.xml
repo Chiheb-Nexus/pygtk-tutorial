@@ -1,0 +1,116 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+
+<chapter id="toolitemwidgets">
+    <title>ToolItem Widgets</title>
+    <para>ToolItem widgets are variants of their standard counterparts, however are designed for use on Toolbars. They can take global styling options from GTK+ which allows all ToolItem widgets to look the same in different applications.</para>
+    <sect1 id="toolbutton">
+        <title>ToolButton</title>
+        <para>A ToolButton widget is similar to a Button widget, however is specialised for use on a Toolbar.</para>
+        <simplesect>
+            <title>Constructor</title>
+            <para>There are two types of constructor for ToolButton widgets, and their use will depend on requirements. The first utilises the Stock Images and is best used for standard items such as New, Open, Save, Close, Print, etc. The second constructor is often used for custom items which the Stock Images collection does not cover. If using the first constructor, changing the label to display custom text is slightly more difficult.</para>
+            <programlisting>toolbutton = gtk.ToolButton(stock_id)
+toolbutton = gtk.ToolButton(widget, label)</programlisting>
+            <para>The stock_id parameter is the name of an icon from the Stock Images page. The widget parameter is the name of a widget which should be displayed on the ToolButton. This could be an Image widget for example. The label value is the text which should be displayed on the ToolButton.</para>
+        </simplesect>
+        <simplesect>
+            <title>Methods</title>
+            <para>The label set on the ToolButton can be changed after construction with:</para>
+            <programlisting>toolbutton.set_label(label)</programlisting>
+            <para>We can also change the Stock Image:</para>
+            <programlisting>toolbutton.set_stock_id(stock_id)</programlisting>
+        </simplesect>
+    </sect1>
+    <sect1 id="toggletoolbutton">
+        <title>ToggleToolButton</title>
+        <para>A ToggleToolButton is simiar to a ToolButton widget, however it can be set to two states. If the ToggleToolButton is pressed, it pops down. When pressed again, it pops back up. It is similar to a standard Toggle Button widget, but specialised for use on a Toolbar.</para>
+        <simplesect>
+            <title>Constructor</title>
+            <programlisting>toggletoolbutton = gtk.ToggleToolButton(stock_id)
+toggletoolbutton = gtk.ToggleToolButton(widget, label)</programlisting>
+        </simplesect>
+        <simplesect>
+            <title>Methods</title>
+            <para>The ToggleToolButton can be set to depressed with:</para>
+            <programlisting>toggletoolbutton.set_active(Boolean)</programlisting>
+            <para>We can also retrieve the state of the ToggleToolButton with the method:</para>
+            <programlisting>state = toggletoolbutton.get_active()</programlisting>
+            <para>When the widget is depressed, the value returned will be True. Alternatively, False is returned when the widget is not depressed.</para>
+        </simplesect>
+    </sect1>
+    <sect1 id="radiotoolbutton">
+        <title>RadioToolButton</title>
+        <para>The RadioToolButton is similar to a standard Radio Button, however it is specialised for use on the Toolbar. They are styled on old-style television sets which allow only one button in a group to be depressed at a time. When one button is pressed, any other button which is currently depressed is popped-up.</para>
+        <simplesect>
+            <title>Constructor</title>
+            <programlisting>radiotoolbutton = gtk.RadioToolButton(group, stock_id)</programlisting>
+            <para>The group parameter is required for RadioToolButton widgets to work correctly together. The first RadioToolButton in the group should have its group parameter set to None. All subsequent RadioToolButtons should be set to the name of the first in the group. The stock_id value sets the icon on the RadioToolButton and can be selected from the Stock Images page.</para>
+        </simplesect>
+        <simplesect>
+            <title>Methods</title>
+            <para>The group to which a RadioToolButton is assigned can be changed after construction with the method:</para>
+            <programlisting>radiotoolbutton.set_group(group)</programlisting>
+        </simplesect>        
+    </sect1>
+    <sect1 id="menutoolbutton">
+        <title>MenuToolButton</title>
+        <para>A MenuToolButton is similar to a ToolButton widget, however provides an arrow next to the widget. When the arrow is clicked, a menu is dropped down.</para>
+        <simplesect>
+            <title>Constructor</title>
+            <para>There are two constructors for the MenuToolButton and their use will depend on requirements.</para>
+            <programlisting>menutoolbutton = gtk.MenuToolButton(stock_id)
+menutoolbutton = gtk.MenuToolButton(widget, label)</programlisting>
+            <para> The first uses a stock_id paramater which allows for the selection of the icon from the Stock Images page. When a Stock Image is used it sets a label which can be difficult to customise. In these cases, stock_id is used for common functions such as New, Open, Save, Close, Print, etc. If the MenuToolButton needs to be more specialised to the application, it is better to use the second constructor. This allows a custom image and label to be constructed with the MenuToolButton.</para>
+        </simplesect>
+        <simplesect>
+            <para>After constructing the MenuToolButton, a menu will need to be attached:</para>
+            <programlisting>menutoolbutton.set_menu(menu)</programlisting>
+            <para>The menu parameter is the name of a Menu widget created previously. If no menu is specified on the widget, the arrow will appear "greyed-out" and will be unclickable.</para>
+            <para>If required, tooltip text can be added to the arrow to indicate what the menu does. This can be done with the method:</para>
+            <programlisting>menutoolbutton.set_arrow_tooltip_text(text)</programlisting>
+        </simplesect>
+    </sect1>
+    <sect1 id="separatortoolitem">
+        <title>SeparatorToolItem</title>
+        <para>The SeparatorToolItem allows widgets on a Toolbar to be separated into groups. By default, the separator is drawn as a horizontal or vertical line depending on the Toolbar orientation setting.</para>
+        <simplesect>
+            <title>Constructor</title>
+            <programlisting>separatortoolitem = gtk.SeparatorToolItem()</programlisting>
+        </simplesect>
+        <simplesect>
+            <title>Methods</title>
+            <para>As mentioned above, the default setting is to draw a line on the toolbar. This can be disabled and instead leaves empty space with the method:</para>
+            <programlisting>separatortoolitem.set_draw(Boolean)</programlisting>
+            <para>We can also force the separator to expand to fill up all free space on the toolbar with:</para>
+            <programlisting>separatortoolitem.set_expand(Boolean)</programlisting>
+            <para>When both the .set_draw() and .set_expand() methods are set to False and True respectively, the separator expands and creates a large empty space. This is useful to allow widgets to be placed on the far-right of the Toolbar.</para>
+        </simplesect>
+    </sect1>
+    <sect1 id="generaltoolitems">
+        <title>General ToolItem Methods</title>
+        <para>The following page documents methods which apply to more than one particular ToolItem variant.</para>
+        <simplesect>
+            <title>Methods</title>
+            <para>We can utilise a ToolItem widget to allow creation of custom items. This is commonly used to allow placing of Entry or ComboBoxEntry widgets on the Toolbar. Widgets can be placed added to and removed from ToolItem widgets with:</para>
+            <programlisting>toolitem.add(widget)
+toolitem.remove(widget)</programlisting>
+            <para>When the toolbar is set to display text beside icons, by default no text is actually displayed unless explicitly defined on each ToolItem. This is called setting "priority text", and is usually set on items which are important to the function of the application. For example, in a web browser, the back button would be set as important whereas a word processor would likely have the save button defined as important.</para>
+            <programlisting>toolitem.set_is_important(important)</programlisting>
+            <para>Each ToolItem which should be defined as important should have this method defined, with the important parameter being set to True to enable the displaying of text.</para>
+            <para>We can also set ToolItems to have equal sizes with:</para>
+            <programlisting>toolitem.set_homogeneous(homogeneous)</programlisting>
+            <para>If homogeneous is set to True, the ToolItem is set to an equal size of all other homogeneous items on the Toolbar.</para>
+            <para>A number of items of information about ToolItems can be retrieved with:</para>
+            <programlisting>important = toolitem.get_is_important()
+icon_size = toolitem.get_icon_size()
+orientation = toolitem.get_orientation()
+style = toolitem.get_toolbar_style()</programlisting>
+            <para>ToolItem widgets can also be set to be visible/invisible depending on the orientation of the Toolbar. This can be made with:</para>
+            <programlisting>toolitem.set_visible_vertical(visible)
+toolitem.set_visible_horizontal(visible)</programlisting>
+            <para>When the visible parameter is set to False, the item will not be visible in the orientation specified.</para>
+        </simplesect>
+    </sect1>
+</chapter>

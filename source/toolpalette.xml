@@ -1,0 +1,69 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+
+<chapter id="toolpalette">
+    <title>ToolPalette</title>
+    <para>The ToolPalette widget is similar to a <link linkend="toolbar">Toolbar</link>, however is tailored to store a large number of items. The items can be displayed by icon, text or both, in a horizontal or vertical style.</para>
+    <simplesect>
+        <title>Constructor</title>
+        <programlisting>toolpalette = gtk.ToolPalette()</programlisting>
+    </simplesect>
+    <simplesect>
+        <title>Methods</title>
+        <para>Items are not added to a ToolPalette directly, rather they are added via groups using the <link linkend="toolitemgroup">ToolItemGroup</link> object. This allows for a logical separation of items, of which the groups can be expanded contracted as per user requirement. To add a group to the ToolPalette use:</para>
+        <programlisting>toolpalette.add(group)</programlisting>
+        <para>Alternatively, a group can be removed from the ToolPalette with:</para>
+        <programlisting>toolpalette.remove(group)</programlisting>
+        <para>Groups can be set to a specific position with the method:</para>
+        <programlisting>toolpalette.set_group_position(group, position)</programlisting>
+        <para>The group parameter should be set to the name of the ToolItemGroup which is being set. The position value should be set to a number of 0 or greater. 0 indicates that the group will be added to the top of the ToolPalette.</para>
+        <para>Another useful feature of ToolPalette widgets is the ability to only allow one group to be expanded at a particular time. This allows for displaying of large number of icons by closing other groups. This is done with:</para>
+        <programlisting>toolpalette.set_exclusive(group, exclusive)</programlisting>
+        <para>The group parameter will be set to the group which is being made exclusive. The exclusive value should be set to True or False, with True enabling the exclusive mode on the specified group.</para>
+        <para>By default, the ToolPalette will display items in the style set by GTK+ global configuration. This can be changed with the method:</para>
+        <programlisting>toolpalette.set_style(style)</programlisting>
+        <para>The style parameter should be set to one of the following constants:</para>
+        <programlisting>gtk.TOOLBAR_ICONS
+gtk.TOOLBAR_TEXT
+gtk.TOOLBAR_BOTH
+gtk.TOOLBAR_BOTH_HORIZ</programlisting>
+    </simplesect>
+    <simplesect>
+        <title>Example</title>
+        <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class ToolPalette:
+    def __init__(self):
+        window = gtk.Window()
+        window.set_default_size(250, 500)
+        
+        toolpalette = gtk.ToolPalette()
+        toolbutton1 = gtk.ToolButton(gtk.STOCK_ADD)
+        toolbutton2 = gtk.ToolButton(gtk.STOCK_REMOVE)
+        toolbutton3 = gtk.ToolButton(gtk.STOCK_ABOUT)
+        toolbutton4 = gtk.ToolButton(gtk.STOCK_HELP)
+        toolbutton5 = gtk.ToolButton(gtk.STOCK_PREFERENCES)
+        
+        group1 = gtk.ToolItemGroup("Group 1")
+        group1.add(toolbutton1)
+        group1.add(toolbutton2)
+        toolpalette.add(group1)
+        group2 = gtk.ToolItemGroup("Group 2")
+        group2.add(toolbutton3)
+        group2.add(toolbutton4)
+        group2.add(toolbutton5)
+        toolpalette.add(group2)
+        
+        window.connect("destroy", lambda w: gtk.main_quit())
+        
+        window.add(toolpalette)
+        window.show_all()
+
+ToolPalette()
+gtk.main()</programlisting>
+        <para>Download <ulink url="examples/toolpalette.py"><command>toolpalette.py</command></ulink></para>
+    </simplesect>
+</chapter>

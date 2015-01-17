@@ -1,0 +1,46 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+
+<chapter id="hsv">
+    <title>HSV</title>
+    <para>The HSV widget displays a colour-wheel widget, allowing the user to select colours.</para>
+    <simplesect>
+        <title>Constructor</title>
+        <programlisting>hsv = gtk.HSV()</programlisting>
+    </simplesect>
+    <simplesect>
+        <title>Methods</title>
+        <para>Colours can be retrieved from and set to the colour-wheel with the calls:</para>
+        <programlisting>r, g, b = hsv.get_color()
+hsv.set_color(r, g, b)</programlisting>
+        <para>In both cases, the r, g, b values must be a number between 0.0 and 1.0.</para>
+        <para>By default, the HSV widget is relatively small. The size can be adjusted with:</para>
+        <programlisting>hsv.set_metrics(diameter, ring)</programlisting>
+        <para>The diameter value is the size of the ring, with the value being measured in pixels. The ring parameter is a width in pixels of the widget ring. By default, the HSV values are 100 pixels in diameter and 10 pixels in ring width.</para>
+    </simplesect>
+    <simplesect>
+        <title>Example</title>
+        <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class HSV:
+    def __init__(self):
+        window = gtk.Window()
+        hsv = gtk.HSV()
+        
+        window.connect("destroy", lambda w: gtk.main_quit())
+        hsv.connect("changed", self.colour_changed)
+        
+        window.add(hsv)
+        window.show_all()
+    
+    def colour_changed(self, hsv):
+        print hsv.get_color()
+
+HSV()
+gtk.main()</programlisting>
+        <para>Download: <ulink url="examples/hsv.py">hsv.py</ulink></para>
+    </simplesect>
+</chapter>

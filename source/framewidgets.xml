@@ -1,0 +1,150 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+
+<chapter id="framewidgets">
+    <title>Frame Widgets</title>
+    <para>Frame widgets are used to segregate other widgets into logical groups relating to specific tasks.</para>
+    <sect1 id="frame">
+        <title>Frame</title>
+        <para>Frame widgets can be used to segregate widgets into related groups. They have a surround which shows the boundary of the frame and an optional label.</para>
+        <simplesect>
+            <title>Constructor</title>
+            <programlisting>expander = gtk.Expander(label)</programlisting>
+            <para>The label property should be set to a value which describes the expander. Alternatively, it can be left blank if no title is required, however this is not recommended.</para>
+        </simplesect>
+        <simplesect>
+            <title>Methods</title>
+            <para>To change the label on the frame after creation, use the following:</para>
+            <programlisting>frame.set_label(label)</programlisting>
+            <para>It is also possible to set the shadow type on the frame:</para>
+            <programlisting>frame.set_shadow_type(shadow)</programlisting>
+            <para>The default shadow type is gtk.SHADOW_ETCHED_IN, however this can be changed to one of the following five values:</para>
+            <programlisting>gtk.SHADOW_NONE
+gtk.SHADOW_IN
+gtk.SHADOW_OUT
+gtk.SHADOW_ETCHED_IN
+gtk.SHADOW_ETCHED_OUT</programlisting>
+        </simplesect>
+        <simplesect>
+            <title>Example</title>
+            <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class Frame:
+    def __init__(self):
+        window = gtk.Window()
+        window.set_default_size(200, 200)
+        frame = gtk.Frame("Frame")
+
+        window.connect("destroy", lambda w: gtk.main_quit())
+        
+        window.add(frame)
+        window.show_all()
+
+Frame()
+gtk.main()</programlisting>
+            <para>Download <ulink url="examples/frame.py"><command>frame.py</command></ulink></para>
+        </simplesect>
+    </sect1>
+    <sect1 id="aspectframe">
+        <title>Aspect Frame</title>
+        <para>An Aspect Frame is similar to a Frame widget, however its sizing properties allow it to keep a ratio of size. This is useful for displaying images or other media which need to be sized appropriately.</para>
+	    <simplesect>
+	        <title>Constructor</title>
+	        <programlisting>aspectframe = gtk.AspectFrame(label, xalign, yalign, ratio, obey_child)</programlisting>
+	        <para>The label property is the text shown on the top of the frame. The xalign and yalign values are floats, which specify the position of the label. The obey_child property is a boolean which when set to True, uses the child widgets aspect. When set to false, the child widget must obey the aspect of the frame.</para>
+	    </simplesect>
+	    <simplesect>
+	        <title>Methods</title>
+	        <para>After creating the aspect frame, it can be adjusted using the following:</para>
+	        <programlisting>aspectframe.set(xalign, yalign, ratio, obey_child)</programlisting>
+	        <para>We can still adjust the label after creation too, with:</para>
+	        <programlisting>aspectframe.set_label(text)</programlisting>
+	    </simplesect>
+	    <simplesect>
+	        <title>Example</title>
+	        <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class AspectFrame:
+    def __init__(self):
+        window = gtk.Window()
+        window.set_default_size(200, 200)
+        
+        frame = gtk.AspectFrame("Frame", 0.5, 0.5, 0.8, False)
+        image = gtk.Image()
+        image.set_from_file("gtk.png")
+        frame.add(image)
+
+        window.connect("destroy", lambda w: gtk.main_quit())
+        
+        window.add(frame)
+        window.show_all()
+
+AspectFrame()
+gtk.main()</programlisting>
+            <para>Download <ulink url="examples/aspectframe.py"><command>aspectframe.py</command></ulink></para>
+        </simplesect>
+    </sect1>
+    <sect1 id="commonframe">
+        <title>Common Frame</title>
+        <para>A Common Frame is a derivative of a standard Frame widget. It is recommended for use in GTK+ applications, as it does not have a distracting effect (due to a standard Frames border). It also adds some flexibility for positioning child widgets in the frame.</para>
+    	<simplesect>
+    	    <title>Construction</title>
+    	    <para>The basis for our Common Frame is:</para>
+    	    <programlisting>frame = gtk.Frame()
+frame.set_shadow_type(gtk.SHADOW_NONE)</programlisting>
+            <para>Now the frame has been constructed and the shadow has been turned off, we need to create a label for use as the frame title.</para>
+            <programlisting>label = gtk.Label("&lt;b&gt;Common Frame&lt;/b&gt;")
+label.set_use_markup(True)
+frame.set_label_widget(label)</programlisting>
+            <para>Inside our label text, there are &lt;b&gt; &lt;/b&gt; markup tags. This indicates to GTK that we need the label text to be in bold style. These tags will not be shown to the user. The final line displays the label widget inside the frame title.</para>
+            <para>Now, inside the frame we will attach an Alignment widget.</para>
+            <programlisting>alignment = gtk.Alignment()</programlisting>
+            <para>After creating the alignment, we can specify certain attributes to get the child widgets to display neatly.</para>
+            <programlisting>alignment.set_padding(5, 0, 12, 0)
+alignment.set(0.5, 0.5, 1.0, 1.0)</programlisting>
+            <para>Finally, we put everything together:</para>
+            <programlisting>frame.add(alignment)
+alignment.add(child)</programlisting>
+            <para>The child property is the widget which should be displayed in the frame. This can be a Button, VBox, ComboBox, etc.</para>
+        </simplesect>
+        <simplesect>
+            <title>Example</title>
+            <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class CommonFrame:
+    def __init__(self):
+        window = gtk.Window()
+        window.set_default_size(200, 200)
+        
+        frame = gtk.Frame()
+        frame.set_shadow_type(gtk.SHADOW_NONE)
+        label = gtk.Label("&lt;b&gt;Common Frame&lt;/b&gt;")
+        label.set_use_markup(True)
+        frame.set_label_widget(label)
+        
+        alignment = gtk.Alignment()
+        alignment.set_padding(5, 0, 12, 0)
+        alignment.set(0.5, 0.5, 1.0, 1.0)
+        frame.add(alignment)
+        
+        label = gtk.Label("Label in Common Frame")
+        alignment.add(label)
+        
+        window.connect("destroy", lambda w: gtk.main_quit())
+        
+        window.add(frame)
+        window.show_all()
+
+CommonFrame()
+gtk.main()</programlisting>
+            <para>Download <ulink url="examples/commonframe.py"><command>commonframe.py</command></ulink></para>
+        </simplesect>
+    </sect1>
+</chapter>

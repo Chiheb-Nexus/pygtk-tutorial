@@ -1,0 +1,90 @@
+Contributing
+------------
+The PyGTK Tutorial welcomes all contributions, suggestions and constructive
+criticism.
+
+If you wish to contribute text or code, please use a recent version of the
+gitorious repository as this is often updated every couple of days and provides
+the most up-to-date version of the tutorial.
+
+The tutorial uses docbook which allows for the text to be structured, and then
+compiled into the HTML and PDF files the tutorial provides. It is simply XML, with
+tags that state how a piece of text should be displayed. Common tag examples
+include:
+    <programlisting></programlisting> - displays code samples
+    <title></title> - page or section titles
+    <para></para> - paragraphs of text used for most of the writings
+    <simplesect></simplesect> - provide sections within a page
+    <sect1></sect1> - provide sections within a topic
+    
+Each topic has its own file within the tutorial, except in cases where items are
+related. For example, information on buttons and labels go in separate files, but
+information about cellrenderers go in a single file, separated using <sect1> tags.
+
+There are also several folders used by the tutorial. The source directory contains
+the XML files, the examples folder contains the code samples and the resources
+directory is used to contain supplmentary files such as images, text files, sound 
+clips, etc.
+
+When adding new pages to the tutorial, it is important to ensure that the new page
+is added to the contents.xml file. This file is read at compile time, to identify
+the chapters of the tutorial. If a file is not included on this page, it will
+not be compiled.
+
+
+License
+-------
+The text and code samples included in this tutorial are released in the Public
+Domain. Any text or code samples donated to the project need to also be made
+Public Domain.
+
+Supplementary files such as the GTK+ logo, used by some code examples are
+released under a particular license.
+
+
+Requirements
+------------
+There are several pieces of software required to compile the docbook source. The
+following are the name of packages found on Debian-based distros. Other distros
+may use different package names:
+    xsltproc
+    dblatex
+    build-essential
+
+
+Compile
+-------
+To create the HTML or PDF files from the XML source, enter:
+    make tutorial-html
+    make tutorial-pdf
+
+Afterwards, you can make a tarball package containing all the HTML, images, resources and examples with:
+    make tutorial-dist
+
+If you want a tarball containing the uncompiled source, use:
+    make tutorial-src
+
+To delete all previously compiled tutorial files, including tarballs, use:
+    make clean
+
+Note: Due to the length of the tutorial, it may take around one or two minutes to 
+compile the HTML and PDF files.
+
+
+Maintainers
+-----------
+Name:       Andrew Steele
+Website:    http://www.learngtk.org/
+Website:    http://www.andrewsteele.me/
+Email:      andrew@andrewsteele.me.uk
+
+
+Thanks
+------
+Thanks goes to the following individuals and groups for their work in Python, GTK+
+and PyGTK.
+
+    Guido van Rossum and other developers for creating and maintaining the Python programming language.
+    The GTK+ developers for their excellent work on creating the toolkit.
+    James Henstridge and other developers for their work on the PyGTK bindings.
+    John Finlay, Rafaele Villar Burke and other maintainers of the original (and excellent) PyGTK tutorial.

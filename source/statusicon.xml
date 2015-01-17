@@ -1,0 +1,78 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+
+<chapter id="statusicon">
+    <title>StatusIcon</title>
+    <para>The StatusIcon widget provides an icon in the notification area / task bar of the desktop.</para>
+    <simplesect>
+        <title>Constructor</title>
+        <programlisting>statusicon = gtk.StatusIcon()</programlisting>
+    </simplesect>
+    <simplesect>
+        <title>Methods</title>
+        <para>After construction of the StatusIcon, an image needs to be specified. There are a variety of ways to set the image:</para>
+        <programlisting>statusicon.set_from_pixbuf(pixbuf)
+statusicon.set_from_file(filepath)
+statusicon.set_from_stock(stock_item)
+statusicon.set_from_icon_name(icon_name)
+statusicon.set_from_gicon(gicon)</programlisting>
+        <para>The two most common methods to use are .set_from_stock() and .set_from_file(). If using .set_from_stock(), please see the Stock Items page for a list of icons.</para>
+        <para>The StatusIcon can also be configured to be visible or not visible, depending on the status of the application.</para>
+        <programlisting>statusicon.set_visible(visible)</programlisting>
+        <para>The StatusIcon can be hidden when the visible value is set to False.</para>
+        <para>We can also set the StatusIcon to blink, to grab the users attention.</para>
+        <programlisting>statusicon.set_blinking(blinking)</programlisting>
+        <para>When blinking is set to True, the StatusIcon will appear and disappear. This is used to draw the attention of the user.</para>
+        <para>Tooltip text can also be added to the icon. This allows the user to position the mouse cursor over the icon to and have a line of text displaying the application name or status.</para>
+        <programlisting>statusicon.set_tooltip(text)</programlisting>
+    </simplesect>
+    <simplesect>
+        <title>Example</title>
+        <programlisting>#!/usr/bin/python
+
+import gtk
+
+class StatusIcon:
+    def __init__(self):
+        self.statusicon = gtk.StatusIcon()
+        self.statusicon.set_from_stock(gtk.STOCK_HOME) 
+        self.statusicon.connect("popup-menu", self.right_click_event)
+        self.statusicon.set_tooltip("StatusIcon Example")
+        
+        window = gtk.Window()
+        window.connect("destroy", lambda w: gtk.main_quit())
+        window.show_all()
+		
+    def right_click_event(self, icon, button, time):
+        menu = gtk.Menu()
+
+        about = gtk.MenuItem("About")
+        quit = gtk.MenuItem("Quit")
+        
+        about.connect("activate", self.show_about_dialog)
+        quit.connect("activate", gtk.main_quit)
+        
+        menu.append(about)
+        menu.append(quit)
+        
+        menu.show_all()
+        
+        menu.popup(None, None, gtk.status_icon_position_menu, button, time, self.statusicon)
+        
+    def show_about_dialog(self, widget):
+        about_dialog = gtk.AboutDialog()
+
+        about_dialog.set_destroy_with_parent(True)
+        about_dialog.set_name("StatusIcon Example")
+        about_dialog.set_version("1.0")
+        about_dialog.set_authors(["Andrew Steele"])
+        		
+        about_dialog.run()
+        about_dialog.destroy()
+
+StatusIcon()
+gtk.main()</programlisting>
+        <para>Download <ulink url="examples/statusicon.py"><command>statusicon.py</command></ulink></para>
+    </simplesect>
+</chapter>

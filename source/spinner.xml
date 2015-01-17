@@ -1,0 +1,63 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+
+<chapter id="spinner">
+    <title>Spinner</title>
+    <para>A Spinner widget is used to indicate activity within an application. It is often used to indicate that a web page is being downloaded or an instant messaging client is connecting.</para>
+    <simplesect>
+        <title>Constructor</title>
+        <programlisting>spinner = gtk.Spinner()</programlisting>
+    </simplesect>
+    <simplesect>
+        <title>Methods</title>
+        <para>We can start and stop the Spinner animation with the following calls:</para>
+        <programlisting>spinner.start()
+spinner.stop()</programlisting>
+        <para>By default, the animation takes 1000 milliseconds (1 second) to complete a rotation. This can be adjusted with:</para>
+        <programlisting>spinner.set_property("cycle-duration", duration)</programlisting>
+        <para>The duration parameter must be specified in milliseconds, with 500 (half a second) being the lowest possible value.</para>
+        <para>Another value is the number of steps the Spinner has, with the default being 12. This can be adjusted with:</para>
+        <programlisting>spinner.set_propety("num-steps", steps)</programlisting>
+        <para>The steps value should be set to a number greater than or equal to 1.</para>
+    </simplesect>
+    <simplesect>
+        <title>Example</title>
+        <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class Spinner:
+    def __init__(self):
+        window = gtk.Window()
+        window.set_default_size(200, 200)
+        vbox = gtk.VBox(False, 5)
+        hbox = gtk.HBox(True, 5)
+
+        self.spinner = gtk.Spinner()
+        button_start = gtk.Button("Start")
+        button_stop = gtk.Button("Stop")
+
+        window.connect("destroy", lambda w: gtk.main_quit())
+        button_start.connect("clicked", self.start_animation)
+        button_stop.connect("clicked", self.stop_animation)
+
+        window.add(vbox)
+        vbox.pack_start(self.spinner, True, True, 0)
+        vbox.pack_end(hbox, False, False, 0)
+        hbox.pack_start(button_start)
+        hbox.pack_start(button_stop)
+
+        window.show_all()
+
+    def start_animation(self, widget):
+        self.spinner.start()
+    
+    def stop_animation(self, widget):
+        self.spinner.stop()
+
+Spinner()
+gtk.main()</programlisting>
+        <para>Download: <ulink url="examples/spinner.py"><command>spinner.py</command></ulink></para>
+    </simplesect>
+</chapter>

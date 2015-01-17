@@ -1,0 +1,46 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+
+<chapter id="alignment">
+    <title>Alignment</title>
+    <para>An alignment widget allows for the placement of a child widget at a specific size or position.</para>
+    <simplesect>
+        <title>Constructor</title>
+        <programlisting>alignment = gtk.Alignment(xalign, yalign, xscale, yscale)</programlisting>
+        <para>The xalign, yalign, xscale and yscale arguments should be set to values between 0.0 and 1.0.</para>
+    </simplesect>
+    <simplesect>
+        <title>Methods</title>
+        <para>To adjust the alignment properties after creation, use this method:</para>
+        <programlisting>alignment.set(xalign, yalign, xscale, yscale)</programlisting>
+        <para>All the properties specified for an alignment are float values ranging from 0.0 to 1.0. The xalign and yalign property specifies the position of the child widget horizontally and vertically. The xscale and yscale properties specify the size of the child widget, with 1.0 values indicating that the child widget should take up all available space.</para>
+        <para>Padding values can be set for the top, bottom, left and right side of the Alignment.</para>
+        <programlisting>alignment.set_padding(top, bottom, left, right)</programlisting>
+        <para>The four parameters can be set to integer or float values.</para>
+        <para>Finally, to add a child widget to the alignment:</para>
+        <programlisting>alignment.add(child)</programlisting>
+    </simplesect>
+    <simplesect>
+        <title>Example</title>
+        <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class Alignment:
+    def __init__(self):
+        window = gtk.Window()
+        label = gtk.Label("Alignment")
+        alignment = gtk.Alignment(0.5, 0.5, 0.5, 0.5)
+        
+        window.connect("destroy", lambda w: gtk.main_quit())
+        
+        window.add(alignment)
+        alignment.add(label)
+        window.show_all()
+
+Alignment()
+gtk.main()</programlisting>
+        <para>Download <ulink url="examples/alignment.py"><command>alignment.py</command></ulink></para>
+    </simplesect>
+</chapter>

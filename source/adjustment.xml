@@ -1,0 +1,38 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+
+<chapter id="adjustment">
+    <title>Adjustment</title>
+    <para>An Adjustment provides a backend for another widget such as a ScrollBar or Spin Button. The user will never actually see the Adjustment, however they will interact with it indirectly. The use of the Adjustment widget allows for powerful use of numbers in conjunction with other widgets.</para>
+    <simplesect>    
+        <title>Constructor</title>
+        <programlisting>adjustment = gtk.Adjustment(value, lower, upper, step_increment, page_increment, page_size)</programlisting>
+        <para>The value property is the default starting value. The lower and upper properties are the minimum and maximum numbers that can be placed in the Adjustment. Obviously, the initial value should fall in the range of the lower and upper values. The step_increment is the "smaller" value by which the Adjustment changes and the page_increment value is the "larger" value.</para>
+        <para>The final argument is the page_size value. For widgets which provide scrolling, such as a Scrolled Window or ScrollBar, this value should be set to the size by which the page scrolls. In other widgets such as a Spin Button, this value should be set to zero.</para>
+    </simplesect>
+    <simplesect>
+        <title>Methods</title>
+        <para>To change the value of the Adjustment, use:</para>
+        <programlisting>adjustment.set_value(value)</programlisting>
+        <para>The other five values in the Adjustment can be manipulated after construction with:</para>
+        <programlisting>adjustment.set_lower(value)
+adjustment.set_upper(value)
+adjustment.set_step_increment(value)
+adjustment.set_page_incrememt(value)
+adjustment.set_page_size(value)</programlisting>
+        <para>To change all the values after construction of the Adjustment, use:</para>
+        <programlisting>adjustment.set_all(value, lower, upper, step_increment, page_increment, page_size)</programlisting>
+    </simplesect>
+    <simplesect>
+        <title>Example</title>
+        <para>For an example of the Adjustment widget in use, see the following widgets:</para>
+        <itemizedlist>
+            <listitem>Spin Button</listitem>
+            <listitem>Scale</listitem>
+            <listitem>Scrollbar</listitem>
+            <listitem>Viewport</listitem>
+            <listitem>Scrolled Window</listitem>
+        </itemizedlist>
+    </simplesect>
+</chapter>

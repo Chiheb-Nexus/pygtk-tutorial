@@ -1,0 +1,59 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+
+<chapter id="buttonbox">
+    <title>Button Box</title>
+    <para>Button Box widgets can be used to quickly layout a group of buttons. The style of the Button Box can be configured after creation to allow for a style which fits the application.</para>
+    <simplesect>
+        <title>Constructor</title>
+        <para>There are two types, vertical and horizontal which can be set with one the following constructors:</para>
+        <programlisting>vbuttonbox = gtk.VButtonBox()
+hbuttonbox = gtk.HButtonBox()</programlisting>
+    </simplesect>
+    <simplesect>
+        <title>Methods</title>
+        <para>To add child widgets to the Button Box:</para>
+        <programlisting>buttonbox.add(child)</programlisting>
+        <para>Button Boxes can also follow a number of layouts. The configure the layout:</para>
+        <programlisting>buttonbox.set_layout(layout)</programlisting>
+        <para>The layout property can be set to one of the following:</para>
+        <programlisting>gtk.BUTTONBOX_DEFAULT_STYLE
+gtk.BUTTONBOX_SPREAD
+gtk.BUTTONBOX_EDGE
+gtk.BUTTONBOX_START
+gtk.BUTTONBOX_END</programlisting>
+        <para>Another useful function of the Button Box is that a child widget can be separated from the group if necessary. This allows for buttons such as Help or About to be positioned away from the main children such as OK and Cancel buttons.</para>
+        <programlisting>buttonbox.set_child_secondary(child, secondary)</programlisting>
+        <para>The child widget is the name of a Button in the Button Box. The secondary parameter when set to True activates this behaviour.</para>
+    </simplesect>
+    <simplesect>
+        <title>Example</title>
+        <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class ButtonBox:
+    def __init__(self):
+        window = gtk.Window()
+        window.set_default_size(300, -1)
+        buttonbox = gtk.HButtonBox()
+        
+        button1 = gtk.Button("Button 1")
+        button2 = gtk.Button("Button 2")
+        button3 = gtk.Button("Button 3")
+        
+        window.add(buttonbox)
+        buttonbox.add(button1)
+        buttonbox.add(button2)
+        buttonbox.add(button3)
+        
+        window.connect("destroy", lambda w: gtk.main_quit())
+        
+        window.show_all()
+
+ButtonBox()
+gtk.main()</programlisting>
+        <para>Download <ulink url="examples/buttonbox.py"><command>buttonbox.py</command></ulink></para>
+    </simplesect>
+</chapter>

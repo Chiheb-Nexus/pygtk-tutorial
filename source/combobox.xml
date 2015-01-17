@@ -1,0 +1,73 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+
+<chapter id="combobox">
+    <title>ComboBox</title>
+    <para>A ComboBox allows for the selection of an item from a dropdown menu. They are preferable to having many radio buttons on screen as they take up less room. A ComboBox also has many other uses including:</para>
+    <itemizedlist>
+        <listitem>Displaying images, check buttons, radio buttons and several other widgets.</listitem>
+        <listitem>Sorting options into an ordered list.</listitem>
+        <listitem>Use an existing liststore to display data.</listitem>
+    </itemizedlist>
+    <para>Note: a ComboBox is one of the more complicated widgets in GTK+ as it has several parts which are required to make it work correctly.</para>
+    <simplesect>
+        <title>Constructor</title>
+        <programlisting>combobox = gtk.ComboBox(model)</programlisting>
+        <para>The model property is the name of the liststore which will hold the data used by the ComboBox.</para>
+    </simplesect>
+    <simplesect>
+        <title>Methods</title>
+        <para>At some point after the creation of the ComboBox, you may need to change the model used by the widget. This can be useful when getting the ComboBox to display different data.</para>
+        <programlisting>combobox.set_model(model)</programlisting>
+        <para>If the ComboBox has to display a large number of item, it may be better to display them in a grid rather than a list. This can be done using:</para>
+        <programlisting>combobox.set_wrap_width(width)</programlisting>
+        <para>The width value is the number of columns the ComboBox should display.</para>
+        <para>Note: For ComboBox widgets containing more than 50 items and using set_wrap_width, the computation of the grid can slow the application loading speed significantly. In these cases, it is recommended to adjust the design of the application or not using .set_wrap_width().</para>
+        <para>To retrieve the selected text from the ComboBox:</para>
+        <programlisting>text = combobox.get_active_text()</programlisting>
+        <para>Alternatively, you may just wish to retrieve the number of the item selected (remember the first item will return zero):</para>
+        <programlisting>number = combobox.get_active()</programlisting>
+        <para>By default, the ComboBox does not have a default item selected. This can be changed using:</para>
+        <programlisting>combobox.set_active(active)</programlisting>
+        <para>The active parameter is the value of the item which should be selected (remembering that the first item in the list is numbered zero).</para>
+    </simplesect>
+    <simplesect>
+        <title>Example</title>
+        <programlisting>#!/usr/bin/env python
+
+import gtk
+
+distributions = ["Ubuntu", "Debian", "Sabayon", "Fedora", "Arch", "Mint", "Slackware", "Mandriva", "Sidux", "Mepis"]
+
+class ComboBox:
+    def __init__(self):
+        window = gtk.Window()
+        
+        liststore = gtk.ListStore(str)
+        for item in distributions:
+            liststore.append([item])
+        
+        cell = gtk.CellRendererText()
+        
+        combobox = gtk.ComboBox(liststore)
+        combobox.pack_start(cell, True)
+        combobox.add_attribute(cell, "text", 0)
+        
+        combobox.set_active(0)
+        
+        window.add(combobox)
+        
+        window.connect("destroy", lambda w: gtk.main_quit())
+        combobox.connect("changed", self.changed_item)
+        
+        window.show_all()
+    
+    def changed_item(self, widget):
+        print "ComboBox item was changed to %s" % widget.get_active_text()
+
+ComboBox()
+gtk.main()</programlisting>
+        <para>Download <ulink url="examples/combobox.py"><command>combobox.py</command></ulink></para>
+    </simplesect>
+</chapter>

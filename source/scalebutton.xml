@@ -1,0 +1,68 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+
+<chapter id="scalebutton">
+    <title>Scale Button</title>
+    <para>A Scale Button provides a popup box to allow modification of a number. It is the basis of the <link linkend="volumebutton">Volume Button</link> widget.</para>
+    <simplesect>
+        <title>Constructor</title>
+        <programlisting>scalebutton = gtk.ScaleButton(icon_size, min_value, max_value, step_value, icons)</programlisting>
+        <para>The icon_size argument can be set to one of the following:</para>
+        <programlisting>gtk.ICON_SIZE_MENU
+gtk.ICON_SIZE_SMALL_TOOLBAR
+gtk.ICON_SIZE_LARGE_TOOLBAR
+gtk.ICON_SIZE_BUTTON
+gtk.ICON_SIZE_DND
+gtk.ICON_SIZE_DIALOG</programlisting>
+        <para>The minimum and maximum values are usually 0 and 100 respectively. The step value is the amount the value changes when scrolling on the Scale Button, and is often set to 2. All numbers are dependent on your requirements however. Finally, the icons argument is a tuple or list of stock icons which are displayed on the Scale Button (at least two need to be entered). The icons are used to represent the current value of the Scale Button (i.e. the first icon is used for 0% - 50% and the second icon is used for 50% - 100%.</para>
+    </simplesect>
+    <simplesect>
+        <title>Methods</title>
+        <para>To retrieve the value from the Scale Button, the following method is used:</para>
+        <programlisting>value = scalebutton.get_value()</programlisting>
+        <para>Alternatively, setting the value can also be achieved:</para>
+        <programlisting>scalebutton.set_value(value)</programlisting>
+        <para>By default, the Scale Button popup is positioned vertically. This can be changed with:</para>
+        <programlisting>scalebutton.set_orientation(orientation)</programlisting>
+        <para>The orientation argument can be set to one of the following:</para>
+        <programlisting>gtk.ORIENTATION_VERTICAL
+gtk.ORIENTATION_HORIZONTAL</programlisting>
+        <para>The icons being used on the Scale Button can be adjusted after construction with the method:</para>
+        <programlisting>scalebutton.set_icons(icons)</programlisting>
+        <para>The icons parameter should be set to a tuple or list of icons which are to be used. At least two icons should be specified.</para>
+    </simplesect>
+    <simplesect>
+        <title>Signals</title>
+        <programlisting>"value-changed" (scalebutton, value)
+"popup" (scalebutton)
+"popdown" (scalebutton)
+</programlisting>
+        <para>When the slider on the Scale Button is changed, the "value-changed" signal is emitted. The "popup" and "popdown" signals emit when the user clicks to show or hide the slider control.</para>
+    </simplesect>
+    <simplesect>
+        <title>Example</title>
+        <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class ScaleButton:
+    def __init__(self):
+        window = gtk.Window()
+        window.set_default_size(100, 100)
+        scalebutton = gtk.ScaleButton(gtk.ICON_SIZE_MENU, 0, 100, 2, (gtk.STOCK_ZOOM_FIT, gtk.STOCK_ZOOM_FIT))
+        
+        window.connect("destroy", lambda w: gtk.main_quit())
+        scalebutton.connect("value-changed", self.value_changed)
+        
+        window.add(scalebutton)
+        window.show_all()
+    
+    def value_changed(self, scalebutton, value):
+        print "Scale Button is set to %i" % value
+
+ScaleButton()
+gtk.main()</programlisting>
+        <para>Download <ulink url="examples/scalebutton.py"><command>scalebutton.py</command></ulink></para>
+    </simplesect>
+</chapter>

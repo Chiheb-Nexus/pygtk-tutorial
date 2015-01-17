@@ -1,0 +1,54 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+
+<chapter id="pane">
+    <title>Pane</title>
+    <para>The pane widget is used to split the content of a window using a handle, allowing the user to adjust the content of the panes. This widget is commonly used in email clients to adjust the amount of space used to show the emails and content. There are two types of pane; vertical and horizontal.</para>
+	<simplesect>
+	    <title>Constructor</title>
+	    <programlisting>vpane = gtk.VPaned()
+hpane = gtk.HPaned()</programlisting>
+    </simplesect>
+    <simplesect>
+        <title>Methods</title>
+        <para>To add child widgets to the pane, we use the following:</para>
+        <programlisting>pane.add1(child)
+pane.add2(child)</programlisting>
+        <para>The add1 function adds the child widget to the top or left pane (depending on the pane type), and the add2 function adds the child widget to the bottom or right pane (again, depending on the pane type).</para>
+        <para>To set the default position of the separator:</para>
+        <programlisting>pane.set_position(position)</programlisting>
+        <para>The position value is set in pixels.</para>
+        <para>Alternatively, we can retrieve the value of the handle in pixels. This is useful when closing the application and saving the size of the pane.</para>
+        <programlisting>position = pane.get_position()</programlisting>
+        <para>We can also use the following methods to retrieve the child widget from each pane:</para>
+        <programlisting>pane.get_child1()
+pane.get_child2()</programlisting>
+    </simplesect>
+    <simplesect>
+        <title>Example</title>
+        <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class Pane:
+    def __init__(self):
+        window = gtk.Window()
+        window.set_default_size(250, 100)
+        pane = gtk.HPaned()
+        pane.set_position(150)
+        
+        label1 = gtk.Label("Label 1")
+        label2 = gtk.Label("Label 2")
+        pane.add1(label1)
+        pane.add2(label2)
+        
+        window.connect("destroy", lambda w: gtk.main_quit())
+        
+        window.add(pane)
+        window.show_all()
+Pane()
+gtk.main()</programlisting>
+        <para>Download <ulink url="examples/pane.py"><command>pane.py</command></ulink></para>
+    </simplesect>
+</chapter>

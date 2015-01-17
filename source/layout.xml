@@ -1,0 +1,55 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+
+<chapter id="layout">
+    <title>Layout</title>
+    <para>A Layout container is very similar to a Fixed container. It does however offer a couple of features which make its use advantageous over a Fixed widget.</para>
+    <itemizedlist>
+        <listitem>Almost an infinite scrolling area (actual size is 2^32).</listitem>
+        <listitem>Ability to use vertical and horizontal adjustments for scrolling.</listitem>
+    </itemizedlist>
+    <simplesect>
+        <title>Constructor</title>
+        <programlisting>layout = gtk.Layout(hadjustment, vadjustment)</programlisting>
+        <para>The hadjustment and vadjustment arguments are the names of the Adjustment object created previously. This is used to provide scrolling of the container. Alternatively, if you wish not to specify any adjustments, these can be left blank.</para>
+    </simplesect>
+    <simplesect>
+        <title>Methods</title>
+        <para>After creating the widget, it is recommended to set a size.</para>
+        <programlisting>layout.set_size(width, height)</programlisting>
+        <para>We can also retrieve the size of the layout:</para>
+        <programlisting>size = layout.get_size()</programlisting>
+        <para>To add and move widgets within the Layout:</para>
+        <programlisting>layout.put(child, x, y)
+layout.move(child, x, y)</programlisting>
+        <para>The child argument is the name of the widget which is to be added to the container. The X value is the number of pixels across the widget, where the child should be placed. The Y value is the number of pixels down the widget, where the child should be placed. Using a pixel-based method allows for accurate positioning of widgets.</para>
+    </simplesect>
+    <simplesect>
+        <title>Example</title>
+        <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class Layout:
+    def __init__(self):
+        window = gtk.Window()
+        window.set_default_size(200, 200)
+        
+        layout = gtk.Layout()
+        button1 = gtk.Button("Button 1")
+        button2 = gtk.Button("Button 2")
+        
+        layout.put(button1, 50, 5)
+        layout.put(button2, 110, 80)
+        
+        window.connect("destroy", lambda w: gtk.main_quit())
+        
+        window.add(layout)
+        window.show_all()
+
+Layout()
+gtk.main()</programlisting>
+        <para>Download <ulink url="examples/layout.py"><command>layout.py</command></ulink></para>
+    </simplesect>
+</chapter>

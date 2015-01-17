@@ -1,0 +1,57 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+
+<chapter id="gtkmainloop">
+    <title>GTK Main Loop</title>
+    <para>GTK+ is event-driven by nature, in that actions are performed when an event occurs within the application. Take for example the Hello World application from earlier:</para>
+    <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class HelloWorld:
+    def close(self, widget):
+        gtk.main_quit()
+    
+    def print_hello_world(self, widget):
+        print "Hello World"
+    
+    def __init__(self):
+        window = gtk.Window()
+        button = gtk.Button("Click Here")
+
+        window.connect("destroy", self.close)
+        button.connect("clicked", self.print_hello_world)
+
+        window.add(button)
+        window.show_all()
+
+HelloWorld()
+gtk.main()</programlisting>
+    <para>After the HelloWorld() class has run, the application loops in gtk.main line of code. This loop waits for an event in the application to occur such as a click, drag-and-drop or any other number of events.</para>
+    <para>A Python application can either work as standalone or as part of another application. However, if the application is being used as part of another, the GTK main loop position will cause a problem as it stands. Therefore, we only need to allow the main loop to run if the application is running standalone (due to the main application having its own GTK main loop. We can change our code to allow this using:</para>
+    <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class HelloWorld:
+    def close(self, widget):
+        gtk.main_quit()
+    
+    def print_hello_world(self, widget):
+        print "Hello World"
+    
+    def __init__(self):
+        window = gtk.Window()
+        button = gtk.Button("Click Here")
+
+        window.connect("destroy", self.close)
+        button.connect("clicked", self.print_hello_world)
+
+        window.add(button)
+        window.show_all()
+
+if __name__ == "__main__":
+    HelloWorld()
+    gtk.main()</programlisting>
+</chapter>

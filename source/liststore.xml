@@ -1,0 +1,96 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+
+<chapter id="liststore">
+    <title>ListStore</title>
+    <para>A ListStore is a data store widget which holds its information in a flat format. When creating the ListStore, we specify the column data types and each row added to the ListStore will have an item in each column.</para>
+    <simplesect>
+        <title>Constructor</title>
+        <programlisting>liststore = gtk.ListStore(datatypes)</programlisting>
+        <para>There are a range of datatypes which can be used to hold data. The standard Python ones are:</para>
+        <itemizedlist>
+            <listitem>str</listitem>
+            <listitem>int</listitem>
+            <listitem>float</listitem>
+            <listitem>long</listitem>
+            <listitem>bool</listitem>
+            <listitem>object</listitem>
+        </itemizedlist>
+        <para>Alternatively, the ListStore can hold PyGTK widgets, such as Buttons, VBox, HBox, etc.</para>
+        <para>Also, we can store as GTK+ types:</para>
+        <itemizedlist>
+            <listitem>gchar</listitem>
+            <listitem>guchar</listitem>
+            <listitem>gboolean</listitem>
+            <listitem>gint</listitem>
+            <listitem>guint</listitem>
+            <listitem>glong</listitem>
+            <listitem>gulong</listitem>
+            <listitem>gint64</listitem>
+            <listitem>guint64</listitem>
+            <listitem>gfloat</listitem>
+            <listitem>gdouble</listitem>
+            <listitem>gchararray</listitem>
+            <listitem>GObject</listitem>
+        </itemizedlist>
+        <para>We can specify multiple datatypes to allow the ListStore to hold a wide range of data. These are separated by a comma.</para>
+    </simplesect>
+    <simplesect>
+        <title>Methods</title>
+        <para>The next thing to do is add data to the ListStore. Appending places the new item at the rear of the list, whereas prepending places the new item at the front.</para>
+        <programlisting>liststore.prepend([items])
+liststore.append([items])</programlisting>
+        <para>Inserting an item into a specific position can also be achieved with the following method.</para>
+        <programlisting>liststore.insert(position, [items])</programlisting>
+        <para>Note: Remember that the position value begins at zero.</para>
+        <para>To remove individual items from the ListStore, use this method.</para>
+        <programlisting>liststore.remove(iter)</programlisting>
+        <para>The iter argument is a TreeIter value, used to access the item within the row.</para>
+        <para>To clear the items from the ListStore:</para>
+        <programlisting>liststore.clear()</programlisting>
+        <para>We can reorder the ListStore using the following call:</para>
+        <programlisting>liststore.reorder([position])</programlisting>
+        <para>The position argument is the original position value of each item in their new order. Remember that the first item is numbered zero.</para>
+        <para>Alternatively, swapping the position of two entries can be done with:</para>
+        <programlisting>liststore.swap(position_a, position_b)</programlisting>
+        <para>Both the position arguments are TreeIter widgets.</para>
+    </simplesect>
+    <simplesect>
+        <title>Example</title>
+        <para>The example below uses a variety of widgets such as the <link linkend="treeview">TreeView</link> and <link linkend="cellrenderertext">CellRendererText</link>. These will be covered in later chapters.</para>
+        <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class TreeViewListStore:
+    def __init__(self):
+        window = gtk.Window()
+        window.set_default_size(200, 200)
+        
+        liststore = gtk.ListStore(str)
+        treeview = gtk.TreeView(liststore)
+        
+        liststore.append(["Ubuntu"])
+        liststore.append(["Fedora"])
+        liststore.append(["Sabayon"])
+        liststore.append(["Arch"])
+        liststore.append(["Debian"])
+        
+        column = gtk.TreeViewColumn("Distributions")
+        treeview.append_column(column)
+        
+        cell = gtk.CellRendererText()
+        column.pack_start(cell, False)
+        column.add_attribute(cell, "text", 0)
+        
+        window.connect("destroy", lambda w: gtk.main_quit())
+        
+        window.add(treeview)
+        window.show_all()
+        
+TreeViewListStore()
+gtk.main()</programlisting>
+        <para>Download <ulink url="examples/liststore.py"><command>liststore.py</command></ulink></para>
+    </simplesect>
+</chapter>

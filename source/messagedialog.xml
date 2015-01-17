@@ -1,0 +1,90 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+
+<chapter id="messagedialog">
+    <title>Message Dialog</title>
+    <para>Message dialogs display one or several lines of text to indicate a range of events which may have occurred while the application is running. The dialogs can be customised depending on what type of message is to be shown.</para>
+    <simplesect>
+        <title>Constructor</title>
+        <programlisting>messagedialog = gtk.MessageDialog(parent, flags, type, buttons, message)</programlisting>
+        <para>The parent property is the name of the window which owns the dialog. This can be set to None if not required.</para>
+        <para>The flag can be set to any of the following (by default 0 is used):</para>
+        <programlisting>0
+gtk.DIALOG_MODAL
+gtk.DIALOG_DESTROY_WITH_PARENT</programlisting>
+        <para>The type of dialog can be set on the type property, with one of the following four values:</para>
+        <programlisting>gtk.MESSAGE_INFO
+gtk.MESSAGE_WARNING
+gtk.MESSAGE_QUESTION
+gtk.MESSAGE_ERROR</programlisting>
+        <para>It is also possible to set a variety of buttons on the message dialog, to retrieve different responses from the user. One of the following five values can be used:</para>
+        <programlisting>gtk.BUTTONS_NONE
+gtk.BUTTONS_OK
+gtk.BUTTONS_OK_CANCEL
+gtk.BUTTONS_CANCEL
+gtk.BUTTONS_YES_NO
+gtk.BUTTONS_CLOSE</programlisting>
+        <para>The final property named message is the text that the message dialog should display.</para>
+    </simplesect>
+    <simplesect>
+        <title>Methods</title>
+        <para>In some dialogs which require some further explanation of what has happened, a secondary text can be added. In this case, the primary message entered when creating the message dialog is made bigger and set to bold text. The secondary message is used to explain in detail. This can be set using:</para>
+        <programlisting>messagedialog.format_secondary_text(message)</programlisting>
+    </simplesect>
+    <simplesect>
+        <title>Example</title>
+        <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class MessageDialog:
+    def __init__(self):
+        self.window = gtk.Window()
+        
+        vbox = gtk.VBox(True, 5)
+        
+        button_info = gtk.Button("Information")
+        button_error = gtk.Button("Error")
+        button_warning = gtk.Button("Warning")
+        button_question = gtk.Button("Question")
+        
+        self.window.connect("destroy", lambda w: gtk.main_quit())
+        button_info.connect("clicked", self.information_message)
+        button_error.connect("clicked", self.error_message)
+        button_warning.connect("clicked", self.warning_message)
+        button_question.connect("clicked", self.question_message)
+        
+        self.window.add(vbox)
+        vbox.pack_start(button_info)
+        vbox.pack_start(button_error)
+        vbox.pack_start(button_warning)
+        vbox.pack_start(button_question)
+        
+        self.window.show_all()
+    
+    def information_message(self, widget):
+        messagedialog = gtk.MessageDialog(self.window, 0, gtk.MESSAGE_INFO, gtk.BUTTONS_OK, "Download of file has completed.")
+        messagedialog.run()
+        messagedialog.destroy()
+    
+    def error_message(self, widget):
+        messagedialog = gtk.MessageDialog(self.window, 0, gtk.MESSAGE_ERROR, gtk.BUTTONS_CANCEL, "File could not be accessed. Read operation cancelled.")
+        messagedialog.run()
+        messagedialog.destroy()
+    
+    def warning_message(self, widget):
+        messagedialog = gtk.MessageDialog(self.window, 0, gtk.MESSAGE_WARNING, gtk.BUTTONS_OK_CANCEL, "Folder merge conflict while writing.")
+        messagedialog.run()
+        messagedialog.destroy()
+    
+    def question_message(self, widget):
+        messagedialog = gtk.MessageDialog(self.window, 0, gtk.MESSAGE_QUESTION, gtk.BUTTONS_YES_NO, "Continue with file conversion operation?")
+        messagedialog.run()
+        messagedialog.destroy()
+
+MessageDialog()
+gtk.main()</programlisting>
+        <para>Download <ulink url="examples/messagedialog.py"><command>messagedialog.py</command></ulink></para>
+    </simplesect>
+</chapter>

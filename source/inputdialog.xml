@@ -1,0 +1,43 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+
+<chapter id="inputdialog">
+    <title>Input Dialog</title>
+    <para>An Input Dialog allows for the configuration of X input devices. It can be used to configure devices such as joysticks and gamepads.</para>
+    <para>Note: Due to the specialised nature of this widget, it may be removed in the future from PyGTK and accessible through another package. Until that time, this widget is available for use as with any other widget and the documentation will remain available.</para>
+    <simplesect>
+        <title>Constructor</title>
+        <programlisting>inputdialog = gtk.InputDialog()</programlisting>
+    </simplesect>
+    <simplesect>
+        <title>Example</title>
+        <para>Note: This example currently has no functionality other than allowing the Save and Close buttons to be used.</para>
+        <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class InputDialog:
+    def __init__(self):
+        inputdialog = gtk.InputDialog()
+        
+        vbox = inputdialog.get_child()
+        children = vbox.get_children()
+        hbuttonbox = children[2]
+        buttons = hbuttonbox.get_children()
+        button_close = buttons[1]
+        button_save = buttons[0]
+        
+        button_save.connect("clicked", self.interaction)
+        button_close.connect("clicked", lambda w: inputdialog.destroy())
+
+        inputdialog.run()
+        inputdialog.destroy()
+    
+    def interaction(self, widget):
+        print "Save Button clicked"
+
+InputDialog()</programlisting>
+        <para>Download <ulink url="examples/inputdialog.py"><command>inputdialog.py</command></ulink></para>
+    </simplesect>
+</chapter>

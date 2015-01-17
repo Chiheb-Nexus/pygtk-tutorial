@@ -1,0 +1,93 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+
+<chapter id="infobar">
+    <title>InfoBar</title>
+    <para>An InfoBar provides an in-window method of displaying warnings, errors, information, questions and other message types. They are commonly used to notify the user of occurrences within the program, such as an instant-messaging client being disconnected.</para>
+    <para>The use of this widget is often seen as an alternative to a <link linkend="messagedialog">Message Dialog</link>.</para>
+    <simplesect>
+        <title>Constructor</title>
+        <programlisting>infobar = gtk.InfoBar()</programlisting>
+    </simplesect>
+    <simplesect>
+        <title>Methods</title>
+        <para>After construction, configuration of the message type is most likely needed. This can be made with:</para>
+        <programlisting>infobar.set_message_type(type)</programlisting>
+        <para>The type value should be set to one of the following items:</para>
+        <programlisting>gtk.MESSAGE_INFO
+gtk.MESSAGE_WARNING
+gtk.MESSAGE_ERROR
+gtk.MESSAGE_QUESTION
+gtk.MESSAGE_OTHER</programlisting>
+        <para>If no message type is declared, gtk.MESSAGE_INFO is used.</para>
+        <para>Buttons can also be added to InfoBar to allow for different responses to the message. These can be added to the InfoBar with:</para>
+        <programlisting>infobar.add_button(text, response)
+infobar.add_button(stock_id, response)</programlisting>
+        <para>The text value in the first method is a string of text which should be displayed on the button. The second method uses a <link linkend="stockimages">Stock Image</link>. Both methods require a response from the user, which can be configured based on the following values:</para>
+        <programlisting>gtk.RESPONSE_NONE
+gtk.RESPONSE_REJECT
+gtk.RESPONSE_ACCEPT
+gtk.RESPONSE_DELETE_EVENT
+gtk.RESPONSE_OK
+gtk.RESPONSE_CANCEL
+gtk.RESPONSE_CLOSE
+gtk.RESPONSE_YES
+gtk.RESPONSE_NO
+gtk.RESPONSE_APPLY
+gtk.RESPONSE_HELP</programlisting>
+        <para>After an InfoBar is no longer needed, it is recommended to remove it from view with:</para>
+        <programlisting>infobar.hide()</programlisting>
+    </simplesect>
+    <simplesect>
+        <title>Example</title>
+        <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class InfoBar:
+    def __init__(self):
+        window = gtk.Window()
+        vbox = gtk.VBox(False, 5)
+        hbox = gtk.HBox(True, 5)
+
+        label = gtk.Label("InfoBar Example")
+
+        self.infobar = gtk.InfoBar()
+        content = self.infobar.get_content_area()
+        content.add(label)
+
+        button_info = gtk.Button("Info")
+        button_warning = gtk.Button("Warning")
+        button_question = gtk.Button("Question")
+        button_error = gtk.Button("Error")
+
+        window.connect("destroy", lambda w: gtk.main_quit())
+        button_info.connect("clicked", self.infobar_type, gtk.MESSAGE_INFO)
+        button_warning.connect("clicked", self.infobar_type, gtk.MESSAGE_WARNING)
+        button_question.connect("clicked", self.infobar_type, gtk.MESSAGE_QUESTION)
+        button_error.connect("clicked", self.infobar_type, gtk.MESSAGE_ERROR)
+        self.infobar.connect("response", self.infobar_response)
+
+        window.add(vbox)
+        vbox.pack_start(self.infobar)
+        vbox.pack_start(hbox, False, False, 0)
+        hbox.pack_start(button_info)
+        hbox.pack_start(button_warning)
+        hbox.pack_start(button_question)
+        hbox.pack_start(button_error)
+        
+        window.show_all()
+
+    def infobar_type(self, widget, type):
+        self.infobar.set_message_type(type)
+        self.infobar.show()
+
+    def infobar_response(self, widget, event):
+        self.infobar.hide()
+
+InfoBar()
+gtk.main()</programlisting>
+        <para>Download: <ulink url="examples/infobar.py"><command>infobar.py</command></ulink></para>
+    </simplesect>
+</chapter>

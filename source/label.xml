@@ -1,0 +1,85 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+
+<chapter id="label">
+    <title>Label</title>
+    <para>Labels are a commonly used widget for displaying text. They can be used to display single words, sentences or paragraphs of text in a variety of ways. Many of the basic formatting options you find in a word processor can be applied to GTK labels. This includes justification of text, applying bold, italic or underlined formatting, inserting new lines of tab spacing and a number of other options.</para>
+    <simplesect>
+        <title>Constructor</title>
+        <programlisting>label = gtk.Label(text)</programlisting>
+        <para>The text argument is the string which should be displayed on the label. It should be surrounded in quotation marks otherwise the interpreter will report an error.</para>
+    </simplesect>
+    <simplesect>
+        <title>Methods</title>
+        <para>Alternatively, we can set the text of the label while after it has been created.</para>
+        <programlisting>label.set_text(text)</programlisting>
+        <para>Note: When text is added to a label, by default the label will automatically increase in size to accomodate the text.</para>
+        <para>To allow for entering tab spacing and new lines within the label, we can use the "\t" and "\n" characters respectively. These are inserted into the label as follows, however they are not displayed when the user runs the application.</para>
+        <programlisting>This is the first line.\t This is the second sentence.\n This is the second line.</programlisting>
+        <para>In some cases, you may wish to retrieve the text from the label.</para>
+        <programlisting>text = label.get_text()</programlisting>
+        <para>Being able to select the text contained within in a label can also be useful:</para>
+        <programlisting>label.set_selectable(selectable)</programlisting>
+        <para>When the selectable value is set to True, the user will be able to highlight all text within the label. By default, this value is False.</para>
+        <para>As mentioned previously, the label widget has some similar properties to a basic word processor. One of these features is setting the justification of the text using:</para>
+        <programlisting>label.set_justify(type)</programlisting>
+        <para>The type attribute can be set to one of the following three values:</para>
+        <programlisting>gtk.JUSTIFY_LEFT
+gtk.JUSTIFY_RIGHT
+gtk.JUSTIFY_CENTER</programlisting>
+        <para>A label by default uses gtk.JUSTIFY_LEFT as the justification value.</para>
+        <para>The default behaviour of a Label widget is to expand the label to allow all text to be displayed. This can however break the application layout. The default behaviour can be adjusted using:</para>
+        <programlisting>label.set_line_wrap(line_wrap)</programlisting>
+        <para>When the line_wrap parameter is set to True, text will be adjusted to fill the Label vertically.</para>
+    </simplesect>
+    <simplesect>
+        <title>Example</title>
+        <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class Label:
+    def __init__(self):
+        window = gtk.Window()
+        
+        hbox = gtk.HBox(False, 10)
+        vbox_left = gtk.VBox(False, 10)
+        vbox_right = gtk.VBox(False, 10)
+        
+        hbox.pack_start(vbox_left)
+        hbox.pack_start(vbox_right)
+        
+        label = gtk.Label("This is a normal label")
+        vbox_left.pack_start(label)
+        
+        label = gtk.Label("This is a left-justified label.\nWith multiple lines.")
+        label.set_justify(gtk.JUSTIFY_LEFT)
+        vbox_left.pack_start(label) 
+        
+        label = gtk.Label("This is a right-justified label.\nWith multiple lines.")
+        label.set_justify(gtk.JUSTIFY_RIGHT)
+        vbox_left.pack_start(label)
+        
+        label = gtk.Label("This is a line-wrapped label spread over multiple lines."
+                          "It supports multiple lines and correctly inserts many   spaces   .")
+        label.set_line_wrap(True)
+        vbox_right.pack_start(label)
+        
+        label = gtk.Label("This is a line-wrapped, filled label. It takes the entire space "
+                          "allocated to it.\n\nIt also supports multiple lines and correctly "
+                          "inserts many   spaces   .")
+        label.set_line_wrap(True)
+        label.set_justify(gtk.JUSTIFY_FILL)
+        vbox_right.pack_start(label)
+        
+        window.connect("destroy", lambda w: gtk.main_quit())
+        
+        window.add(hbox)
+        window.show_all()
+        
+Label()
+gtk.main()</programlisting>
+        <para>Download <ulink url="examples/label.py"><command>label.py</command></ulink></para>
+    </simplesect>
+</chapter>

@@ -1,0 +1,97 @@
+<?xml version='1.0'?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+]>
+
+<book id="pygtk-tutorial" xmlns:xi="http://www.w3.org/2001/XInclude">
+    <title>PyGTK Tutorial</title>
+    <bookinfo>
+        <author>
+            <firstname>Andrew</firstname>
+            <surname>Steele</surname>
+        </author>
+        <pubdate><?dbtimestamp format="d B Y"?></pubdate>
+    </bookinfo>
+
+<!--Chapters-->
+<xi:include href="introduction.xml" />
+<xi:include href="gettingstarted.xml" />
+<xi:include href="packingtheory.xml" />
+<xi:include href="signaltheory.xml" />
+<xi:include href="gtkmainloop.xml" />
+<xi:include href="window.xml" />
+<xi:include href="boxes.xml" />
+<xi:include href="table.xml" />
+<xi:include href="label.xml" />
+<xi:include href="entry.xml" />
+<xi:include href="buttonwidgets.xml" />
+<xi:include href="image.xml" />
+<xi:include href="arrow.xml" />
+<xi:include href="calendar.xml" />
+<xi:include href="ruler.xml" />
+<xi:include href="progressbar.xml" />
+<xi:include href="spinner.xml" />
+<xi:include href="infobar.xml" />
+<xi:include href="separator.xml" />
+<xi:include href="alignment.xml" />
+<xi:include href="expander.xml" />
+<xi:include href="framewidgets.xml" />
+<xi:include href="notebook.xml" />
+<xi:include href="pane.xml" />
+<xi:include href="buttonbox.xml" />
+<xi:include href="fixed.xml" />
+<xi:include href="layout.xml" />
+<xi:include href="eventbox.xml" />
+<xi:include href="handlebox.xml" />
+<xi:include href="adjustment.xml" />
+<xi:include href="scale.xml" />
+<xi:include href="scrolledwindow.xml" />
+<xi:include href="scrollbar.xml" />
+<xi:include href="viewport.xml" />
+<xi:include href="liststore.xml" />
+<xi:include href="treestore.xml" />
+<xi:include href="combobox.xml" />
+<xi:include href="comboboxentry.xml" />
+<xi:include href="entrybuffer.xml" />
+<xi:include href="entrycompletion.xml" />
+<xi:include href="textviewconstruction.xml" />
+<xi:include href="treeviewconstruction.xml" />
+<xi:include href="cellrendererwidgets.xml" />
+<xi:include href="cellview.xml" />
+<xi:include href="clipboard.xml" />
+<xi:include href="fileselectionwidgets.xml" />
+<xi:include href="fontselectionwidgets.xml" />
+<xi:include href="colorselectionwidgets.xml" />
+<xi:include href="hsv.xml" />
+<xi:include href="recentchooserwidgets.xml" />
+<xi:include href="filefilter.xml" />
+<xi:include href="scalebutton.xml" />
+<xi:include href="volumebutton.xml" />
+<xi:include href="menuconstruction.xml" />
+<xi:include href="toolbar.xml" />
+<xi:include href="toolitemwidgets.xml" />
+<xi:include href="toolpalette.xml" />
+<xi:include href="toolitemgroup.xml" />
+<xi:include href="statusbar.xml" />
+<xi:include href="statusicon.xml" />
+<xi:include href="tooltip.xml" />
+<xi:include href="iconview.xml" />
+<xi:include href="dialog.xml" />
+<xi:include href="messagedialog.xml" />
+<xi:include href="aboutdialog.xml" />
+<xi:include href="assistant.xml" />
+<xi:include href="sizegroup.xml" />
+<xi:include href="actionobjects.xml" />
+<xi:include href="uimanager.xml" />
+<xi:include href="plugsocket.xml" />
+<xi:include href="drawingarea.xml" />
+<xi:include href="curve.xml" />
+<xi:include href="gammacurve.xml" />
+<xi:include href="inputdialog.xml" />
+
+<!--Appendices-->
+<xi:include href="commonmethods.xml" />
+<xi:include href="stockimages.xml" />
+<xi:include href="unavailabledeprecated.xml" />
+
+</book>

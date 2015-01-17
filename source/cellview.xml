@@ -1,0 +1,79 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+
+<chapter id="cellview">
+    <title>CellView</title>
+    <para>A CellView widget is used to display a single row of a model.</para>
+    <simplesect>
+        <title>Constructor</title>
+        <programlisting>cellview = gtk.CellView()</programlisting>
+    </simplesect>
+    <simplesect>
+        <title>Methods</title>
+        <para>After construction of the CellView, a model should be added which holds the data:</para>
+        <programlisting>cellview.set_model(model)</programlisting>
+        <para>The model value will either be set to a <link linkend="liststore">ListStore</link> or <link linkend="treestore">TreeStore</link>.</para>
+        <para>The method used to specify the row to display is:</para>
+        <programlisting>cellview.set_displayed_row(path)</programlisting>
+        <para>The path parameter is a TreePath value, which identifies the selected row.</para>
+    </simplesect>
+    <simplesect>
+        <title>Example</title>
+        <programlisting>#!/usr/bin/env python
+
+import gtk
+
+class CellView:
+    def __init__(self):
+        window = gtk.Window()
+
+        vbox = gtk.VBox(False, 2)
+        
+        label = gtk.Label("Double click to activate cell")
+
+        liststore = gtk.ListStore(str, str)
+        liststore.append(["Debian", "http://www.debian.org/"])
+        liststore.append(["Fedora", "http://fedoraproject.org/"])
+        liststore.append(["Sabayon", "http://www.sabayon.org/"])
+        liststore.append(["Chakra", "http://chakra-project.org/"])
+        liststore.append(["Arch Linux", "http://www.archlinux.org/"])
+
+        treeview = gtk.TreeView(liststore)
+        
+        cell = gtk.CellRendererText()
+        column = gtk.TreeViewColumn("Name", cell)
+        column.add_attribute(cell, "text", 0)
+        treeview.append_column(column)
+        
+        cell = gtk.CellRendererText()
+        column = gtk.TreeViewColumn("Website", cell)
+        column.add_attribute(cell, "text", 1)
+        treeview.append_column(column)
+
+        self.cellview = gtk.CellView()
+        self.cellview.set_model(liststore)
+        cell = gtk.CellRendererText()
+        self.cellview.pack_start(cell, False)
+        self.cellview.add_attribute(cell, "text", 0)
+        cell = gtk.CellRendererText()
+        self.cellview.pack_start(cell, False)
+        self.cellview.add_attribute(cell, "text", 1)
+
+        window.connect("destroy", lambda w: gtk.main_quit())
+        treeview.connect("row-activated", self.row_selected)
+
+        window.add(vbox)
+        vbox.pack_start(label, False)
+        vbox.pack_start(treeview, True)
+        vbox.pack_start(self.cellview, False)
+        window.show_all()
+        
+    def row_selected(self, treeview, path, column):
+        self.cellview.set_displayed_row(path)
+
+CellView()
+gtk.main()</programlisting>
+        <para>Download <ulink url="examples/cellview.py"><command>cellview.py</command></ulink></para>
+    </simplesect>
+</chapter>
